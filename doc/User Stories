@@ -95,8 +95,8 @@ As an owner, I want to optionally attach a photograph to a book of mine, _so tha
 US 08.02.01
 As an owner, I want to delete any attached photograph for a book of mine, _so that if I feel the photo is irrelevant I can remove it or if there is a better photo I can change it_.
 
-US 08.03.01
-As an owner or borrower, I want to view any attached photograph for a book, _so that I can take a closer look at the photograph_.
+US 08.03.02
+As an owner or borrower, I want to view any attached photograph for a book, _so that I can take a closer look at the condition of the book_.
 
 Location
 
