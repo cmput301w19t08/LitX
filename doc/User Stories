@@ -57,7 +57,7 @@ As an owner, I want to view all the requests on one of my books, _so that I can 
 Accepting
 
 US 05.01.01
-As an owner, I want to accept a request on one of my books (any other requests are declined), _so that one borrower is promised the book_.
+As an owner, I want to accept a request on one of my books (any other requests are declined), _so that one borrower is promised the book and other borrowers will not be waiting for the book_.
 
 US 05.02.01
 As an owner, I want to decline a request on one of my books, _so that I don't have to lend the book to a borrower if I don't want to_.
@@ -90,7 +90,7 @@ As an owner, I want to receive a returned book by scanning the book ISBN code to
 Photographs
 
 US 08.01.01
-As an owner, I want to optionally attach a photograph to a book of mine, _so that borrowers can view the cover or hard copy of the book_.
+As an owner, I want to optionally attach a photograph to a book of mine, _so that borrowers can view the cover and condition of the book_.
 
 US 08.02.01
 As an owner, I want to delete any attached photograph for a book of mine, _so that if I feel the photo is irrelevant I can remove it or if there is a better photo I can change it_.
