@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Book {
     private String author;
     private String title;
-    private int ISBN;
+    private long ISBN;
     private String status;
     private Boolean available;
     private Owner owner;
@@ -55,11 +55,11 @@ public class Book {
 
     }
 
-    public int getISBN() {
+    public long getISBN() {
         return ISBN;
     }
 
-    public void setISBN(int ISBN) {
+    public void setISBN(long ISBN) {
 
     }
 
