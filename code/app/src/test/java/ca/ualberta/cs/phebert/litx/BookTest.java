@@ -19,7 +19,7 @@ public class BookTest {
     public void available_isCorrect()
     {
         Book book = new Book();
-        assertTrue(book.getAvailable())
+        assertTrue(book.getAvailable());
         book.setAvailable(true);
         assertTrue(book.getAvailable());
         book.setAvailable(false);
