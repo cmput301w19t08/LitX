@@ -1,5 +1,9 @@
 package ca.ualberta.cs.phebert.litx;
 
+import android.media.Image;
+
+import java.util.ArrayList;
+
 public class Owner {
     private ArrayList<Book> myBooks;
 
@@ -53,6 +57,7 @@ public class Owner {
     public void declineRequest(Request request) {
 
     }
+
     /*
      * Scans the ISBN to get the book, sets the books status to be borrowed.
      */
@@ -71,7 +76,7 @@ public class Owner {
     /*
      * Creates a Photograph and then calls setPhotograph on the book we were passed in as a parameter
      */
-    public void addPhotograph(Book book, IMG image) {
+    public void addPhotograph(Book book, Image image) {
 
     }
 
