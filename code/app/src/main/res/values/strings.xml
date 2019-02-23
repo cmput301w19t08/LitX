@@ -5,4 +5,5 @@
     <string name="email">Email</string>
     <string name="edit">✎</string>
     <string name="plus">+</string>
+    <string name="done">✓</string>
 </resources>
