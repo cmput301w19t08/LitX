@@ -6,4 +6,12 @@
     <string name="edit">✎</string>
     <string name="plus">+</string>
     <string name="done">✓</string>
+    <string name="profile_button">Profile</string>
+    <string name="myBooks_button">My Books</string>
+    <string name="exchange_button">Exchange</string>
+    <string name="search_button">Search</string>
+    <string name="request_button">Requested</string>
+    <string name="accept_button">Accepted</string>
+    <string name="borrowing_button">Borrowed</string>
+    <string name="top10">Top 10 Recommended Books on LitX</string>
 </resources>
