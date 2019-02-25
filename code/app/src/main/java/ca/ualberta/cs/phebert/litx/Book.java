@@ -16,12 +16,15 @@ public class Book {
 
     private ImageView photograph;
 
-    public Book(User owner, String Author, String title, long isbn) {
-
+    public Book(User owner, String author, String title, long isbn) {
+        this.owner = owner;
+        this.author = author;
+        this.title = title;
+        this.isbn = isbn;
     }
 
     public void setOwner(User setowner) {
-
+        this.owner = owner;
     }
 
     public User getOwner() {
