@@ -36,6 +36,13 @@ public class Request {
     }
 
     /**
+     * Push the given requests to firebase.
+     * If any are resolved or refused, delete them from firebase.
+     */
+    @OwnerCalled
+    public static void push(ArrayList<Request> requests) { }
+
+    /**
      * create a notification
      * <p>
      *     Based on
