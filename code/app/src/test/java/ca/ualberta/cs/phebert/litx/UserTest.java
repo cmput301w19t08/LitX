@@ -97,7 +97,7 @@ public class UserTest {
     /**
      * Tests the removeRequest method
      * Should remove the request from the owners requests
-     *
+     * Throws an exception due to function returning null
      */
     @Test
     public void removeRequestTest()
@@ -156,6 +156,7 @@ public class UserTest {
     /**
      * Tests the addBook method
      * Owners myBooks should be increased in size by one
+     * Throws a exception due to the function returning null
      */
     @Test
     public void addBookTest()
@@ -170,6 +171,7 @@ public class UserTest {
     /**
      * Will test to see if the book is properly deleted
      * Makes sure that owners myBook is deleted
+     * throws exception due to function returning null
      */
     @Test
     public void deleteBookTest()

@@ -13,6 +13,7 @@ public class RequestTest{
 
     /**
      * Tests the accept method Request
+     * Throws the NullpointerException since Myrequests in User will be null
      */
     @Test
     public void acceptedTest(){
@@ -39,6 +40,8 @@ public class RequestTest{
      * test delete method
      * AcceptedRequest book --> Null
      * Request.getStatus --> Resolved
+     * This throws a null pointer exception since requestors.myRequests will be null
+     * due to no implementation
      **/
     @Test
     public void resolvedTest(){
@@ -46,7 +49,6 @@ public class RequestTest{
         Book book = new Book( owner, "Auhtor", "Title", 12345);
         User requestor = new User("requestor", "requestor@gmail.com", 9876541);
         Request request = new Request(book,owner, requestor);
-
         assertEquals(0, requestor.viewRequests().size());
         assertEquals(0, book.getRequests().size());
         // Make sure that both of the arraylists of requests now contain the request
