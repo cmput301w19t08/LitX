@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void filter(View v) {
-        Intent intent = new Intent(this, FilteredActivity.class);
+        Intent intent = new Intent(this, ViewStatusActivity.class);
         if(v.getId() == R.id.requests_home) {
             intent.putExtra(FilterMode,0);
         } else if(v.getId() == R.id.accept_home) {
