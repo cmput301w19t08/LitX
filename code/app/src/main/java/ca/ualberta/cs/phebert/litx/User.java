@@ -85,6 +85,10 @@ public class User {
         return acceptedRequests;
     }
 
+    public long scanISBN () {
+        return 1; //TODO: Use Scanner external implementation
+    }
+
     /*
      * Gets profile information
      * in easily read manor
