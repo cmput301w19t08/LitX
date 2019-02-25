@@ -56,6 +56,7 @@ public class Book {
         return requests;
     }
 
+
     public void setBorrower(User user) {
 
     }
@@ -67,8 +68,16 @@ public class Book {
         return null;
     }
 
+    /**
+     * should fail if acceptedRequest is not null.
+     * @param request
+     */
     public void setAcceptedRequest(Request request) {
 
+    }
+
+    public Request getAcceptRequest() {
+        return acceptedRequest;
     }
 
     public ImageView getPhotograph() {
