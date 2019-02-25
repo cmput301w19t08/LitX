@@ -6,7 +6,6 @@ package ca.ualberta.cs.phebert.litx;
         import java.util.ArrayList;
 
 public class User {
-    private boolean isOwner;
     private String userName;
     private String email;
     private int phoneNumber;
@@ -22,7 +21,6 @@ public class User {
      * Used for creation of new user
      */
     public User(String username, String email, int phone) {
-        isOwner = false;
         editProfile(username, email, phone);
     }
 
@@ -37,7 +35,7 @@ public class User {
      * Method to search for other users
      */
     public static User findByUid (String Uid) {
-        return this;
+        return null;
     }
 
     /*
@@ -67,14 +65,6 @@ public class User {
         return phoneNumber;
     }
 
-    /*
-     * Takes input from textviews
-     * Using setters for User Profile
-     */
-    public void editProfile() {
-
-    }
-
     public ArrayList<Request> viewRequests () {
         return myRequests;
     }
@@ -91,15 +81,19 @@ public class User {
 
     }
 
-    public ArrayList<Request> viewAcceptedRequests () {
+    public ArrayList<Request> getAcceptedRequests () {
         return acceptedRequests;
+    }
+
+    public long scanISBN () {
+        return 1; //TODO: Use Scanner external implementation
     }
 
     /*
      * Gets profile information
      * in easily read manor
      */
-    public void getProfile() {
+    public void getProfile () {
 
     }
 
@@ -133,19 +127,7 @@ public class User {
         return certificate.getUid();
     }
 
-    public boolean getIsOwner () {
-        return isOwner;
-    }
-
     //********************************Owner******************************
-
-
-    /*
-     * When owned books is greater than 0
-     */
-    public void becomeOwner () {
-        isOwner = false;
-    }
 
     /**
      * Used for testing
