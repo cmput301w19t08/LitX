@@ -1,52 +1,39 @@
 package ca.ualberta.cs.phebert.litx;
 
+import android.widget.ImageView;
+
 import java.util.ArrayList;
 
 public class Book {
     private String author;
     private String title;
-    private long ISBN;
-    private String status;
-    private Boolean available;
-    private Owner owner;
-    private ArrayList<Request> requests;
-    private User borrower;
-    private Photograph photograph;
+    private long isbn;
 
-    public void setOwner(Owner setowner) {
+    private User owner;
+
+    private ArrayList<Request> requests;
+    private Request acceptedRequest;
+
+    private ImageView photograph;
+
+    public Book(User owner, String Author, String title, long isbn) {
 
     }
 
-    public Owner getOwner() {
+    public void setOwner(User setowner) {
+
+    }
+
+    public User getOwner() {
         return owner;
     }
 
-    /*
-     * For updating status and availability
-     */
-    public void setStatus(String setstatus) {
-
-    }
-
-    public String getStatus() { return status; }
-
-    public Boolean getAvailable() {
-        return available;
-    }
-
-    /*
-     * Uses the value of status to determine what the availability should be
-     */
-    public void setAvailable(Boolean available) {
-
+    public Boolean isAvailable() {
+        return acceptedRequest == null;
     }
 
     public String getAuthor() {
         return author;
-    }
-
-    public void setAuthor(String author) {
-
     }
 
     public String getTitle() {
@@ -57,11 +44,11 @@ public class Book {
 
     }
 
-    public long getISBN() {
-        return ISBN;
+    public long getIsbn() {
+        return isbn;
     }
 
-    public void setISBN(long ISBN) {
+    public void setIsbn(long isbn) {
 
     }
 
@@ -74,31 +61,21 @@ public class Book {
     }
 
     public User getBorrower() {
-        return borrower;
+        if(acceptedRequest != null) {
+            return acceptedRequest.getRequestor();
+        }
+        return null;
     }
 
-
-    /*
-     * Should empty the request array so that only one remains
-     * Updates borrower to be the new requestor of the Request object passed in.
-     * Sets own status to be accepted
-     */
-    public void requestAccepted(Request arequest) {
+    public void setAcceptedRequest(Request request) {
 
     }
 
-    /*
-     * Removes Request from requests and calls delete in Request
-     */
-    public void requestResolved(Request request) {
-
-    }
-
-    public Photograph getPhotograph() {
+    public ImageView getPhotograph() {
         return photograph;
     }
 
-    public void setPhotograph(Photograph photograph) {
+    public void setPhotograph(ImageView photograph) {
         this.photograph = photograph;
     }
 

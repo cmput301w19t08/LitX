@@ -122,7 +122,7 @@ public class Request {
     }
 
     /**
-     * First sets the books Request to this, if not set,
+     * First sets the books Request to null, if not set,
      * then sets status to resolved.
      */
     @OwnerCalled
@@ -131,8 +131,7 @@ public class Request {
     }
 
     /**
-     * First sets the books Request to this, if not set,
-     * then sets status to Refused.
+     * sets status to Refused.
      */
     @OwnerCalled
     public void delete() {
