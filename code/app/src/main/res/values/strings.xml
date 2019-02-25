@@ -14,4 +14,5 @@
     <string name="accept_button">Accepted</string>
     <string name="borrowing_button">Borrowed</string>
     <string name="top10">Top 10 Recommended Books on LitX</string>
+    <string name="find">🔍</string>
 </resources>
