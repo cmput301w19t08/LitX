@@ -21,10 +21,13 @@ public class MapTest {
 
     }
 
+    /**
+     * Unable to test until further implentation is decided
+     */
     @Test
-    public void viewLocationTest()
+    public void viewMapTest()
     {
-        // TODO viewLocationTest()
+        // TODO viewMapTest()
         // unsure how this is implemented
     }
 }

@@ -61,5 +61,19 @@ public class RequestTest{
         assertFalse(book.getRequests().contains(request));
     }
 
+    /**
+     * Tests the delete method
+     */
+    @Test
+    public void deleteTest()
+    {
+        User owner = new User("Test", "Test@gmail.com", 123457678);
+        Book book = new Book( owner, "Auhtor", "Title", 12345);
+        User requestor = new User("requestor", "requestor@gmail.com", 9876541);
+        Request request = new Request(book,owner, requestor);
 
+        assertEquals("Pending", request.getStatus());
+        request.delete();
+        assertEquals("Refused", request.getStatus());
+    }
 }

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class UserTest {
+
     /**
      * Tests the setuserName method
      * Should set a username to a new username if that new username is unique
@@ -37,7 +38,7 @@ public class UserTest {
     }
 
     /**
-     * Tests the setPhoneNse unque phone number
+     * Tests the setPhoneNumber method
      */
     @Test
     public void setPhoneNumberTest()
@@ -48,16 +49,7 @@ public class UserTest {
         assertEquals(987654321, user.getPhoneNumber());
     }
 
-    /**
-     * Tests the editProfile method
-     * Unsure how to get the data from editTexts to test this method
-     *
-     */
-    @Test
-    public void editProfileTest()
-    {
 
-    }
 
     /**
      * Tests the removeRequest method
@@ -103,8 +95,19 @@ public class UserTest {
         assertEquals(owner.getAcceptedRequests().size(), 1);
     }
 
+    /**
+     * Tests the setMyLocation method
+     */
 
-
+    @Test
+    public void setMyLocationTest()
+    {
+        User user = new User("User", "user@gmail.com", 1223456789);
+        assertNull(user.getMyLocation());
+        Coordinate coordinate = new Coordinate(24,24);
+        user.setMyLocation(24, 24);
+        assertEquals(coordinate, user.getMyLocation());
+    }
 
     @Test
     public void addBookTest()

@@ -85,7 +85,7 @@ public class User {
         return acceptedRequests;
     }
 
-    public long scanISBN () {
+    public long scanIsbn () {
         return 1; //TODO: Use Scanner external implementation
     }
 

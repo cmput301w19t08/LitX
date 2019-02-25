@@ -7,11 +7,17 @@ import static org.junit.Assert.assertTrue;
 
 public class PhotographTest {
     /**
-     * Unsure how to implement since photograph is not fleshed out enough
+     * TODO PhotographTest
+     * Specific Implementation is undecided right now
      */
     @Test
-    public void viewPhotograph()
+    public void viewPhotographTest()
     {
-        // TODO
+        /**
+         *  TODO viewPhotographTest
+         *  Specific implementation is undecided right now
+         */
+
+
     }
 }
