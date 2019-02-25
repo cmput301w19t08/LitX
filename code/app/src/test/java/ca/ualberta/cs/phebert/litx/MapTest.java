@@ -1,5 +1,7 @@
 package ca.ualberta.cs.phebert.litx;
 import org.junit.Test;
+
+import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNull;
 
 
@@ -11,7 +13,7 @@ public class MapTest {
     @Test
     public void setLocationTest()
     {
-        Coordinate coordinate = new Coordinate();
+        Coordinate coordinate = new Coordinate(2, 3);
         Map map = new Map();
         assertNull(map.getLocation());
         map.setLocation(coordinate);

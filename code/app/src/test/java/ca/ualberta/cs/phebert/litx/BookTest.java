@@ -12,10 +12,11 @@ public class BookTest {
     @Test
     public void owner_isCorrect()
     {
-        Owner owner = new Owner();
-        Book book = new Book();
-        assertNull(book.getOwner());
-        book.setOwner(owner);
+        User owner = new User("owner", "owner@gmail.com", 123456789);
+        Book book = new Book(owner,"Author", "Title", 12345);
+        assertEquals(owner, book.getOwner());
+        User owner1 = new User("owner1", "owner1@gmail.com", 988765421);
+        book.setOwner(owner1);
         assertEquals(owner, book.getOwner());
     }
 
@@ -25,16 +26,14 @@ public class BookTest {
     @Test
     public void available_isCorrect()
     {
-        Book book = new Book();
-        assertTrue(book.getAvailable());
-        book.setAvailable(true);
-        assertTrue(book.getAvailable());
-        book.setAvailable(false);
-        assertFalse(book.getAvailable());
-        book.setAvailable(false);
-        assertFalse(book.getAvailable());
-        book.setAvailable(true);
-        assertTrue(book.getAvailable());
+        User owner = new User("owner", "owner@gmail.com", 123456789);
+        User requestor = new User("requestor", "requestor@gmail.com", 98765);
+        Book book = new Book(owner,"Author", "Title", 12345);
+        Request request = new Request(book, owner, requestor);
+        assertTrue(book.isAvailable());
+        // Set the accepted request to request
+        book.setAcceptedRequest(request);
+        assertFalse(book.isAvailable());
     }
 
     /**
@@ -43,107 +42,19 @@ public class BookTest {
     @Test
     public void available_isIndependant()
     {
-        Book book = new Book();
-        Owner originalOwner = book.getOwner();
+
+        User owner = new User("owner", "owner@gmail.com", 123456789);
+        User requestor = new User("requestor", "requestor@gmail.com", 98765);
+        Book book = new Book(owner,"Author", "Title", 12345);
+        Request request = new Request(book, owner, requestor);
         String originalAuthor = book.getAuthor();
-        long originalISBN = book.getISBN();
-        book.setAvailable(false);
-        assertEquals(originalOwner, book.getOwner());
+        long originalISBN = book.getIsbn();
+        book.setAcceptedRequest(request);
+        assertEquals(owner, book.getOwner());
         assertEquals(originalAuthor, book.getAuthor());
-        assertEquals(originalISBN, book.getISBN());
+        assertEquals(originalISBN, book.getIsbn());
     }
 
-    /**
-     * Tests to see if setAuthor is correct
-     *
-     */
-    @Test
-    public void setAuthorTest()
-    {
-        Book book  = new Book();
-        long originalISBN = book.getISBN();
-        assertNull(book.getAuthor());
-        book.setAuthor("TestAuthor");
-        assertEquals("TestAuthor", book.getAuthor());
-    }
-
-    /**
-     * Tests to see if Author is independant
-     */
-    @Test
-    public void setAuthorIndependent()
-    {
-        Book book  = new Book();
-        Owner originalOwner = book.getOwner();
-        Boolean available = book.getAvailable();
-        long originalISBN = book.getISBN();
-        String title = book.getTitle();
-        book.setAuthor("NewAuthor");
-        assertEquals(originalOwner, book.getOwner());
-        assertEquals(originalISBN, book.getISBN());
-        assertEquals(available, book.getAvailable());
-        assertEquals(title, book.getTitle());
-    }
-
-    /**
-     * Tests to see if setTitle is correct
-     */
-    @Test
-    public void setTitleTest()
-    {
-        Book book = new Book();
-        assertNull(book.getTitle());
-        book.setTitle("testTitle");
-        assertEquals("testTitle", book.getTitle())
-    }
-
-    /**
-     * Tests to see if Title is independant
-     */
-    @Test
-    public void setTitleIndependent()
-    {
-        Book book  = new Book();
-        Owner originalOwner = book.getOwner();
-        Boolean available = book.getAvailable();
-        long originalISBN = book.getISBN();
-        String author = book.getAuthor();
-        book.setTitle("NewTitle");
-        assertEquals(originalOwner, book.getOwner());
-        assertEquals(originalISBN, book.getISBN());
-        assertEquals(available, book.getAvailable());
-        assertEquals(author, book.getAuthor());
-    }
-
-    /**
-     * Tests to see if the setISBN is correct
-     */
-    @Test
-    public void setISBNTest()
-    {
-        Book book = new Book();
-        assertNull(book.getISBN());
-        book.setISBN(1234);
-        assertEquals(1234, book.getISBN());
-    }
-
-    /**
-     * Tests to see if ISBN is independant
-     */
-    @Test
-    public void setISBNIndependent()
-    {
-        Book book  = new Book();
-        Owner originalOwner = book.getOwner();
-        Boolean available = book.getAvailable();
-        String title = book.getTitle();
-        String author = book.getAuthor();
-        book.setISBN(12345);
-        assertEquals(originalOwner, book.getOwner());
-        assertEquals(title, book.getTitle());
-        assertEquals(available, book.getAvailable());
-        assertEquals(author, book.getAuthor());
-    }
 
     /**
      * Tests to see if setBorrower works
@@ -151,11 +62,12 @@ public class BookTest {
     @Test
     public void setBorrowerTest()
     {
-        Book book = new Book();
-        User user = new User("usertest", "user@gmail.com", 123456789);
+        User owner = new User("owner", "owner@gmail.com", 123456789);
+        User requestor = new User("requestor", "requestor@gmail.com", 98765);
+        Book book = new Book(owner,"Author", "Title", 12345);
         assertNull(book.getBorrower());
-        book.setBorrower(user);
-        assertEquals(user, book.getBorrower());
+        book.setBorrower(requestor);
+        assertEquals(requestor, book.getBorrower());
     }
 
     /**
@@ -164,78 +76,43 @@ public class BookTest {
     @Test
     public void setBorrowerIndependent()
     {
-        Book book  = new Book();
-        User user = new User("userTest", "User@gmail.com", 123456789);
-        Owner originalOwner = book.getOwner();
-        Boolean available = book.getAvailable();
-        long originalISBN = book.getISBN();
+        User owner = new User("owner", "owner@gmail.com", 123456789);
+        User requestor = new User("requestor", "requestor@gmail.com", 98765);
+        Book book = new Book(owner,"Author", "Title", 12345);
+        Boolean available = book.isAvailable();
+        long originalISBN = book.getIsbn();
         String title = book.getTitle();
         String author = book.getAuthor();
-        book.setBorrower(user);
-        assertEquals(originalOwner, book.getOwner());
-        assertEquals(originalISBN, book.getISBN());
-        assertEquals(available, book.getAvailable());
+        book.setBorrower(requestor);
+        assertEquals(owner, book.getOwner());
+        assertEquals(originalISBN, book.getIsbn());
+        assertEquals(available, book.isAvailable());
         assertEquals(author, book.getAuthor());
         assertEquals(title, book.getTitle());
     }
 
     /**
      * Tests to see if the requestAccepted sets borrower to the proper user
-     *  Tests to see if the requests array is now only the proper request, and only that request
-     *  Sets status
+     * Accepted request should equal request
      */
     @Test
     public void requestAcceptedTest()
     {
-        Book book = new Book();
-        Request request = new Request();
-        User user = new User("TestUSer", "Test@gmail.com", 123456789);
-        Request request1 = new Request();
-        User user1 = new User("TestUSer1", "Test1@gmail.com", 987654321);
-        // Add the requestors for the request
-        request.setRequestor(user);
-        request1.setRequestor(user1);
-        // Add those requests to book.requests
-        request.setBook(book);
-        request1.setBook(book);
+        User owner = new User("owner", "owner@gmail.com", 123456789);
+        User requestor = new User("requestor", "requestor@gmail.com", 98765);
+        Book book = new Book(owner,"Author", "Title", 12345);
+        Request request = new Request(book, owner, requestor);
+        User requestor1 = new User("TestUSer1", "Test1@gmail.com", 987654321);
+        Request request1 = new Request(book, owner, requestor1 );
         //Accept request
-        book.requestAccepted(request);
+        book.setAcceptedRequest(request);
         //Check the borrower
-        assertEquals(user, book.getBorrower());
-        //Check the size of the arrayList requests
-        assertEquals(1, book.getRequests().size());
+        assertEquals(requestor, book.getBorrower());
         // Make sure it is the proper request
-        assertEquals(book.getRequests().get(0), request);
+        assertEquals(book.getAcceptedRequest(), request);
 
     }
 
-    /**
-     * Tests to see if request resolved deletes the proper request
-     * Deletes the request
-     * Deletes the request in the requestors requests
-     */
-    @Test
-    public void requestResolved()
-    {
-        Book book = new Book();
-        Request request = new Request();
-        User user = new User("TestUSer", "Test@gmail.com", 123456789);
-        Request request1 = new Request();
-        User user1 = new User("TestUSer1", "Test1@gmail.com", 987654321);
-        // Add the requestors for the request
-        request.setRequestor(user);
-        Request request2 = request;
-        request1.setRequestor(user1);
-        // Add those requests to book.requests
-        request.setBook(book);
-        request1.setBook(book);
-        book.requestResolved(request);
-        //Make sure the array doesnt contain request
-        assertFalse(book.getRequests().contains(request));
-        // request should be the only request in myRequests
-        // Therefore after deletion size should be 0
-        assertEquals(user.myRequests.size(), 0);
-        assertNull(request);
-    }
+
 }
 
