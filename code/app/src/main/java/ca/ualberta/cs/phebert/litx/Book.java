@@ -28,6 +28,8 @@ public class Book {
 
     }
 
+    public String getStatus() { return status; }
+
     public Boolean getAvailable() {
         return available;
     }
@@ -74,6 +76,8 @@ public class Book {
     public User getBorrower() {
         return borrower;
     }
+
+
     /*
      * Should empty the request array so that only one remains
      * Updates borrower to be the new requestor of the Request object passed in.
