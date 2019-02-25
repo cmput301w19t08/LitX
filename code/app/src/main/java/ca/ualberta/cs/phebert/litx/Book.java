@@ -69,7 +69,7 @@ public class Book {
 
     }
 
-    public Request getAcceptRequest() {
+    public Request getAcceptedRequest() {
         return acceptedRequest;
     }
 
