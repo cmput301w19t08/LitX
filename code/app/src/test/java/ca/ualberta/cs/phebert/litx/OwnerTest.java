@@ -12,33 +12,9 @@ public class OwnerTest {
      * Should we construct the book before passing it to add book?
      * will maybe make it easier to test
      */
-    @Test
-    public void addBookTest()
-    {
-        Owner owner = new Owner();
-        assertNull(owner.getMyBooks());
-        owner.addBook("author", "title", 1234);
-        // addbook will construct a book and add it to myBooks
-        assertEquals(1, owner.getMyBooks().size());
-    }
 
-    /**
-     * Will test to see if the book is properly deleted
-     */
-    @Test
-    public void deleteBookTest()
-    {
-        Owner owner = new Owner();
-        assertNull(owner.getMyBooks());
-        Book book = new Book();
-        book.setAuthor("Author");
-        book.setTitle("Title");
-        book.setISBN(1234);
-        owner.addBook("Auhtor", "Title", 1234);
-        owner.deleteBook(book);
-        assertTrue(owner.getMyBooks().isEmpty());
 
-    }
+
 
     /**
      * Tests the editBookTest method

@@ -66,21 +66,22 @@ public class UserTest {
     @Test
     public void removeRequestTest()
     {
-        User user = new User("user", "user@ualberta.ca", 123456789);
+        User owner = new User("owner", "owner@ualberta.ca", 123456789);
+        User requestor = new User("requestor", "requestor@gmail.com", 9876543);
+        Book book = new Book(owner, "Author", "Title", 12345);
+        Book book1 = new Book(owner, "Author1", "Title1", 12346);
         // check to see that there is no requests
-        assertEquals(0, user.viewRequests().size());
-        Request request = new Request();
-        Request request1 = new Request();
-        //Will add request to requests
-        request.setRequestor(user);
-        request1.setRequestor(user);
+        assertEquals(0, owner.viewRequests().size());
+        Request request = new Request(book, owner, requestor);
+        Request request1 = new Request(book1, owner, requestor);
         //ensure the requests were added
-        assertEquals(2, user.viewRequests().size());
-        user.removeRequest(request);
-        assertEquals(1, user.viewRequests().size());
+        assertEquals(2, owner.viewRequests().size());
+        // Remove the request
+        owner.removeRequest(request);
+        // Ensure that the requests now only contains one request
+        assertEquals(1, owner.viewRequests().size());
         //Ensure that the proper request was deleted
-        assertTrue(user.viewRequests().contains(request1));
-
+        assertTrue(owner.viewRequests().contains(request1));
     }
 
     /**
@@ -90,17 +91,44 @@ public class UserTest {
     @Test
     public void succesfulRequestTest()
     {
-        User user = new User("user", "user@ualberta.ca", 123456789);
+
+        User owner = new User("owner", "owner@ualberta.ca", 123456789);
+        User requestor = new User("requestor", "requestor@gmail.com", 9876543);
+        Book book = new Book(owner, "Author", "Title", 12345);
         //ensure that accepted requests is zero
-        assertEquals(0, user.acceptedRequests.size());
-        Request request = new Request();
-        user.successfulRequest(request);
-        assertTrue(user.acceptedRequests.contains(request));
+        assertEquals(owner.getAcceptedRequests().size(), 0);
+        Request request = new Request(book, owner, requestor);
+        owner.successfulRequest(request);
+        assertTrue(owner.getAcceptedRequests().contains(request));
+        assertEquals(owner.getAcceptedRequests().size(), 1);
+    }
+
+
+
+
+    @Test
+    public void addBookTest()
+    {
+        User  owner = new User("owner", "owner@gmail.com", 12345678);
+        assertNull(owner.getMyBooks());
+        owner.addBook("author", "title", 1234);
+        // addbook will construct a book and add it to myBooks
+        assertEquals(1, owner.getMyBooks().size());
     }
 
     /**
-     * TODO returnBookTest, searchForBookTest, FindUserTest, viewPickupLocationTest
-     *
-     *
+     * Will test to see if the book is properly deleted
      */
+    @Test
+    public void deleteBookTest()
+    {
+        User owner = new User("owner", "owner@gmail.com", 123456789);
+        assertNull(owner.getMyBooks());
+        owner.addBook("author", "title", 1234);
+        Book book = owner.getMyBooks().get(0);
+        owner.deleteBook(book);
+        assertTrue(owner.getMyBooks().isEmpty());
+    }
+
+
 }
