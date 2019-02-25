@@ -40,17 +40,10 @@ public class Book {
         return title;
     }
 
-    public void setTitle(String title) {
-
-    }
-
     public long getIsbn() {
         return isbn;
     }
 
-    public void setIsbn(long isbn) {
-
-    }
 
     public ArrayList<Request> getRequests() {
         return requests;
