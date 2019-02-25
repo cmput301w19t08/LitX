@@ -1,5 +1,7 @@
 package ca.ualberta.cs.phebert.litx;
 
+import java.util.ArrayList;
+
 public class Search {
     private User borrower;
     private ArrayList<Book> results;
