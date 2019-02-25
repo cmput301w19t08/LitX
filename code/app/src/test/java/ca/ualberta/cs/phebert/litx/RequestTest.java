@@ -44,6 +44,7 @@ public class RequestTest{
         assertEquals(user, request.getRequestor());
     }
 
+    @Test
     public void acceptedTest(){
         Book book = new Book();
         User user = new User("Test", "test@test.ca", 1800555555);
@@ -72,8 +73,8 @@ public class RequestTest{
      * This will test resolved and since delete is called in resolved then it will also
      * test delete method
      **/
+    @Test
     public void resolvedTest(){
-
         Request request = new Request();
         Book book = new Book();
         User user = new User("Test", "test@test.ca", 1800555555);
@@ -100,6 +101,7 @@ public class RequestTest{
     /**
      * This will test Addmap(Coordinate coordinate)
      */
+    @Test
     public void addMapTest() {
         Request request = new Request();
         Coordinate coordinate = new Coordinate();

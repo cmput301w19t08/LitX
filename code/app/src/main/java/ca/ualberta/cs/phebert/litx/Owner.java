@@ -5,6 +5,8 @@ import android.media.Image;
 import java.util.ArrayList;
 
 public class Owner {
+
+
     private ArrayList<Book> myBooks;
 
     /*
@@ -15,6 +17,14 @@ public class Owner {
      */
     public void addBook(String author, String title, int ISBN) {
 
+    }
+
+    /**
+     * Used for testing
+     * @return mybooks
+     */
+     public ArrayList<Book> getMyBooks() {
+        return myBooks;
     }
 
     /* Uses the getters for each book to fill in the views of a viewBook layout
