@@ -29,7 +29,7 @@ public class RequestTest{
         assertTrue(requestor.getAcceptedRequests().contains(request));
         // Borrower for book should be updated to user
         assertEquals(requestor, book.getBorrower());
-        assertEquals(request, book.getAcceptRequest());
+        assertEquals(request, book.getAcceptedRequest());
         // The books status should be 'accepted'
         assertEquals("Accepted", request.getStatus());
     }
@@ -54,7 +54,7 @@ public class RequestTest{
         assertTrue(book.getRequests().contains(request));
         request.resolve();
         // Make sure that accepted request is null
-        assertNull(book.getAcceptRequest());
+        assertNull(book.getAcceptedRequest());
         //Check to see if the request is still in User.requests
         assertEquals("Resolved", request.getStatus());
         // Check to see if request has been
