@@ -69,7 +69,7 @@ public class Book {
      * @param request A request that has been accepted by owner
      */
     public void setAcceptedRequest(Request request) {
-
+        if(acceptedRequest == null) acceptedRequest = request;
     }
 
     public Request getAcceptedRequest() {
