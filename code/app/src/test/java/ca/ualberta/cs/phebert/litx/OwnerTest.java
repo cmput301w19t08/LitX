@@ -112,7 +112,7 @@ public class OwnerTest {
     }
 
     /**
-     * Test for receive Return, availability of book to True
+     * Test for receiveReturn, availability of book to True
      */
     @Test
     public void recieveReturnTest()
