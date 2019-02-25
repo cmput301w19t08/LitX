@@ -1,30 +1,36 @@
 package ca.ualberta.cs.phebert.litx;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
 import java.util.ArrayList;
+
+import ca.ualberta.cs.phebert.litx.annotations.*;
 
 public class Request {
     private static final String CHANNEL_ID = "ca.ualberta.cs.phebert.litx.notifs";
     private User requestor;
-    private Owner bookOwner;
+    private User bookOwner;
     private Book book;
-    private Map map; // Should be set to null by constructor
+    private Status status;
+
+    enum Status {
+        Pending,
+        Accepted,
+        Resolved,
+        Refused
+    }
 
     /**
      * Look requests up on firebase, and get all pertaining
      * If any requests are not on disk, Create a notification.
-     * This should be called by a daemon/
-     * @return
+     * This should be called by a daemon/service.
+     * @return all the requests
      */
+    @OwnerCalled
     public static ArrayList<Request> scan(Context ctx) {
         return null;
     }
@@ -39,7 +45,8 @@ public class Request {
      * </p>
      */
     private void generateNotification(Context ctx) {
-        new NotificationCompat.Builder(ctx, CHANNEL_ID)
+        // TODO
+        new NotificationCompat.Builder(ctx, CHANNEL_ID);
     }
 
     /**
@@ -50,7 +57,8 @@ public class Request {
      *     Create a Notification  |  Android Developers
      * </a>
      */
-    private void createNotificationChennel(Context ctx) {
+    @OwnerCalled
+    public static void createNotificationChannel(Context ctx) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = ctx.getString(R.string.channel_name);
             String description = ctx.getString(R.string.channel_description);
@@ -64,64 +72,63 @@ public class Request {
         }
     }
 
-    // Should be called in the constructor
-    public void notifyOwner(Owner owner) {
-
+    @BorrowerCalled
+    public Request(Book book, User owner, User requestor) {
+        this.book = book;
+        this.bookOwner = owner;
+        this.requestor = requestor;
+        status = Status.Pending;
     }
 
-    public void setBookOwner(Owner bookOwner) {
-
+    /**
+     * This constructor is used by scan
+     */
+    @OwnerCalled
+    private Request(Book book, User owner, User Requestor, Status state) {
+        this(book,owner,Requestor);
+        status = state;
     }
 
-    public Owner getBookOwner() {
+    public User getBookOwner() {
         return bookOwner;
-    }
-
-    public void setBook(Book book) {
-
     }
 
     public Book getBook(){
         return book;
     }
 
-    public void setRequestor(User requestor) {
-
-    }
-
     public User getRequestor() {
         return requestor;
     }
 
-    /*
-     * This first calls succesfulRequest in User (our requestor) then acceptedRequest in Book
-     */
-    public void accepted() {
-
+    public Status getStatus() {
+        return status;
     }
 
-    /*
-     * This calls requestResolved in Book
+    /**
+     * First sets the books Request to this, if not set,
+     * then sets status to accepted.
      */
-    public void resolved() {
-
+    @OwnerCalled
+    public void accept() {
+        status = Status.Accepted;
     }
 
-    /*
-     * Calls removeRequest in User(requestor) then deletes this object
+    /**
+     * First sets the books Request to this, if not set,
+     * then sets status to resolved.
      */
+    @OwnerCalled
+    public void resolve() {
+        status = Status.Resolved;
+    }
+
+    /**
+     * First sets the books Request to this, if not set,
+     * then sets status to Refused.
+     */
+    @OwnerCalled
     public void delete() {
-
-    }
-
-    /*
-     * Adds a map which is assigned to map
-     */
-    public void addMap(Coordinate coordinate) {
-
-    }
-
-    public Map getMap() {
-        return map;
+        status = Status.Refused;
     }
 }
