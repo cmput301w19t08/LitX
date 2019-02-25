@@ -1,9 +1,9 @@
 package ca.ualberta.cs.phebert.litx;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+        import com.google.firebase.auth.FirebaseAuth;
+        import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
+        import java.util.ArrayList;
 
 public class User {
     private boolean isOwner;
@@ -13,14 +13,31 @@ public class User {
     private ArrayList<Request> acceptedRequests;
     private ArrayList<Request> myRequests;
     private ArrayList<Book> borrowedBooks;
+    private ArrayList<Book> myBooks;
     private Coordinate myLocation;
     private FirebaseUser certificate;
 
     /*
      * Check if username is unique
+     * Used for creation of new user
      */
     public User(String username, String email, int phone) {
+        isOwner = false;
         editProfile(username, email, phone);
+    }
+
+    /*
+     * Gets the user from
+     */
+    public User(FirebaseUser fbUser) {
+
+    }
+
+    /*
+     * Method to search for other users
+     */
+    public static User findByUid (String Uid) {
+        return this;
     }
 
     /*
@@ -96,8 +113,6 @@ public class User {
         return borrowedBooks;
     }
 
-    public void
-
     public void setMyLocation (double x, double y) {
         myLocation = new Coordinate(x, y);
     }
@@ -106,11 +121,49 @@ public class User {
         return myLocation;
     }
 
-    public void setAuth (FirebaseUser newFbUser) {
+    /*public void setAuth (FirebaseUser newFbUser) {
         certificate = newFbUser;
-    }
+    }*/
 
     public FirebaseUser getAuth () {
         return certificate;
     }
+
+    public String getUserid () {
+        return certificate.getUid();
+    }
+
+    public boolean getIsOwner () {
+        return isOwner;
+    }
+
+    //********************************Owner******************************
+
+
+    /*
+     * When owned books is greater than 0
+     */
+    public void becomeOwner () {
+        isOwner = false;
+    }
+
+    /**
+     * Used for testing
+     * @return mybooks
+     */
+    public ArrayList<Book> getMyBooks() {
+        return myBooks;
+    }
+
+    public void addBook(String author, String title, int ISBN) {
+
+    }
+
+    /*
+     * Should delete the book and then remove it form myBooks
+     */
+    public void deleteBook(Book book) {
+
+    }
+
 }
