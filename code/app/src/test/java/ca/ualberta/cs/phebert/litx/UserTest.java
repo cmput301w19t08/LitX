@@ -24,6 +24,21 @@ public class UserTest {
     }
 
     /**
+     * Tests to make sure the setUserName is independent
+     */
+    @Test
+    public void setUserNameIndependance()
+    {
+        User user = new User("user", "user@ualberta.ca", 123456789);
+        String email = user.getEmail();
+        int phone = user.getPhoneNumber();
+        user.setUserName("NewUser");
+        assertEquals(phone, user.getPhoneNumber());
+        assertEquals(email, user.getEmail());
+
+    }
+
+    /**
      * Tests the setEmail method
      * Does not need to see if email is unique
      */
@@ -38,6 +53,20 @@ public class UserTest {
     }
 
     /**
+     * Tests to make sure the setEmail is independent
+     */
+    @Test
+    public void setEmailIndependance()
+    {
+        User user = new User("user", "user@ualberta.ca", 123456789);
+        String username = user.getUserName();
+        int phone = user.getPhoneNumber();
+        user.setEmail("NewEmail@email.com");
+        assertEquals(username, user.getUserName());
+        assertEquals(phone, user.getPhoneNumber());
+    }
+
+    /**
      * Tests the setPhoneNumber method
      */
     @Test
@@ -49,10 +78,25 @@ public class UserTest {
         assertEquals(987654321, user.getPhoneNumber());
     }
 
+    /**
+     * Tests to make sure the setUserName is independent
+     */
+    @Test
+    public void setPhoneNumberIndependance()
+    {
+        User user = new User("user", "user@ualberta.ca", 123456789);
+        String username = user.getUserName();
+        String email = user.getEmail();
+        user.setUserName("NewUser");
+        assertEquals(username, user.getUserName());
+        assertEquals(email, user.getEmail());
+
+    }
 
 
     /**
      * Tests the removeRequest method
+     * Should remove the request from the owners requests
      *
      */
     @Test
@@ -78,7 +122,7 @@ public class UserTest {
 
     /**
      * Tests the succesfulRequest method
-     *
+     * Throws an exception at line 94 due to return of the method being null
      */
     @Test
     public void succesfulRequestTest()
@@ -88,7 +132,7 @@ public class UserTest {
         User requestor = new User("requestor", "requestor@gmail.com", 9876543);
         Book book = new Book(owner, "Author", "Title", 12345);
         //ensure that accepted requests is zero
-        assertEquals(owner.getAcceptedRequests().size(), 0);
+        assertNull(owner.getAcceptedRequests());
         Request request = new Request(book, owner, requestor);
         owner.successfulRequest(request);
         assertTrue(owner.getAcceptedRequests().contains(request));
@@ -109,6 +153,10 @@ public class UserTest {
         assertEquals(coordinate, user.getMyLocation());
     }
 
+    /**
+     * Tests the addBook method
+     * Owners myBooks should be increased in size by one
+     */
     @Test
     public void addBookTest()
     {
@@ -121,6 +169,7 @@ public class UserTest {
 
     /**
      * Will test to see if the book is properly deleted
+     * Makes sure that owners myBook is deleted
      */
     @Test
     public void deleteBookTest()
