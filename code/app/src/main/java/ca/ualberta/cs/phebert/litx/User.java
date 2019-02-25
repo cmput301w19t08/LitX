@@ -1,20 +1,26 @@
 package ca.ualberta.cs.phebert.litx;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.ArrayList;
 
 public class User {
-    protected String userName;
-    protected String email;
-    protected int phoneNumber;
-    protected ArrayList<Request> acceptedRequests;
-    protected ArrayList<Request> myRequests;
-    protected ArrayList<Book> borrowedBooks;
+    private boolean isOwner;
+    private String userName;
+    private String email;
+    private int phoneNumber;
+    private ArrayList<Request> acceptedRequests;
+    private ArrayList<Request> myRequests;
+    private ArrayList<Book> borrowedBooks;
+    private Coordinate myLocation;
+    private FirebaseUser certificate;
 
     /*
      * Check if username is unique
      */
     public User(String username, String email, int phone) {
-
+        editProfile(username, email, phone);
     }
 
     /*
@@ -72,48 +78,39 @@ public class User {
         return acceptedRequests;
     }
 
-    public void displayProfile(User user) {
+    /*
+     * Gets profile information
+     * in easily read manor
+     */
+    public void getProfile() {
 
     }
 
-    public ArrayList<Book> viewBorrowedBooks() {
+    public void editProfile(String username, String email, int phone) {
+        setUserName(username);
+        setEmail(email);
+        setPhoneNumber(phone);
+    }
+
+    public ArrayList<Book> getBorrowedBooks() {
         return borrowedBooks;
     }
 
-    /*
-     *
-     */
-    public Book scanBook() {
-        return new Book();
+    public void
+
+    public void setMyLocation (double x, double y) {
+        myLocation = new Coordinate(x, y);
     }
 
-    public void returnBook () {
-
+    public Coordinate getMyLocation (){
+        return myLocation;
     }
 
-    /*
-     * Takes searchbar String and returns Books database query result
-     */
-    public Book searchForBook (String author, String title, int ISBN) {
-        return new Book();
+    public void setAuth (FirebaseUser newFbUser) {
+        certificate = newFbUser;
     }
 
-    /*
-     * Takes searchbar String and returns User database query result
-     */
-    public User findUser(String username) {
-        return this;        //temporary return while not implemented.
+    public FirebaseUser getAuth () {
+        return certificate;
     }
-
-    public void viewPickupLocation (Request request) {
-
-    }
-
-    //public Photograph viewPhotograph() {
-    //    return photograph;
-    //}
-
-    /*public void setPhotograph(Photograph photograph) {
-        this.photograph = photograph;
-    }*/
 }
