@@ -31,4 +31,15 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this,ProfileActivity.class);
         startActivity(intent);
     }
+
+    public void getMyBooks(View v) {
+        Intent intent = new Intent(this, BookViewActivity.class);
+        startActivity(intent);
+    }
+
+    // No method named this in UML, must be added
+    public void exchangeBook(View v) {
+        Intent intent = new Intent(this, ExchangeActivity.class);
+        startActivity(intent);
+    }
 }
