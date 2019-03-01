@@ -19,4 +19,5 @@
     <!-- notification stuff -->
     <string name="channel_name">LitX</string>
     <string name="channel_description">A wild request has appeared.</string>
+    <string name="add_new">Add New</string>
 </resources>

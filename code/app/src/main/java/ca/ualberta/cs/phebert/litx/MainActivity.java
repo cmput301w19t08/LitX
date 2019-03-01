@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import ca.ualberta.cs.phebert.litx.annotations.BookStatusActivity;
+
 public class MainActivity extends AppCompatActivity {
     public static final String FilterMode = "ca.ualberta.cs.phebert.litx.FilterMode";
 
@@ -16,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void filter(View v) {
-        Intent intent = new Intent(this, ViewStatusActivity.class);
+        Intent intent = new Intent(this, BookStatusActivity.class);
         if(v.getId() == R.id.requests_home) {
             intent.putExtra(FilterMode,0);
         } else if(v.getId() == R.id.accept_home) {
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getMyBooks(View v) {
+        // Should not be BookViewActivity, need a new activity for MyBooks
         Intent intent = new Intent(this, BookViewActivity.class);
         startActivity(intent);
     }
@@ -40,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
     // No method named this in UML, must be added
     public void exchangeBook(View v) {
         Intent intent = new Intent(this, ExchangeActivity.class);
+        startActivity(intent);
+    }
+
+    public void searchForBooks(View v) {
+        Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
     }
 }
