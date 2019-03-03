@@ -1,14 +1,19 @@
 package ca.ualberta.cs.phebert.litx;
 
+        import android.support.annotation.NonNull;
+
         import com.google.firebase.auth.FirebaseAuth;
         import com.google.firebase.auth.FirebaseUser;
 
         import java.util.ArrayList;
 
+        import ca.ualberta.cs.phebert.litx.annotations.BorrowerCalled;
+        import ca.ualberta.cs.phebert.litx.annotations.OwnerCalled;
+
 public class User {
     private String userName;
     private String email;
-    private int phoneNumber;
+    private String phoneNumber;
     private ArrayList<Request> acceptedRequests;
     private ArrayList<Request> myRequests;
     private ArrayList<Book> borrowedBooks;
@@ -16,22 +21,28 @@ public class User {
     private Coordinate myLocation;
     private FirebaseUser certificate;
 
-    /*
+    /**
      * Check if username is unique
      * Used for creation of new user
      */
-    public User(String username, String email, int phone) {
+    public User(String username, String email, String phone) {
+        certificate = null;
         editProfile(username, email, phone);
     }
 
-    /*
-     * Gets the user from
+    /**
+     * called upon authentication. this is
+     * @param fbUser
      */
     public User(FirebaseUser fbUser) {
-
+        // does not use the
+        userName = ""; //TODO
+        email = fbUser.getEmail();
+        phoneNumber = "(780) 000 0000";// TODO
+        certificate = fbUser;
     }
 
-    /*
+    /**
      * Method to search for other users
      */
     public static User findByUid (String Uid) {
@@ -42,26 +53,40 @@ public class User {
      * Check if username is unique
      */
     public void setUserName(String username) {
-
+        this.userName = username;
+        if(certificate != null) {
+            // TODO sync with firebase/store
+        }
     }
 
     public String getUserName() {
+        // no need to to sync, should be automaticly set when loading the user
         return userName;
     }
 
-    public void setEmail(String newEmail) {
-
+    public void setEmail(@NonNull String newEmail) {
+        // TODO Validate email
+        email = newEmail;
+        if(certificate != null) {
+            certificate.updateEmail(newEmail);
+            // TODO sync with firebase/store
+        }
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setPhoneNumber (int newPhoneNumber) {
-
+    public void setPhoneNumber (String newPhoneNumber) {
+        // TODO validate phone Number
+        phoneNumber = newPhoneNumber;
+        if(certificate != null) {
+            // we will not be using phone authentication, so no need to update in Firebase User
+            // TODO sync with Firebase/store
+        }
     }
 
-    public int getPhoneNumber () {
+    public String getPhoneNumber () {
         return phoneNumber;
     }
 
@@ -69,6 +94,7 @@ public class User {
         return myRequests;
     }
 
+    @BorrowerCalled
     public void removeRequest (Request request) {
 
     }
@@ -76,11 +102,14 @@ public class User {
     /*
      * Notifies user of acceptance on their request
      * Adds this book to their list of acceptedRequests
+     * Maybe call this from Request
      */
-    public void successfulRequest (Request request) {
+    @BorrowerCalled
+    public void successfulRequest (Request request) { // TODO rename (name is not a verb)
 
     }
 
+    @BorrowerCalled
     public ArrayList<Request> getAcceptedRequests () {
         return acceptedRequests;
     }
@@ -93,11 +122,14 @@ public class User {
      * Gets profile information
      * in easily read manor
      */
-    public void getProfile () {
 
-    }
+    /**
+     * @deprecated Use ProfileActivity instead.
+     */
+    @Deprecated
+    public void getProfile () { }
 
-    public void editProfile(String username, String email, int phone) {
+    public void editProfile(String username, String email, String phone) {
         setUserName(username);
         setEmail(email);
         setPhoneNumber(phone);
@@ -127,16 +159,17 @@ public class User {
         return certificate.getUid();
     }
 
-    //********************************Owner******************************
 
     /**
      * Used for testing
      * @return mybooks
      */
+    @OwnerCalled
     public ArrayList<Book> getMyBooks() {
         return myBooks;
     }
 
+    @OwnerCalled
     public void addBook(String author, String title, int ISBN) {
 
     }
@@ -144,6 +177,7 @@ public class User {
     /*
      * Should delete the book and then remove it form myBooks
      */
+    @OwnerCalled
     public void deleteBook(Book book) {
 
     }
