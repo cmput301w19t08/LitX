@@ -26,19 +26,21 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         viewProfile = getLayoutInflater().inflate(R.layout.view_profile, null);
         editProfile = getLayoutInflater().inflate(R.layout.edit_profile, null);
-        setContentView(R.layout.view_profile);
-        userView = findViewById(R.id.UserView);
-        userView.setText(currentUser.getUserName());
-        emailView = findViewById(R.id.emailView);
-        emailView.setText(currentUser.getEmail());
-        phoneView = findViewById(R.id.phoneView);
-        phoneView.setText(currentUser.getPhoneNumber());
+        currentUser = new User("hi","example@example.com","7808994536");
+        setContentView(editProfile); // findViewById only works for visible view (eg views in the content view.
         userEdit = findViewById(R.id.UserEdit);
         userEdit.setText(currentUser.getUserName());
         emailEdit = findViewById(R.id.emailEdit);
         emailEdit.setText(currentUser.getEmail());
         phoneEdit = findViewById(R.id.phoneEdit);
         phoneEdit.setText(currentUser.getPhoneNumber());
+        setContentView(viewProfile);
+        userView = findViewById(R.id.UserView);
+        userView.setText(currentUser.getUserName());
+        emailView = findViewById(R.id.emailView);
+        emailView.setText(currentUser.getEmail());
+        phoneView = findViewById(R.id.phoneView);
+        phoneView.setText(currentUser.getPhoneNumber());
     }
 
     public void editProfile(View v) {

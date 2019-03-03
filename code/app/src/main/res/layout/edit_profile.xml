@@ -31,7 +31,7 @@
         android:text="@string/email"
         android:textSize="13pt"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/UserView" />
+        app:layout_constraintTop_toBottomOf="@+id/UserEdit" />
 
     <TextView
         android:id="@+id/textView3"
