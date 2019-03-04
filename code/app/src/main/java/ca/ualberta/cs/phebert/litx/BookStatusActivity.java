@@ -1,4 +1,4 @@
-package ca.ualberta.cs.phebert.litx.annotations;
+package ca.ualberta.cs.phebert.litx;
 
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;

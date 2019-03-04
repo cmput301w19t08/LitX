@@ -5,8 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import ca.ualberta.cs.phebert.litx.annotations.BookStatusActivity;
-
 public class MainActivity extends AppCompatActivity {
     public static final String FilterMode = "ca.ualberta.cs.phebert.litx.FilterMode";
 
@@ -36,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void getMyBooks(View v) {
         // Should not be BookViewActivity, need a new activity for MyBooks
-        Intent intent = new Intent(this, BookViewActivity.class);
+        Intent intent = new Intent(this, myBooksActivity.class);
         startActivity(intent);
     }
 
