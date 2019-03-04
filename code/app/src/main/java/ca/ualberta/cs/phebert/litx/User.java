@@ -171,7 +171,8 @@ public class User {
 
     @OwnerCalled
     public void addBook(String author, String title, int ISBN) {
-
+        Book newBook = new Book(this, author, title, ISBN);
+        myBooks.add(newBook);  //Creates instance
     }
 
     /*
