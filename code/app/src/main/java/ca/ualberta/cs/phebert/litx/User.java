@@ -25,7 +25,7 @@ public class User {
      * Check if username is unique
      * Used for creation of new user
      */
-    public User(String username, String email, String phone) {
+    public User(@NonNull String username, @NonNull String email, @NonNull String phone) {
         certificate = null;
         editProfile(username, email, phone);
     }
@@ -35,10 +35,10 @@ public class User {
      * @param fbUser
      */
     public User(FirebaseUser fbUser) {
-        // does not use the
-        userName = ""; //TODO
+        // use lazy instantiation.
+        userName = null;
         email = fbUser.getEmail();
-        phoneNumber = "(780) 000 0000";// TODO
+        phoneNumber = null;
         certificate = fbUser;
     }
 
@@ -61,6 +61,9 @@ public class User {
 
     public String getUserName() {
         // no need to to sync, should be automaticly set when loading the user
+        if(userName == null && certificate != null) {
+            // TODO get username from firestore
+        }
         return userName;
     }
 
@@ -81,12 +84,14 @@ public class User {
         // TODO validate phone Number
         phoneNumber = newPhoneNumber;
         if(certificate != null) {
-            // we will not be using phone authentication, so no need to update in Firebase User
             // TODO sync with Firebase/store
         }
     }
 
     public String getPhoneNumber () {
+        if(phoneNumber == null && certificate != null) {
+            // TODO getPhoneNumber from FireStore
+        }
         return phoneNumber;
     }
 
@@ -129,7 +134,7 @@ public class User {
     @Deprecated
     public void getProfile () { }
 
-    public void editProfile(String username, String email, String phone) {
+    public void editProfile(String username, @NonNull String email, String phone) {
         setUserName(username);
         setEmail(email);
         setPhoneNumber(phone);
