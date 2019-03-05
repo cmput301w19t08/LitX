@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void getMyBooks(View v) {
         // Should not be BookViewActivity, need a new activity for MyBooks
-        Intent intent = new Intent(this, myBooksActivity.class);
+        Intent intent = new Intent(this, MyBooksActivity.class);
         startActivity(intent);
     }
 

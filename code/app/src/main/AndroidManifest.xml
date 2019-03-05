@@ -9,10 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SearchActivity"></activity>
+        <activity android:name=".AddBookActivity"></activity>
+        <activity android:name=".BookViewActivity" />
+        <activity android:name=".SearchActivity" />
         <activity android:name=".ExchangeActivity" />
         <activity android:name=".annotations.ExchangeActivity" />
-        <activity android:name=".myBooksActivity" />
+        <activity android:name=".MyBooksActivity" />
         <activity android:name=".BookStatusActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
