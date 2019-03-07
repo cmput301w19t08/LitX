@@ -30,6 +30,12 @@ public class User {
         editProfile(username, email, phone);
     }
 
+    public User() {
+        userName = "";
+        email = "";
+        phoneNumber = "";
+    }
+
     /**
      * called upon authentication. this is
      * @param fbUser

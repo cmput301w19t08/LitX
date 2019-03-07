@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -15,10 +16,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FirebaseApp app = FirebaseApp.initializeApp(this);
-        assert app != null;
         setContentView(R.layout.activity_main);
-        if(app.get(FirebaseAuth.class).getCurrentUser() == null) {
+        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             goToProfileView(null);
         }
     }
