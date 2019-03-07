@@ -93,6 +93,9 @@ public class ProfileActivity extends AppCompatActivity {
         phoneView.setText(phoneEdit.getText());
 
         if (creating) {
+            // this whole block is based on Authenticate with Firebase Using Email Link in Android,
+            // https://firebase.google.com/docs/auth/android/email-link-auth,
+            //
             ActionCodeSettings settings = ActionCodeSettings.newBuilder()
                     .setHandleCodeInApp(true)
                     .setAndroidPackageName("ca.ualberta.cs.phebert.litx", true, "1")
