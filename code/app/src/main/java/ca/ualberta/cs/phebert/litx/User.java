@@ -1,14 +1,14 @@
 package ca.ualberta.cs.phebert.litx;
 
-        import android.support.annotation.NonNull;
+import android.support.annotation.NonNull;
 
-        import com.google.firebase.auth.FirebaseAuth;
-        import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-        import java.util.ArrayList;
+import java.util.ArrayList;
 
-        import ca.ualberta.cs.phebert.litx.annotations.BorrowerCalled;
-        import ca.ualberta.cs.phebert.litx.annotations.OwnerCalled;
+import ca.ualberta.cs.phebert.litx.annotations.BorrowerCalled;
+import ca.ualberta.cs.phebert.litx.annotations.OwnerCalled;
 
 public class User {
     private String userName;
