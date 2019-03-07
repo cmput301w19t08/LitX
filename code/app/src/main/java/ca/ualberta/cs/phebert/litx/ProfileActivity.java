@@ -5,9 +5,11 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Layout;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ProfileActivity extends AppCompatActivity {
     private View viewProfile;
@@ -17,9 +19,12 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView userView;
     private TextView emailView;
     private TextView phoneView;
+    private TextView passwordEntry; // not on xml
     private EditText userEdit;
     private EditText emailEdit;
     private EditText phoneEdit;
+    private EditText PasswordEdit; // not on xml
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +55,9 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void addProfile(View v) {
         setContentView(editProfile);
+        String[] packageName = getClass().getPackage().getName().split(".");
+        String logtag = packageName[packageName.length - 1] + ".profileActivity";
+        Log.d(logtag, "editProfile's class: " + editProfile.getClass().getName());
         creating = true;
     }
 
@@ -59,9 +67,20 @@ public class ProfileActivity extends AppCompatActivity {
         if (creating) {
 
         } else {
-            userView.setText(userEdit.getText());
-            emailView.setText(emailEdit.getText());
-            phoneView.setText(phoneView.getText());
+            currentUser.setUserName(userEdit.getText().toString());
+            if(currentUser.getUserName().equals(userEdit.getText().toString())) {
+                userView.setText(userEdit.getText());
+            } else {
+                Toast.makeText(this,"User name already existed",Toast.LENGTH_SHORT).show();
+            }
+            if(emailView.getText() != emailEdit.getText()) {
+                // TODO pull up the authentication fragment to reauthenticate
+                // changing emails needs this as it changes the FirebaseUser object
+                // there is no point in doing this if email does not change.
+                emailView.setText(emailEdit.getText());
+            }
+            currentUser.setPhoneNumber(phoneEdit.getText().toString());
+            phoneView.setText(phoneEdit.getText());
         }
     }
 }

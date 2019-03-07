@@ -53,10 +53,11 @@ public class User {
      * Check if username is unique
      */
     public void setUserName(String username) {
-        this.userName = username;
         if(certificate != null) {
-            // TODO sync with firebase/store
+            // TODO sync with firebase/store.
+            // if the new username is not unique, do not change it
         }
+        this.userName = username;
     }
 
     public String getUserName() {
