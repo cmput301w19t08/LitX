@@ -2,9 +2,10 @@ package ca.ualberta.cs.phebert.litx;
 
 import android.widget.ImageView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Book {
+public class Book implements Serializable {
     private String author;
     private String title;
     private long isbn;
@@ -24,7 +25,7 @@ public class Book {
     }
 
     public void setOwner(User setowner) {
-        this.owner = owner;
+        this.owner = setowner;
     }
 
     public User getOwner() {
