@@ -25,7 +25,6 @@ public class ProfileActivity extends AppCompatActivity {
     private EditText phoneEdit;
     private EditText PasswordEdit; // not on xml
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +64,12 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(viewProfile);
         // TODO handle profile creation.
         if (creating) {
-
+            //check username for invalid
+            //User email confirmation authentication
+            currentUser = new User(userEdit.getText().toString(), emailEdit.getText().toString(), phoneEdit.getText().toString());
+            userView.setText(userEdit.getText());
+            emailView.setText(emailEdit.getText());
+            phoneView.setText(phoneEdit.getText());
         } else {
             currentUser.setUserName(userEdit.getText().toString());
             if(currentUser.getUserName().equals(userEdit.getText().toString())) {
