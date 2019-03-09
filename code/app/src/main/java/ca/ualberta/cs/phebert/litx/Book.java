@@ -8,6 +8,8 @@ public class Book {
     private String author;
     private String title;
     private long isbn;
+    // For testing the adapter
+    private User borrower;
 
     private User owner;
 
@@ -54,6 +56,7 @@ public class Book {
 
 
     public void setBorrower(User user) {
+        this.borrower = user;
 
     }
 

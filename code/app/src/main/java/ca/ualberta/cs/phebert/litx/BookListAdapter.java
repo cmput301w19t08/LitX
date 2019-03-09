@@ -22,6 +22,12 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         this.books = books;
     }
 
+    /**
+     * inflates
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_list_item, parent,
@@ -30,6 +36,12 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         return viewHolder;
     }
 
+
+    /**
+     *
+     * @param holder is a ViewHolder object that holds the imageView and TextViews of a bookList
+     * @param position is a int that denotes the position of the current item
+     */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
@@ -40,19 +52,31 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         holder.author.setText(book.getAuthor());
         holder.isbn.setText(Long.toString(book.getIsbn()));
         holder.photo = book.getPhotograph();
-        holder.borrower.setText(book.getBorrower().getUserName());
-        if (book.isAvailable() == true) {
+        if (book.isAvailable() == false) {
+            holder.borrower.setText(book.getBorrower().getUserName());
+        } else{
+            holder.borrower.setText(null);
+        }
+            if (book.isAvailable()) {
             holder.status.setText("Available");
         } else {
             holder.status.setText("Borrowed");
         }
     }
 
+    /**
+     * returns the size of the list of recyclerView
+     * @return
+     */
     @Override
     public int getItemCount() {
         return books.size();
     }
 
+
+    /**
+     * Class viewholder that holds the view of a bookList Item
+     */
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView title;
         public TextView status;
