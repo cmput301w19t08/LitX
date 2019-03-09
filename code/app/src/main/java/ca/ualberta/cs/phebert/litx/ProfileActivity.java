@@ -17,7 +17,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements UserObserver {
     private static final String LOG_TAG = "litX.ProfileActivity";
     private View viewProfile;
     private View editProfile;
@@ -36,6 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         viewProfile = getLayoutInflater().inflate(R.layout.view_profile, null);
         editProfile = getLayoutInflater().inflate(R.layout.edit_profile, null);
         setContentView(editProfile); // findViewById only works for visible view (eg views in the content view.
@@ -47,12 +48,7 @@ public class ProfileActivity extends AppCompatActivity {
         emailView = findViewById(R.id.emailView);
         phoneView = findViewById(R.id.phoneView);
         if (currentUser != null) {
-            userEdit.setText(currentUser.getUserName());
-            userView.setText(currentUser.getUserName());
-            emailEdit.setText(currentUser.getEmail());
-            emailView.setText(currentUser.getEmail());
-            phoneEdit.setText(currentUser.getPhoneNumber());
-            phoneView.setText(currentUser.getPhoneNumber());
+            onUserUpdated(currentUser); // might as well.
         } else {
             userView.setText("???");
             emailView.setText("???");
@@ -125,6 +121,18 @@ public class ProfileActivity extends AppCompatActivity {
             finishAffinity();
         } else {
             finish();
+        }
+    }
+
+    @Override
+    public void onUserUpdated(User user) {
+        if(user == currentUser) {
+            userEdit.setText(currentUser.getUserName());
+            userView.setText(currentUser.getUserName());
+            emailEdit.setText(currentUser.getEmail());
+            emailView.setText(currentUser.getEmail());
+            phoneEdit.setText(currentUser.getPhoneNumber());
+            phoneView.setText(currentUser.getPhoneNumber());
         }
     }
 }

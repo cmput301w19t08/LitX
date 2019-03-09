@@ -1,51 +1,110 @@
 package ca.ualberta.cs.phebert.litx;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import ca.ualberta.cs.phebert.litx.annotations.BorrowerCalled;
 import ca.ualberta.cs.phebert.litx.annotations.OwnerCalled;
 
 public class User {
+    private final String USER_COLLECTION = "Users";
     private String userName;
     private String email;
     private String phoneNumber;
+    private ArrayList<UserObserver> observers;
     private ArrayList<Request> acceptedRequests;
     private ArrayList<Request> myRequests;
     private ArrayList<Book> borrowedBooks;
     private ArrayList<Book> myBooks;
     private Coordinate myLocation;
     private FirebaseUser certificate;
+    private boolean syncScheduled;
+
 
     /**
      * Check if username is unique
      * Used for creation of new user
      */
     public User(@NonNull String username, @NonNull String email, @NonNull String phone) {
+        observers = new ArrayList<>();
         certificate = null;
         editProfile(username, email, phone);
     }
 
     public User() {
+        observers = new ArrayList<>();
         userName = "";
         email = "";
         phoneNumber = "";
+        syncScheduled = false;
     }
 
     /**
      * called upon authentication. this is
      * @param fbUser
      */
-    public User(FirebaseUser fbUser) {
+    public User(@NonNull FirebaseUser fbUser) {
+        observers = new ArrayList<>();
         // use lazy instantiation.
+        FirebaseFirestore.getInstance()
+                .collection(USER_COLLECTION)
+                .document(fbUser.getUid())
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    userName = snapshot.getString("userName");
+                    email = snapshot.getString("email");
+                    phoneNumber = snapshot.getString("phoneNumber");
+                });
         userName = null;
         email = fbUser.getEmail();
         phoneNumber = null;
         certificate = fbUser;
+        FirebaseFirestore.getInstance()
+                .collection(USER_COLLECTION)
+                .document(fbUser.getUid())
+                .addSnapshotListener((documentSnapshot, e) -> {
+                    if(e == null && documentSnapshot != null) {
+                        userName = documentSnapshot.getString("userName");
+                        email = documentSnapshot.getString("email");
+                        phoneNumber = documentSnapshot.getString("phoneNumber");
+                        for(UserObserver observer:observers) {
+                            observer.onUserUpdated(this);
+                        }
+                    }
+                });
+    }
+
+    public void scheduleSync() {
+        syncScheduled = true;
+    }
+
+    void addObserver(UserObserver observer) {
+        observers.add(observer);
+    }
+
+    public void sync() {
+        if(syncScheduled) {
+            HashMap<String, Object> user = new HashMap<>();
+            user.put("userName", userName);
+            user.put("email", email);
+            user.put("phoneNumber", phoneNumber);
+            FirebaseFirestore.getInstance()
+                    .collection(USER_COLLECTION)
+                    .document(certificate.getUid())
+                    .set(user)
+                    .addOnSuccessListener(ign -> {
+
+                    })
+                    .addOnFailureListener(e -> Log.wtf("LitX.User", e));
+
+        }
+        syncScheduled = false;
     }
 
     /**
@@ -194,5 +253,7 @@ public class User {
     public void deleteBook(Book book) {
 
     }
+
+
 
 }
