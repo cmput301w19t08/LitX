@@ -54,8 +54,6 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         holder.photo = book.getPhotograph();
         if (!book.isAvailable()) {
             holder.borrower.setText(book.getBorrower().getUserName());
-        } else{
-            holder.borrower.setText(null);
         }
             if (book.isAvailable()) {
             holder.status.setText("Available");
