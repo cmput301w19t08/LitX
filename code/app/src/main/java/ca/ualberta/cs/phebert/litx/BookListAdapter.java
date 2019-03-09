@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -53,9 +54,11 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         holder.isbn.setText(Long.toString(book.getIsbn()));
         holder.photo = book.getPhotograph();
         if (!book.isAvailable()) {
-            holder.borrower.setText(book.getBorrower().getUserName());
+            holder.borrower.setText(book.getAcceptedRequest().getRequestor().getUserName());
+        } else {
+            holder.borrower.setText(null);
         }
-        if (book.isAvailable()) {
+            if (book.isAvailable()) {
             holder.status.setText("Available");
         } else {
             holder.status.setText("Borrowed");
@@ -94,6 +97,14 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
             borrower = (TextView) itemView.findViewById(R.id.book_borrower);
 
             // TODO implement on click Listener to show the rest of the profile
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick( View view ) {
+                    Book book = (Book) view.getTag();
+
+
+                }
+            });
         }
     }
 }
