@@ -52,7 +52,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         holder.author.setText(book.getAuthor());
         holder.isbn.setText(Long.toString(book.getIsbn()));
         holder.photo = book.getPhotograph();
-        if (book.isAvailable() == false) {
+        if (!book.isAvailable()) {
             holder.borrower.setText(book.getBorrower().getUserName());
         } else{
             holder.borrower.setText(null);
