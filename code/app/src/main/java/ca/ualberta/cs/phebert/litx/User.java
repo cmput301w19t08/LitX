@@ -21,6 +21,7 @@ public class User {
      * Used for creation of new user
      */
     public User(String username, String email, int phone) {
+
         editProfile(username, email, phone);
     }
 
@@ -42,7 +43,7 @@ public class User {
      * Check if username is unique
      */
     public void setUserName(String username) {
-
+        this.userName = username;
     }
 
     public String getUserName() {
@@ -50,7 +51,7 @@ public class User {
     }
 
     public void setEmail(String newEmail) {
-
+        this.email = newEmail;
     }
 
     public String getEmail() {
@@ -58,7 +59,7 @@ public class User {
     }
 
     public void setPhoneNumber (int newPhoneNumber) {
-
+        this.phoneNumber = newPhoneNumber;
     }
 
     public int getPhoneNumber () {

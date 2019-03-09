@@ -10,27 +10,25 @@ public class Book implements Serializable {
     private String title;
     private long isbn;
 
-    private User owner;
+    private String owner;
 
     private ArrayList<Request> requests;
     private Request acceptedRequest;
 
     private ImageView photograph;
 
-    public Book(User owner, String author, String title, long isbn) {
+    public Book(String owner, String author, String title, long isbn) {
         this.owner = owner;
         this.author = author;
         this.title = title;
         this.isbn = isbn;
     }
 
-    public void setOwner(User setowner) {
-        this.owner = setowner;
-    }
+    public Book() {} // For firestore
 
-    public User getOwner() {
-        return owner;
-    }
+    public void setOwner(String owner) { this.owner = owner; }
+
+    public String getOwner() { return owner; }
 
     public Boolean isAvailable() {
         return acceptedRequest == null;
@@ -40,12 +38,20 @@ public class Book implements Serializable {
         return author;
     }
 
+    public void setAuthor(String author) { this.author = author; }
+
     public String getTitle() {
         return title;
     }
 
+    public void setTitle(String title) { this.title = title; }
+
     public long getIsbn() {
         return isbn;
+    }
+
+    public void setIsbn(long isbn) {
+        this.isbn = isbn;
     }
 
 

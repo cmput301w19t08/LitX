@@ -9,13 +9,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddBookActivity"></activity>
+        <activity android:name=".AddBookActivity"
+            android:parentActivityName=".MyBooksActivity"></activity>
         <activity android:name=".BookViewActivity" />
-        <activity android:name=".SearchActivity" />
-        <activity android:name=".ExchangeActivity" />
+        <activity android:name=".SearchActivity"
+            android:parentActivityName=".MainActivity"></activity>
+        <activity android:name=".ExchangeActivity"
+            android:parentActivityName=".MainActivity"></activity>
         <activity android:name=".annotations.ExchangeActivity" />
-        <activity android:name=".MyBooksActivity" />
-        <activity android:name=".BookStatusActivity" />
+        <activity android:name=".MyBooksActivity"
+            android:parentActivityName=".MainActivity"></activity>
+
+        <activity android:name=".BookStatusActivity"
+            android:parentActivityName=".MainActivity"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +29,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".ProfileActivity"
+            android:parentActivityName=".MainActivity"></activity>
     </application>
 
 </manifest>

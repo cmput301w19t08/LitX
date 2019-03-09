@@ -3,6 +3,7 @@ package ca.ualberta.cs.phebert.litx;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,18 +41,26 @@ public class AddBookActivity extends AppCompatActivity {
                 String author = etAuthor.getText().toString();
                 try {
                     long isbn = Long.valueOf(etISBN.getText().toString());
+
+                    if (title.equals("") || author.equals("") ||
+                            (String.valueOf(isbn).length() != 13 && String.valueOf(isbn).length() != 10)) {
+                        throw new Exception("Invalid fields");
+                    }
+
+                    //TODO: User should be the one using the app, not newly created user
                     User u = new User("John", "n", 123);
-                    Book book = new Book(u, title, author, isbn);
+                    Book book = new Book(u.getUserName(), title, author, isbn);
 
                     // Write to database
                     firestore = FirebaseFirestore.getInstance();
-                    Map<String, String> bookMap = new HashMap<>();
+                    /*Map<String, String> bookMap = new HashMap<>();
 
                     bookMap.put("Title", title);
                     bookMap.put("Author", author);
-                    bookMap.put("ISBN", Long.toString(isbn));
+                    bookMap.put("ISBN", isbn);*/
 
-                    firestore.collection("Books").add(bookMap);
+                    //TODO: Authentication for the user adding a book
+                    firestore.collection("Books").document().set(book);
 
                     Intent intent = new Intent(AddBookActivity.this, MyBooksActivity.class);
                     startActivity(intent);
