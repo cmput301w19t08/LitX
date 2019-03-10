@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -65,7 +66,7 @@ public class AddBookActivity extends AppCompatActivity {
                     Intent intent = new Intent(AddBookActivity.this, MyBooksActivity.class);
                     startActivity(intent);
                 }
-                catch(Exception e) {}
+                catch(Exception e) {Log.d("error", e.toString()); }
             }
         });
     }
