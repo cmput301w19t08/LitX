@@ -50,7 +50,7 @@ public class AddBookActivity extends AppCompatActivity {
 
                     //TODO: User should be the one using the app, not newly created user
                     User u = new User("John", "n", 123);
-                    Book book = new Book(u.getUserName(), title, author, isbn);
+                    Book book = new Book(u.getUserName(), author, title, isbn);
 
                     // Write to database
                     firestore = FirebaseFirestore.getInstance();

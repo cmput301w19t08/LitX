@@ -42,7 +42,7 @@ public class User {
      * Check if username is unique
      */
     public void setUserName(String username) {
-
+        this.userName = username;
     }
 
     public String getUserName() {
