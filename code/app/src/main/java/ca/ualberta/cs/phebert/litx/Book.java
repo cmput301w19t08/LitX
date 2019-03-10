@@ -11,8 +11,8 @@ public class Book implements Serializable {
     private long isbn;
     // For testing the adapter
     //private User borrower;
-
     private String owner;
+    private String docID; // Document ID in Firestore
 
     private ArrayList<Request> requests;
     private Request acceptedRequest;
@@ -27,6 +27,10 @@ public class Book implements Serializable {
     }
 
     public Book() {} // For firestore
+
+    public String getDocID() { return docID; }
+
+    public void setDocID(String newDocID) { this.docID = newDocID; }
 
     public void setOwner(String owner) { this.owner = owner; }
 

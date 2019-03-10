@@ -34,8 +34,8 @@
 
     <ImageView
         android:id="@+id/bookImage"
-        android:layout_width="111dp"
-        android:layout_height="98dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginStart="25dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="290dp"
@@ -48,16 +48,16 @@
 
     <TextView
         android:id="@+id/descriptionIDView"
-        android:layout_width="0dp"
-        android:layout_height="51dp"
-        android:layout_marginStart="55dp"
+        android:layout_width="197dp"
+        android:layout_height="81dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="55dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginBottom="460dp"
         android:text="Description"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/bookImage"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.542" />

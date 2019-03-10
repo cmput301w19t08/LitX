@@ -46,6 +46,7 @@ public class MyBooksActivity extends AppCompatActivity {
         myBooks.add(b);*/
         firestore = FirebaseFirestore.getInstance();
 
+        //TODO: Load myBooks from owners list instead of querying every time
         firestore.collection("Books").whereEqualTo("owner", u.getUserName()).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -62,6 +63,7 @@ public class MyBooksActivity extends AppCompatActivity {
                                 book.setAvailable(temp.get("available").toString());
                                 book.setBorrower(temp.get("borrower").toString());
                                 book.setRequests(temp.get("requests").toString());*/
+                                book.setDocID(document.getId());
 
                                 myBooks.add(book);
                             }

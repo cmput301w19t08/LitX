@@ -28,16 +28,31 @@ public class AddBookActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_book);
 
+        String id = ""; // To determine the document id in Firestore
+
+        final EditText etTitle = (EditText) findViewById(R.id.editTitle);
+        final EditText etAuthor = (EditText) findViewById(R.id.editAuthor);
+        final EditText etISBN = (EditText) findViewById(R.id.editISBN);
+
+        try {
+            Intent intent = getIntent();
+            final Book book = (Book) intent.getExtras().getSerializable("Book");
+            id = book.getDocID();
+
+            //Fill the edit text boxes with the book information
+            etTitle.setText(book.getTitle());
+            etAuthor.setText(book.getAuthor());
+            etISBN.setText(String.valueOf(book.getIsbn()));
+
+        } catch (Exception e) {}
+
+        final String docID = id;
+        Log.d("New", id);
         btnOkay = (Button) findViewById(R.id.btnOkay);
 
         btnOkay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: Check input fields are valid, then create book object and pass it back
-                EditText etTitle = (EditText) findViewById(R.id.editTitle);
-                EditText etAuthor = (EditText) findViewById(R.id.editAuthor);
-                EditText etISBN = (EditText) findViewById(R.id.editISBN);
-
                 String title = etTitle.getText().toString();
                 String author = etAuthor.getText().toString();
                 try {
@@ -48,20 +63,20 @@ public class AddBookActivity extends AppCompatActivity {
                         throw new Exception("Invalid fields");
                     }
 
-                    //TODO: User should be the one using the app, not newly created user
-                    User u = new User("John", "n", 123);
-                    Book book = new Book(u.getUserName(), author, title, isbn);
-
-                    // Write to database
                     firestore = FirebaseFirestore.getInstance();
-                    /*Map<String, String> bookMap = new HashMap<>();
+                    User u = new User("John", "n", 123);
+                    //TODO: User should be the one using the app, not newly created user
+                    Book b = new Book(u.getUserName(), author, title, isbn);
 
-                    bookMap.put("Title", title);
-                    bookMap.put("Author", author);
-                    bookMap.put("ISBN", isbn);*/
-
-                    //TODO: Authentication for the user adding a book
-                    firestore.collection("Books").document().set(book);
+                    //TODO: Authentication for the user adding a books
+                    //TODO: Add book to owners list of books as well
+                    if (docID.equals("")) {
+                        // Create a new book and add it to firestore
+                        firestore.collection("Books").document().set(b);
+                    } else {
+                        // Update the firestore document since the book already exists
+                        firestore.collection("Books").document(docID).set(b);
+                    }
 
                     Intent intent = new Intent(AddBookActivity.this, MyBooksActivity.class);
                     startActivity(intent);
