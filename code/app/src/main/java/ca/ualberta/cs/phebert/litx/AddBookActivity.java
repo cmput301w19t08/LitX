@@ -1,6 +1,8 @@
 package ca.ualberta.cs.phebert.litx;
 
 import android.content.Intent;
+import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +25,8 @@ import java.util.Map;
  * @see MyBooksActivity, ViewBookActivity, Book
  */
 public class AddBookActivity extends AppCompatActivity {
+    EditText titleView;
+    EditText ISBNView;
 
     private Button btnOkay;
 
@@ -43,6 +47,35 @@ public class AddBookActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_book);
 
         String id = ""; // To determine the document id in Firestore
+        titleView=(EditText)findViewById(R.id.editTitle);
+        ISBNView=(EditText)findViewById(R.id.editISBN);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        String TAG = "scan";
+        //titleView.setText("" + resultCode);
+        if(requestCode == 155) {
+            if(data != null) {
+                String title = data.getStringExtra("Title");
+                String ISBN = data.getStringExtra("ISBN");
+                ISBNView.setText(ISBN);
+                titleView.setText(title);
+                Log.d(TAG, title);
+            } else {
+                Log.w(TAG,"data is null");
+            }
+        }
+    }
+
+    public void scanISBN(View v) {
+        Intent intent = new Intent(this, scan.class);
+        startActivityForResult(intent,155);
+    }
+
+
+
 
         // Get edittexts
         final EditText etTitle = (EditText) findViewById(R.id.editTitle);
