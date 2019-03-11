@@ -139,8 +139,8 @@ public class Request {
 
     /**
      * returns the book owner
-     *@return
-     /*
+     * @return
+     */
     public User getBookOwner() {
         return bookOwner;
     }
