@@ -10,7 +10,6 @@ public class Book implements Serializable {
     private String title;
     private long isbn;
     private Status status;
-    private String docID;
 
 
     enum Status {
@@ -23,6 +22,7 @@ public class Book implements Serializable {
     //private User borrower;
 
     private String owner;
+    private String docID; // Document ID in Firestore
 
     private ArrayList<Request> requests;
     private Request acceptedRequest;
@@ -47,6 +47,11 @@ public class Book implements Serializable {
     public void setOwner(String owner) {
         this.owner = owner;
     }
+
+    public String getDocID() { return docID; }
+
+    public void setDocID(String newDocID) { this.docID = newDocID; }
+
 
     /**
      * getter for status
@@ -157,19 +162,11 @@ public class Book implements Serializable {
     }
 
 
-    public String getDocID() {
-        return docID;
-    }
+    /*public void setBorrower(User user) {
+        this.borrower = user;
 
-    public void setDocID(String docID) {
-        this.docID = docID;
-    }
+    }*/
 
-    /**
-     * Getter for borrower, if no acceptedRequest then returns null
-     *
-     * @returns User if there acceptedRequest else returns null
-     */
     public User getBorrower() {
         if (acceptedRequest != null) {
             return acceptedRequest.getRequestor();
@@ -179,13 +176,12 @@ public class Book implements Serializable {
 
     /**
      * should fail if acceptedRequest is not null.
-     *
      * @param request A request that has been accepted by owner
      */
     public void setAcceptedRequest(Request request) {
         if (acceptedRequest == null)
             acceptedRequest = request;
-        status = Status.Accepted;
+            status = Status.Accepted;
     }
 
     /**
@@ -212,5 +208,13 @@ public class Book implements Serializable {
      */
     public void setPhotograph(ImageView photograph) {
         this.photograph = photograph;
+    }
+
+    /*
+     * Uses the getters for each Request to fill in the views of a viewRequest layout
+     * (Probably going to be some form of a custom adapter layout)
+     */
+    public void viewRequests() {
+
     }
 }

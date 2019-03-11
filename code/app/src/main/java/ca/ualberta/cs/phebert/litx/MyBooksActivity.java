@@ -24,12 +24,20 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * MyBooksActivity displays the books this user owns, and allows the user to select a book to view
+ * or add a new book
+ * @author sdupasqu
+ * @version 1.0
+ * @see MainActivity, AddBookActivity, BookViewActivity, Book, BookListAdapter
+ */
 public class MyBooksActivity extends AppCompatActivity {
 
     private Button addNew;
     private Spinner mySpinner;
     private String filter;
 
+    // Variables required to display books in the database
     private ArrayList<Book> myBooks = new ArrayList<Book>();
     BookListAdapter adapter;
     RecyclerView recyclerView;
@@ -39,11 +47,19 @@ public class MyBooksActivity extends AppCompatActivity {
 
     private FirebaseFirestore firestore;
 
+    /**
+     * onCreate finds all the books in the database that the user owns and displays them in the
+     * RecyclerView. It allows the user to add a new book to this list as well as select a book
+     * to display
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_books);
         mySpinner = (Spinner) findViewById(R.id.spinner);
+
+        // Find the add new button
         addNew = (Button) findViewById(R.id.btnAddNew);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.spinnner_array, android.R.layout.simple_spinner_item);
@@ -163,4 +179,6 @@ public class MyBooksActivity extends AppCompatActivity {
                     });
         }
 
+
+    }
 }
