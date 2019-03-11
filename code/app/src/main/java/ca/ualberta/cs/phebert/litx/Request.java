@@ -32,6 +32,7 @@ public class Request {
      * If any requests are not on disk, Create a notification.
      * This should be called by a daemon/service.
      * @return all the requests
+     * @param ctx
      */
     @OwnerCalled
     public static ArrayList<Request> scan(Context ctx) {
@@ -41,6 +42,7 @@ public class Request {
     /**
      * Push the given requests to firebase.
      * If any are resolved or refused, delete them from firebase.
+     * @param requests ArrayList of all requests for a book
      */
     @OwnerCalled
     public static void push(ArrayList<Request> requests) { }
@@ -53,6 +55,7 @@ public class Request {
      *         Create a Notification  |  Android Developers
      *     </a>
      * </p>
+     * @param ctx
      */
     private void generateNotification(Context ctx) {
         // TODO
@@ -91,6 +94,7 @@ public class Request {
      * <a https://developer.android.com/training/notify-user/build-notification#java>
      *     Create a Notification  |  Android Developers
      * </a>
+     * @param ctx
      */
     @OwnerCalled
     public static void createNotificationChannel(Context ctx) {
@@ -106,7 +110,12 @@ public class Request {
             notificationManager.createNotificationChannel(channel);
         }
     }
-
+    /**
+     * Constructor for request
+     * @param book The book that is being requested
+     * @param owner The book owner
+     * @param requestor The requestor of the book
+     */
     @BorrowerCalled
     public Request(Book book, User owner, User requestor) {
         this.book = book;
@@ -117,6 +126,10 @@ public class Request {
 
     /**
      * This constructor is used by scan
+     * @param book The book that is being requested
+     * @param owner The owner of the book
+     * @param requstor The requestor of the book
+     * @param state Current status of the book
      */
     @OwnerCalled
     private Request(Book book, User owner, User Requestor, Status state) {
@@ -124,18 +137,33 @@ public class Request {
         status = state;
     }
 
+    /**
+     * returns the book owner
+     *@return
+     /*
     public User getBookOwner() {
         return bookOwner;
     }
-
+    /**
+     * returns the requested book
+     * @return
+     */
     public Book getBook(){
         return book;
     }
 
+    /**
+     * returns the user that is requesting the book
+     * @return
+     */
     public User getRequestor() {
         return requestor;
     }
-
+    
+    /**
+     * Returns the status of the book one of pending, accepted, resolved or refused
+     * @return
+     */
     public Status getStatus() {
         return status;
     }
