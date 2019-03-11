@@ -20,7 +20,7 @@ public class User {
     private String email;
     private String phoneNumber;
     private ArrayList<UserObserver> observers;
-    private int phoneNumber;
+    //private int phoneNumber;
     private ArrayList<Request> acceptedRequests;
     private ArrayList<Request> myRequests;
     private ArrayList<Book> borrowedBooks;
