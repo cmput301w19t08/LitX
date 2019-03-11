@@ -25,8 +25,7 @@ import java.util.Map;
  * @see MyBooksActivity, ViewBookActivity, Book
  */
 public class AddBookActivity extends AppCompatActivity {
-    EditText titleView;
-    EditText ISBNView;
+
 
     private Button btnOkay;
 
@@ -39,6 +38,7 @@ public class AddBookActivity extends AppCompatActivity {
      * it leaves the fields blank and the user can provide new information. From this activity,
      * the user can scan the ISBN of a book to auto-fill the fields. Once the okay button is clicked
      * a new book gets added to the database
+     *
      * @param savedInstanceState
      */
     @Override
@@ -47,35 +47,6 @@ public class AddBookActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_book);
 
         String id = ""; // To determine the document id in Firestore
-        titleView=(EditText)findViewById(R.id.editTitle);
-        ISBNView=(EditText)findViewById(R.id.editISBN);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        String TAG = "scan";
-        //titleView.setText("" + resultCode);
-        if(requestCode == 155) {
-            if(data != null) {
-                String title = data.getStringExtra("Title");
-                String ISBN = data.getStringExtra("ISBN");
-                ISBNView.setText(ISBN);
-                titleView.setText(title);
-                Log.d(TAG, title);
-            } else {
-                Log.w(TAG,"data is null");
-            }
-        }
-    }
-
-    public void scanISBN(View v) {
-        Intent intent = new Intent(this, scan.class);
-        startActivityForResult(intent,155);
-    }
-
-
-
 
         // Get edittexts
         final EditText etTitle = (EditText) findViewById(R.id.editTitle);
@@ -93,7 +64,8 @@ public class AddBookActivity extends AppCompatActivity {
             etAuthor.setText(book.getAuthor());
             etISBN.setText(String.valueOf(book.getIsbn()));
 
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
         // Make the document id final so the onClickListener can use it
         final String docID = id;
@@ -137,9 +109,39 @@ public class AddBookActivity extends AppCompatActivity {
                     // Go back to MyBooksActivity after the book has been added
                     Intent intent = new Intent(AddBookActivity.this, MyBooksActivity.class);
                     startActivity(intent);
-                }
-                catch(Exception e) {} // If fields are invalid do nothing
+                } catch (Exception e) {
+                } // If fields are invalid do nothing
             }
         });
     }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        String TAG = "scan";
+        EditText ISBNView = (EditText) findViewById(R.id.editTitle);
+        EditText titleView = (EditText) findViewById(R.id.editAuthor);
+        EditText etISBN = (EditText) findViewById(R.id.editISBN);
+        //titleView.setText("" + resultCode);
+        if (requestCode == 155) {
+            if (data != null) {
+                String title = data.getStringExtra("Title");
+                String ISBN = data.getStringExtra("ISBN");
+                ISBNView.setText(ISBN);
+                titleView.setText(title);
+                Log.d(TAG, title);
+            } else {
+                Log.w(TAG, "data is null");
+            }
+        }
+    }
+
+    public void scanISBN(View v) {
+        Intent intent = new Intent(this, scan.class);
+        startActivityForResult(intent, 155);
+    }
+
 }
+
+

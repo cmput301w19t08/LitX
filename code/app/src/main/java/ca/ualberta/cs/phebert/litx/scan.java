@@ -58,7 +58,9 @@ public class scan extends AppCompatActivity {
 
     /**
      * Sets up our camera for reading in barcodes
-     * @param int, String[], int[]
+     * @param requestCode int
+     * @param grantResults int[]
+     * @param permissions String[]
      * @throws: IOException
      * @see BookClient
      */
