@@ -95,7 +95,11 @@ public class MyBooksActivity extends AppCompatActivity {
 //        myBooks.add(book);
 //        Book b = new Book(u.getUserName(), "Me", "Fuck 301", 1234567899);
 //        myBooks.add(b);*/
-        public void query() {
+
+    /**
+     * Query will be called after anything is selected in the spinner
+     */
+    public void query() {
             firestore = FirebaseFirestore.getInstance();
             final User u = new User("John", "n", 123);
             final ArrayList<Book> newBooks = new ArrayList<Book>();
@@ -110,7 +114,11 @@ public class MyBooksActivity extends AppCompatActivity {
                                             temp.get("author").toString(),
                                             temp.get("title").toString(),
                                             Long.valueOf(temp.get("isbn").toString()));
-
+                                    if (temp.get("acceptedRequest") != null){
+                                        book.setStatus("accepted");
+                                    } else {
+                                        book.setStatus("available");
+                                    }
 // TODO: Need to figure out how to get the request back to set properly for looks
 //TODO: Set all book information
 //                                book.setPhotograph(temp.get("photograph").toString());

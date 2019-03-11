@@ -10,6 +10,7 @@ public class Book implements Serializable {
     private String title;
     private long isbn;
     private Status status;
+    private String docID;
 
 
     enum Status {
@@ -155,6 +156,14 @@ public class Book implements Serializable {
         return requests;
     }
 
+
+    public String getDocID() {
+        return docID;
+    }
+
+    public void setDocID(String docID) {
+        this.docID = docID;
+    }
 
     /**
      * Getter for borrower, if no acceptedRequest then returns null

@@ -63,10 +63,14 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         //        } else {
         holder.borrower.setText(null);
 
-        if (book.isAvailable()) {
+        if (book.getStatus() == "Available" ) {
             holder.status.setText("Available");
-        } else {
+        } else if (book.getStatus() == "Borrowed"){
             holder.status.setText("Borrowed");
+        } else if (book.getStatus() == "Accepted") {
+            holder.status.setText("Accepted");
+        } else if (book.getStatus() == "Requested") {
+            holder.status.setText("Requested");
         }
         // Sets the onclick listener for each book to go to the view
         // Books activity  while displaying the books
