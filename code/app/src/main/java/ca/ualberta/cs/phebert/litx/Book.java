@@ -9,8 +9,7 @@ public class Book implements Serializable {
     private String author;
     private String title;
     private long isbn;
-    // For testing the adapter
-    //private User borrower;
+
     private String owner;
     private String docID; // Document ID in Firestore
 
@@ -64,12 +63,6 @@ public class Book implements Serializable {
     public ArrayList<Request> getRequests() {
         return requests;
     }
-
-
-    /*public void setBorrower(User user) {
-        this.borrower = user;
-
-    }*/
 
     public User getBorrower() {
         if(acceptedRequest != null) {

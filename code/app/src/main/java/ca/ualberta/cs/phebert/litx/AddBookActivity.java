@@ -15,6 +15,13 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+/**
+ * AddBookActivity takes the entered information and if valid, creates a new book object from them
+ * once the okay button gets clicked. The book then gets added to the database.
+ * @author sdupasqu
+ * @version 1.0
+ * @see MyBooksActivity, ViewBookActivity, Book
+ */
 public class AddBookActivity extends AppCompatActivity {
 
     private Button btnOkay;
@@ -23,6 +30,10 @@ public class AddBookActivity extends AppCompatActivity {
     private FirebaseFirestore firestore;
     //private FirebaseAuth auth;
 
+    /**
+     * onCreate allows the user
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +92,7 @@ public class AddBookActivity extends AppCompatActivity {
                     Intent intent = new Intent(AddBookActivity.this, MyBooksActivity.class);
                     startActivity(intent);
                 }
-                catch(Exception e) {Log.d("error", e.toString()); }
+                catch(Exception e) {}
             }
         });
     }
