@@ -3,7 +3,11 @@ package ca.ualberta.cs.phebert.litx;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     public static final String FilterMode = "ca.ualberta.cs.phebert.litx.FilterMode";
@@ -13,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
     }
 
     public void filter(View v) {
@@ -29,6 +34,17 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToProfileView(View v) {
         Intent intent = new Intent(this,ProfileActivity.class);
+        startActivity(intent);
+    }
+
+    public void getMyBooks(View v) {
+        Intent intent = new Intent(this, BookViewActivity.class);
+        startActivity(intent);
+    }
+
+    // No method named this in UML, must be added
+    public void exchangeBook(View v) {
+        Intent intent = new Intent(this, ExchangeActivity.class);
         startActivity(intent);
     }
 }
