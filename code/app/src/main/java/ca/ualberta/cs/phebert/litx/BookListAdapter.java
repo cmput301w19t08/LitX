@@ -17,11 +17,23 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
+/** Based
+ *  Source: http://www.sanktips.com/2017/11/15/android-recyclerview-with-custom-adapter-example/
+ * @version 1
+ * @author plontke
+ * @see MyBooksActivity
+ */
 public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHolder> {
 
     private Context context;
     private ArrayList<Book> books;
 
+    /**
+     * Constructor for the BookList adapter
+     * will populate a book_list_item with the list provided  in the constructor
+     * @param context Context
+     * @param books ArrayList<Book>
+     */
     public BookListAdapter(Context context, ArrayList<Book> books){
         this.context = context;
         this.books = books;
@@ -31,7 +43,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
      *
      * @param parent ViewGroup
      * @param viewType int
-     * @return
+     * @return ViewHolder
      */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
@@ -43,7 +55,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
 
 
     /**
-     *
+     *  Sets the TextViews and the ImageView to the proper values
      * @param holder is a ViewHolder object that holds the imageView and TextViews of a bookList
      * @param position is a int that denotes the position of the current item
      */
@@ -72,8 +84,11 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         } else if (book.getStatus() == "Requested") {
             holder.status.setText("Requested");
         }
-        // Sets the onclick listener for each book to go to the view
-        // Books activity  while displaying the books
+        /**
+         * Sets the onclick listener for each book to go to the view
+         * Books activity  while displaying the book passed
+         * @Param View.OnClickListener
+         */
         holder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -85,8 +100,9 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
     }
 
     /**
+     *
      * returns the size of the list of recyclerView
-     * @return
+     * @return int
      */
     @Override
     public int getItemCount() {
@@ -95,6 +111,10 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
 
 
     /**
+     * ViewHolder Object that holds the view of a book_list_item
+     * @author plontke
+     * @see BookListAdapter
+     * @version 1
      * Class viewholder that holds the view of a bookList Item
      */
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -105,7 +125,10 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         public ImageView photo;
         public TextView borrower;
 
-
+        /**
+         * Constructor for the ViewHolder object
+         * @param itemView View
+         */
         public ViewHolder(View itemView) {
             super(itemView);
             context = itemView.getContext();
