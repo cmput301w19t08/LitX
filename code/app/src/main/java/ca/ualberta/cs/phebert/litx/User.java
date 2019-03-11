@@ -13,7 +13,7 @@ import ca.ualberta.cs.phebert.litx.annotations.BorrowerCalled;
 import ca.ualberta.cs.phebert.litx.annotations.OwnerCalled;
 
 public class User {
-    private final String USER_COLLECTION = "Users";
+    final static String USER_COLLECTION = "Users";
     private String userName;
     private String email;
     private String phoneNumber;
@@ -119,25 +119,21 @@ public class User {
      */
     public void setUserName(String username) {
         if(certificate != null) {
-            // TODO sync with firebase/store.
-            // if the new username is not unique, do not change it
+            sync();
         }
         this.userName = username;
     }
 
     public String getUserName() {
         // no need to to sync, should be automaticly set when loading the user
-        if(userName == null && certificate != null) {
-            // TODO get username from firestore
-        }
         return userName;
     }
 
     public void setEmail(@NonNull String newEmail) {
-        // TODO Validate email
         email = newEmail;
         if(certificate != null) {
             certificate.updateEmail(newEmail);
+            sync();
             // TODO sync with firebase/store
         }
     }
@@ -150,7 +146,7 @@ public class User {
         // TODO validate phone Number
         phoneNumber = newPhoneNumber;
         if(certificate != null) {
-            // TODO sync with Firebase/store
+            sync();
         }
     }
 

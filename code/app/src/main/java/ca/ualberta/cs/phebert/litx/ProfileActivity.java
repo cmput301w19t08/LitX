@@ -13,9 +13,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
 
 public class ProfileActivity extends AppCompatActivity implements UserObserver {
     private static final String LOG_TAG = "litX.ProfileActivity";
@@ -47,7 +51,9 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
         userView = findViewById(R.id.UserView);
         emailView = findViewById(R.id.emailView);
         phoneView = findViewById(R.id.phoneView);
-        if (currentUser != null) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            currentUser = new User(FirebaseAuth.getInstance().getCurrentUser());
+            currentUser.addObserver(this);
             onUserUpdated(currentUser); // might as well.
         } else {
             userView.setText("???");
@@ -92,25 +98,32 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
             // this whole block is based on Authenticate with Firebase Using Email Link in Android,
             // https://firebase.google.com/docs/auth/android/email-link-auth,
             //
-            ActionCodeSettings settings = ActionCodeSettings.newBuilder()
-                    .setHandleCodeInApp(true)
-                    .setAndroidPackageName("ca.ualberta.cs.phebert.litx", true, "1")
-                    // package name, install if does not exist, min package version
-                    .build();
             FirebaseAuth.getInstance()
-                    .sendSignInLinkToEmail(emailEdit.getText().toString(), settings)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Log.d(LOG_TAG, "Email sent.");
-                                Toast.makeText(ProfileActivity.this,
-                                        "We have sent you an email to verify.",
-                                        Toast.LENGTH_LONG)
-                                        .show();
-                            }
-                        }
-                    });
+                    .signInWithEmailAndPassword(emailView.getText().toString(),"a").addOnSuccessListener(res -> {
+                        Log.v(LOG_TAG,"signed in");
+                        finish();
+            }).addOnFailureListener(e -> {
+                e.printStackTrace();
+                FirebaseAuth.getInstance().createUserWithEmailAndPassword(emailView.getText().toString(),"a23b45")
+                        .addOnSuccessListener(res ->{
+                            HashMap<String, Object> user = new HashMap<>();
+                            user.put("userName", userView.getText().toString());
+                            user.put("email",  emailView.getText().toString());
+                            user.put("phoneNumber", phoneView.getText().toString());
+                            FirebaseFirestore.getInstance()
+                                    .collection(User.USER_COLLECTION)
+                                    .document(res.getUser().getUid())
+                                    .set(user)
+                                    .addOnSuccessListener(ign -> {
+
+                                    })
+                                    .addOnFailureListener(e2 -> Log.wtf("LitX.User", e));
+                            Log.d(LOG_TAG,"signed up");
+                            finish();
+                        }).addOnFailureListener(e2 -> {
+                            Log.e(LOG_TAG, "could not sign up", e2);
+                });
+            });
         }
     }
 
