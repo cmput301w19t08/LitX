@@ -111,13 +111,13 @@ public class MyBooksActivity extends AppCompatActivity {
                                             temp.get("title").toString(),
                                             Long.valueOf(temp.get("isbn").toString()));
 
-                                // TODO: Need to figure out how to get the request back to set properly for looks
-                                    //TODO: Set all book information
-                                    //                                book.setPhotograph(temp.get("photograph").toString());
-                                    //                                book.setAcceptedRequest(temp.get("acceptedRequest").toString());
-                                    //                                book.setAvailable(temp.get("available").toString());
-                                    //                                book.setBorrower(temp.get("borrower").toString());
-                                    //                                book.setRequests(temp.get("requests").toString());
+// TODO: Need to figure out how to get the request back to set properly for looks
+//TODO: Set all book information
+//                                book.setPhotograph(temp.get("photograph").toString());
+//                                book.setAcceptedRequest(temp.get("acceptedRequest").toString());
+//                                book.setAvailable(temp.get("available").toString());
+//                                book.setBorrower(temp.get("borrower").toString());
+//                                book.setRequests(temp.get("requests").toString());
 
                                     if (filter.equals("All")) {
                                         newBooks.add(book);
@@ -145,8 +145,8 @@ public class MyBooksActivity extends AppCompatActivity {
                                 recyclerView.setHasFixedSize(true);
                                 layoutManager = new LinearLayoutManager(MyBooksActivity.this);
                                 recyclerView.setLayoutManager(layoutManager);
-                                BookListAdapter adapter = new BookListAdapter(MyBooksActivity.this,
-                                        newBooks);
+                                BookListAdapter adapter = new BookListAdapter(
+                                        MyBooksActivity.this, newBooks);
                                 recyclerView.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
 

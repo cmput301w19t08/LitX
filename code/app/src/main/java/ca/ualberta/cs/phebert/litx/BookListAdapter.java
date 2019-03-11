@@ -29,8 +29,8 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
 
     /**
      *
-     * @param parent
-     * @param viewType
+     * @param parent ViewGroup
+     * @param viewType int
      * @return
      */
     @Override
@@ -56,12 +56,14 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         holder.author.setText(book.getAuthor());
         holder.isbn.setText(Long.toString(book.getIsbn()));
         holder.photo = book.getPhotograph();
-        if (!book.isAvailable()) {
-            holder.borrower.setText(book.getAcceptedRequest().getRequestor().getUserName());
-        } else {
-            holder.borrower.setText(null);
-        }
-            if (book.isAvailable()) {
+
+        // Commented out since we cannot get request object from database at this time
+        //        if (!book.isAvailable()) {
+        //            holder.borrower.setText(book.getAcceptedRequest().getRequestor().getUserName());
+        //        } else {
+        holder.borrower.setText(null);
+
+        if (book.isAvailable()) {
             holder.status.setText("Available");
         } else {
             holder.status.setText("Borrowed");
