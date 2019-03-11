@@ -118,7 +118,7 @@ public class MyBooksActivity extends AppCompatActivity {
      */
     public void query() {
             firestore = FirebaseFirestore.getInstance();
-            final User u = new User("John", "n", 123);
+            final User u = new User("John", "n", "123");
             final ArrayList<Book> newBooks = new ArrayList<Book>();
             firestore.collection("Books").whereEqualTo("owner", u.getUserName()).get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

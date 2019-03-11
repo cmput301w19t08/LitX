@@ -5,6 +5,7 @@
     <string name="email">Email</string>
     <string name="edit">✎</string>
     <string name="plus">+</string>
+    <string name="logout">🚪➜</string>
     <string name="done">✓</string>
     <string name="profile_button">Profile</string>
     <string name="myBooks_button">My Books</string>
