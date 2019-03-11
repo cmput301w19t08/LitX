@@ -9,19 +9,12 @@ public class Book implements Serializable {
     private String author;
     private String title;
     private long isbn;
-    private Status status;
-
-
-    enum Status {
-        Available,
-        Borrowed,
-        Accepted,
-        Requested
-    }
+    private String status;
     // For testing the adapter
     //private User borrower;
 
     private String owner;
+    private String docID; // Document ID in Firestore
 
     private ArrayList<Request> requests;
     private Request acceptedRequest;
@@ -33,6 +26,7 @@ public class Book implements Serializable {
         this.author = author;
         this.title = title;
         this.isbn = isbn;
+        this.status = "Available";
     }
 
     public Book() {
@@ -47,13 +41,17 @@ public class Book implements Serializable {
         this.owner = owner;
     }
 
+    public String getDocID() { return docID; }
+
+    public void setDocID(String newDocID) { this.docID = newDocID; }
+
+
     /**
      * getter for status
-     *
      * @return String
      */
     public String getStatus() {
-        return this.status.toString();
+        return status;
     }
 
     /**
@@ -62,15 +60,7 @@ public class Book implements Serializable {
      * @param status String one of accepted, available, borrowed, requested
      */
     public void setStatus(String status) {
-        if (status.equals("accepted")) {
-            this.status = Status.Accepted;
-        } else if (status.equals("available")) {
-            this.status = Status.Available;
-        } else if (status.equals("borrowed")) {
-            this.status = Status.Borrowed;
-        } else {
-            this.status = Status.Requested;
-        }
+        this.status = status;
 
     }
 
@@ -89,7 +79,7 @@ public class Book implements Serializable {
      * @return Boolean
      */
     public Boolean isAvailable() {
-        return this.status == Status.Available;
+        return this.status == "Available";
     }
 
     /**
@@ -156,11 +146,11 @@ public class Book implements Serializable {
     }
 
 
-    /**
-     * Getter for borrower, if no acceptedRequest then returns null
-     *
-     * @returns User if there acceptedRequest else returns null
-     */
+    /*public void setBorrower(User user) {
+        this.borrower = user;
+
+    }*/
+
     public User getBorrower() {
         if (acceptedRequest != null) {
             return acceptedRequest.getRequestor();
@@ -170,13 +160,12 @@ public class Book implements Serializable {
 
     /**
      * should fail if acceptedRequest is not null.
-     *
      * @param request A request that has been accepted by owner
      */
     public void setAcceptedRequest(Request request) {
         if (acceptedRequest == null)
             acceptedRequest = request;
-        status = Status.Accepted;
+            status = "accepted";
     }
 
     /**
@@ -203,5 +192,13 @@ public class Book implements Serializable {
      */
     public void setPhotograph(ImageView photograph) {
         this.photograph = photograph;
+    }
+
+    /*
+     * Uses the getters for each Request to fill in the views of a viewRequest layout
+     * (Probably going to be some form of a custom adapter layout)
+     */
+    public void viewRequests() {
+
     }
 }

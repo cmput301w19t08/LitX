@@ -24,12 +24,20 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * MyBooksActivity displays the books this user owns, and allows the user to select a book to view
+ * or add a new book
+ * @author sdupasqu, plontke
+ * @version 1.0
+ * @see MainActivity, AddBookActivity, BookViewActivity, Book, BookListAdapter
+ */
 public class MyBooksActivity extends AppCompatActivity {
 
     private Button addNew;
     private Spinner mySpinner;
     private String filter;
 
+    // Variables required to display books in the database
     private ArrayList<Book> myBooks = new ArrayList<Book>();
     BookListAdapter adapter;
     RecyclerView recyclerView;
@@ -39,11 +47,19 @@ public class MyBooksActivity extends AppCompatActivity {
 
     private FirebaseFirestore firestore;
 
+    /**
+     * onCreate finds all the books in the database that the user owns and displays them in the
+     * RecyclerView. It allows the user to add a new book to this list as well as select a book
+     * to display
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_books);
         mySpinner = (Spinner) findViewById(R.id.spinner);
+
+        // Find the add new button
         addNew = (Button) findViewById(R.id.btnAddNew);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.spinnner_array, android.R.layout.simple_spinner_item);
@@ -95,7 +111,12 @@ public class MyBooksActivity extends AppCompatActivity {
 //        myBooks.add(book);
 //        Book b = new Book(u.getUserName(), "Me", "Fuck 301", 1234567899);
 //        myBooks.add(b);*/
-        public void query() {
+
+    /**
+     *
+     * Query will be called after anything is selected in the spinner
+     */
+    public void query() {
             firestore = FirebaseFirestore.getInstance();
             final User u = new User("John", "n", "123");
             final ArrayList<Book> newBooks = new ArrayList<Book>();
@@ -110,14 +131,19 @@ public class MyBooksActivity extends AppCompatActivity {
                                             temp.get("author").toString(),
                                             temp.get("title").toString(),
                                             Long.valueOf(temp.get("isbn").toString()));
-
-                                // TODO: Need to figure out how to get the request back to set properly for looks
-                                    //TODO: Set all book information
-                                    //                                book.setPhotograph(temp.get("photograph").toString());
-                                    //                                book.setAcceptedRequest(temp.get("acceptedRequest").toString());
-                                    //                                book.setAvailable(temp.get("available").toString());
-                                    //                                book.setBorrower(temp.get("borrower").toString());
-                                    //                                book.setRequests(temp.get("requests").toString());
+                                    if (temp.get("acceptedRequest") != null){
+                                        book.setStatus("Accepted");
+                                    } else {
+                                        book.setStatus("Available");
+                                    }
+                                    book.setDocID(document.getId());
+// TODO: Need to figure out how to get the request back to set properly for looks
+//TODO: Set all book information
+//                                book.setPhotograph(temp.get("photograph").toString());
+//                                book.setAcceptedRequest(temp.get("acceptedRequest").toString());
+//                                book.setAvailable(temp.get("available").toString());
+//                                book.setBorrower(temp.get("borrower").toString());
+//                                book.setRequests(temp.get("requests").toString());
 
                                     if (filter.equals("All")) {
                                         newBooks.add(book);
@@ -145,8 +171,8 @@ public class MyBooksActivity extends AppCompatActivity {
                                 recyclerView.setHasFixedSize(true);
                                 layoutManager = new LinearLayoutManager(MyBooksActivity.this);
                                 recyclerView.setLayoutManager(layoutManager);
-                                BookListAdapter adapter = new BookListAdapter(MyBooksActivity.this,
-                                        newBooks);
+                                BookListAdapter adapter = new BookListAdapter(
+                                        MyBooksActivity.this, newBooks);
                                 recyclerView.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
 
@@ -155,4 +181,6 @@ public class MyBooksActivity extends AppCompatActivity {
                     });
         }
 
+
 }
+
