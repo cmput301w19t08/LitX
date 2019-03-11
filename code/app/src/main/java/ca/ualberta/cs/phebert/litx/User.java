@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +20,7 @@ public class User {
     private String email;
     private String phoneNumber;
     private ArrayList<UserObserver> observers;
+    private int phoneNumber;
     private ArrayList<Request> acceptedRequests;
     private ArrayList<Request> myRequests;
     private ArrayList<Book> borrowedBooks;
@@ -27,7 +30,7 @@ public class User {
     private boolean syncScheduled;
 
 
-    /**
+    /*
      * Check if username is unique
      * Used for creation of new user
      */
@@ -107,7 +110,7 @@ public class User {
         syncScheduled = false;
     }
 
-    /**
+    /*
      * Method to search for other users
      */
     public static User findByUid (String Uid) {
@@ -125,7 +128,6 @@ public class User {
     }
 
     public String getUserName() {
-        // no need to to sync, should be automaticly set when loading the user
         return userName;
     }
 
@@ -161,7 +163,6 @@ public class User {
         return myRequests;
     }
 
-    @BorrowerCalled
     public void removeRequest (Request request) {
 
     }
@@ -169,14 +170,11 @@ public class User {
     /*
      * Notifies user of acceptance on their request
      * Adds this book to their list of acceptedRequests
-     * Maybe call this from Request
      */
-    @BorrowerCalled
-    public void successfulRequest (Request request) { // TODO rename (name is not a verb)
+    public void successfulRequest (Request request) {
 
     }
 
-    @BorrowerCalled
     public ArrayList<Request> getAcceptedRequests () {
         return acceptedRequests;
     }
@@ -189,12 +187,9 @@ public class User {
      * Gets profile information
      * in easily read manor
      */
+    public void getProfile () {
 
-    /**
-     * @deprecated Use ProfileActivity instead.
-     */
-    @Deprecated
-    public void getProfile () { }
+    }
 
     public void editProfile(String username, @NonNull String email, String phone) {
         setUserName(username);
@@ -226,26 +221,23 @@ public class User {
         return certificate.getUid();
     }
 
+    //********************************Owner******************************
 
     /**
      * Used for testing
      * @return mybooks
      */
-    @OwnerCalled
     public ArrayList<Book> getMyBooks() {
         return myBooks;
     }
 
-    @OwnerCalled
     public void addBook(String author, String title, int ISBN) {
-        Book newBook = new Book(this, author, title, ISBN);
-        myBooks.add(newBook);  //Creates instance
+
     }
 
     /*
      * Should delete the book and then remove it form myBooks
      */
-    @OwnerCalled
     public void deleteBook(Book book) {
 
     }
