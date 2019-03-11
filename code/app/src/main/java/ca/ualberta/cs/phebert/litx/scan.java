@@ -1,6 +1,14 @@
+/*
+ * Classname: scan.java
+ * Version: 1.0
+ * Date: 2019-03-11
+ * Copyright notice: https://www.youtube.com/watch?v=xoTKpstv9f0 (video on text recognition with Camera using Google Vision)
+ * https://codelabs.developers.google.com/codelabs/barcodes/#4 (guide on Barcode Reading)
+ * https://guides.codepath.com/android/Book-Search-Tutorial (guide on searching for books using ISBN)
+
+
+ */
 package ca.ualberta.cs.phebert.litx;
-
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,7 +23,6 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -23,16 +30,20 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import cz.msebera.android.httpclient.Header;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.net.URLEncoder;
-
 import ca.ualberta.cs.phebert.litx.R;
 
+
+/**
+ * This is our scan class
+ * @author 150 1248
+ * @version 1.0
+ * @see AppCompatActivity
+ */
 public class scan extends AppCompatActivity {
 
     SurfaceView cameraView;
@@ -45,7 +56,12 @@ public class scan extends AppCompatActivity {
     private String title;
 
 
-
+    /**
+     * Sets up our camera for reading in barcodes
+     * @param int, String[], int[]
+     * @throws: IOException
+     * @see BookClient
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode)
@@ -76,6 +92,12 @@ public class scan extends AppCompatActivity {
     }
 
 
+
+    /**
+     * Executes when we first create scan with a bundle parameter
+     * @param Bundle
+     * @throws: IOException
+     * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -173,19 +195,26 @@ public class scan extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * Clears ISBN and allows us to read in a new ISBN
+     * @param View
+     */
     public void clearISBN(View v) {
         ReadISBN = Boolean.TRUE;
         textView.setText(NoISBN);
     }
 
+    /**
+     * Confirms ISBN creates an Intent with the title and ISBN and passes it to AddBookActivity
+     * @param View
+     * @throws: JSONException
+     * @see AddBookActivity
+     */
     public void confirmISBN(View v) {
         ReadISBN = Boolean.TRUE;
         String Author;
-        //String url = "http://openlibrary.org/ISBN/" + ISBN + "9780316399623.json";
-        //JsonHttpResponseHandler handler = new JsonHttpResponseHandler();
-        //JSONObject ourBook = client.get(url,handler);
         BookClient client = new BookClient();
-        //JSONObject ourBook = null;
         client.getBooks(ISBN, new JsonHttpResponseHandler(){
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 if (response!=null){
@@ -200,7 +229,7 @@ public class scan extends AppCompatActivity {
                             finish();
 
                         }
-                        //Not Done Yet!
+                        //Not Done Yet! For part 5
                         if (response.has("authors")){
                             final JSONArray authors = response.getJSONArray("author_name");
                             int numAuthors = authors.length();
@@ -209,7 +238,6 @@ public class scan extends AppCompatActivity {
                             for (int i = 0; i < numAuthors; ++i) {
                                 authorStrings[i] = authors.getString(i);
                             }
-                            //String author = response.getString("author");
                             textView.setText(authorStrings[0]);
 
                         }
@@ -219,7 +247,6 @@ public class scan extends AppCompatActivity {
 
 
                     }catch (JSONException e) {
-                        // Invalid JSON format, show appropriate error.
                         e.printStackTrace();
                     }
 
