@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * MyBooksActivity displays the books this user owns, and allows the user to select a book to view
  * or add a new book
- * @author sdupasqu
+ * @author sdupasqu, plontke
  * @version 1.0
  * @see MainActivity, AddBookActivity, BookViewActivity, Book, BookListAdapter
  */
@@ -113,6 +113,7 @@ public class MyBooksActivity extends AppCompatActivity {
 //        myBooks.add(b);*/
 
     /**
+     *
      * Query will be called after anything is selected in the spinner
      */
     public void query() {
