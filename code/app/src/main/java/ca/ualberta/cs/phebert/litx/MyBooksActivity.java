@@ -20,10 +20,18 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * MyBooksActivity displays the books this user owns, and allows the user to select a book to view
+ * or add a new book
+ * @author sdupasqu
+ * @version 1.0
+ * @see MainActivity, AddBookActivity, BookViewActivity, Book, BookListAdapter
+ */
 public class MyBooksActivity extends AppCompatActivity {
 
     private Button addNew;
 
+    // Variables required to display books in the database
     private ArrayList<Book> myBooks = new ArrayList<Book>();
     BookListAdapter adapter;
     RecyclerView recyclerView;
@@ -31,21 +39,25 @@ public class MyBooksActivity extends AppCompatActivity {
 
     private FirebaseFirestore firestore;
 
+    /**
+     * onCreate finds all the books in the database that the user owns and displays them in the
+     * RecyclerView. It allows the user to add a new book to this list as well as select a book
+     * to display
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_books);
 
+        // Find the add new button
         addNew = (Button) findViewById(R.id.btnAddNew);
 
-        //Testing purposes only, following two lines need to be removed
+        //Testing purposes only, following line needs to be removed
         User u = new User("John", "n", 123);
-        /*Book book = new Book(u.getUserName(), "Author", "Title", 1234567890);
-        myBooks.add(book);
-        Book b = new Book(u.getUserName(), "Me", "Fuck 301", 1234567899);
-        myBooks.add(b);*/
         firestore = FirebaseFirestore.getInstance();
 
+        // Get the collection of books that this user owns
         //TODO: Load myBooks from owners list instead of querying every time
         firestore.collection("Books").whereEqualTo("owner", u.getUserName()).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -53,6 +65,9 @@ public class MyBooksActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
+                                /* Get all requirements for one book object, then create that
+                                 * object and set all variables to the required things
+                                 */
                                 Map<String, Object> temp = document.getData();
                                 Book book = new Book(temp.get("owner").toString(), temp.get("author").toString(),
                                         temp.get("title").toString(), Long.valueOf(temp.get("isbn").toString()));
@@ -68,6 +83,9 @@ public class MyBooksActivity extends AppCompatActivity {
                                 myBooks.add(book);
                             }
 
+                            /* Once all books have been added to the list, set the adapter and
+                             * display the array in the RecyclerView
+                             */
                             recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
                             recyclerView.setHasFixedSize(true);
                             layoutManager = new LinearLayoutManager(MyBooksActivity.this);
@@ -79,6 +97,7 @@ public class MyBooksActivity extends AppCompatActivity {
                     }
                 });
 
+        // When Add New button is clicked, got to the addBookActivity class to add a new book
         addNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
