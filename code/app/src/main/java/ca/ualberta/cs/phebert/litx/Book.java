@@ -9,15 +9,7 @@ public class Book implements Serializable {
     private String author;
     private String title;
     private long isbn;
-    private Status status;
-
-
-    enum Status {
-        Available,
-        Borrowed,
-        Accepted,
-        Requested
-    }
+    private String status;
     // For testing the adapter
     //private User borrower;
 
@@ -34,6 +26,7 @@ public class Book implements Serializable {
         this.author = author;
         this.title = title;
         this.isbn = isbn;
+        this.status = "Available";
     }
 
     public Book() {
@@ -55,11 +48,10 @@ public class Book implements Serializable {
 
     /**
      * getter for status
-     *
      * @return String
      */
     public String getStatus() {
-        return this.status.toString();
+        return status;
     }
 
     /**
@@ -68,15 +60,7 @@ public class Book implements Serializable {
      * @param status String one of accepted, available, borrowed, requested
      */
     public void setStatus(String status) {
-        if (status.equals("accepted")) {
-            this.status = Status.Accepted;
-        } else if (status.equals("available")) {
-            this.status = Status.Available;
-        } else if (status.equals("borrowed")) {
-            this.status = Status.Borrowed;
-        } else {
-            this.status = Status.Requested;
-        }
+        this.status = status;
 
     }
 
@@ -95,7 +79,7 @@ public class Book implements Serializable {
      * @return Boolean
      */
     public Boolean isAvailable() {
-        return this.status == Status.Available;
+        return this.status == "Available";
     }
 
     /**
@@ -181,7 +165,7 @@ public class Book implements Serializable {
     public void setAcceptedRequest(Request request) {
         if (acceptedRequest == null)
             acceptedRequest = request;
-            status = Status.Accepted;
+            status = "accepted";
     }
 
     /**

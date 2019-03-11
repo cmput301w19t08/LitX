@@ -131,10 +131,11 @@ public class MyBooksActivity extends AppCompatActivity {
                                             temp.get("title").toString(),
                                             Long.valueOf(temp.get("isbn").toString()));
                                     if (temp.get("acceptedRequest") != null){
-                                        book.setStatus("accepted");
+                                        book.setStatus("Accepted");
                                     } else {
-                                        book.setStatus("available");
+                                        book.setStatus("Available");
                                     }
+                                    book.setDocID(document.getId());
 // TODO: Need to figure out how to get the request back to set properly for looks
 //TODO: Set all book information
 //                                book.setPhotograph(temp.get("photograph").toString());
@@ -180,5 +181,5 @@ public class MyBooksActivity extends AppCompatActivity {
         }
 
 
-    }
 }
+
