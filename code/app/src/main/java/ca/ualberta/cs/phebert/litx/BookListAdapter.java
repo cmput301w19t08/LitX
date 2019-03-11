@@ -1,13 +1,17 @@
 package ca.ualberta.cs.phebert.litx;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.j2objc.annotations.ObjectiveCName;
 
 import org.w3c.dom.Text;
 
@@ -24,7 +28,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
     }
 
     /**
-     * inflates
+     *
      * @param parent
      * @param viewType
      * @return
@@ -45,9 +49,8 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
      */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
         holder.itemView.setTag(books.get(position));
-        Book book = books.get(position);
+        final Book book = books.get(position);
 
         holder.title.setText(book.getTitle());
         holder.author.setText(book.getAuthor());
@@ -63,6 +66,16 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         } else {
             holder.status.setText("Borrowed");
         }
+        // Sets the onclick listener for each book to go to the view
+        // Books activity  while displaying the books
+        holder.itemView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), BookViewActivity.class);
+                intent.putExtra("Book", book);
+                context.startActivity(intent);
+            }
+        });
     }
 
     /**
@@ -86,8 +99,10 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         public ImageView photo;
         public TextView borrower;
 
+
         public ViewHolder(View itemView) {
             super(itemView);
+            context = itemView.getContext();
 
             title = (TextView) itemView.findViewById(R.id.book_title);
             status = (TextView) itemView.findViewById(R.id.book_status);
@@ -96,15 +111,6 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
             photo = (ImageView) itemView.findViewById(R.id.book_photo);
             borrower = (TextView) itemView.findViewById(R.id.book_borrower);
 
-            // TODO implement on click Listener to show the rest of the profile
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick( View view ) {
-                    Book book = (Book) view.getTag();
-
-
-                }
-            });
         }
     }
 }

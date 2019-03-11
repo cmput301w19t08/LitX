@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void filter(View v) {
-        Intent intent = new Intent(this, ViewStatusActivity.class);
+        Intent intent = new Intent(this, BookStatusActivity.class);
         if(v.getId() == R.id.requests_home) {
             intent.putExtra(FilterMode,0);
         } else if(v.getId() == R.id.accept_home) {
@@ -38,13 +38,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getMyBooks(View v) {
-        Intent intent = new Intent(this, BookViewActivity.class);
+        // Should not be BookViewActivity, need a new activity for MyBooks
+        Intent intent = new Intent(this, MyBooksActivity.class);
         startActivity(intent);
     }
 
     // No method named this in UML, must be added
     public void exchangeBook(View v) {
         Intent intent = new Intent(this, ExchangeActivity.class);
+        startActivity(intent);
+    }
+
+    public void searchForBooks(View v) {
+        Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
     }
 }
