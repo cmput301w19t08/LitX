@@ -91,7 +91,7 @@ public class AddBookActivity extends AppCompatActivity {
                     firestore = FirebaseFirestore.getInstance();
                     //TODO: User should be the one using the app, not newly created user
                     User u = new User("John", "n", "123");
-                    Book book = new Book(u.getUserName(), author, title, isbn);
+                    Book b = new Book(u.getUserName(), author, title, isbn);
 
                     //TODO: Authentication for the user adding a books
                     //TODO: Add book to owners list of books as well
