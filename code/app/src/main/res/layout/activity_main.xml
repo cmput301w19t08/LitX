@@ -59,6 +59,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
+        android:onClick="getMyBooks"
         android:text="@string/myBooks_button"
         app:layout_constraintEnd_toStartOf="@+id/exchange_home"
         app:layout_constraintStart_toEndOf="@+id/profile_home"
@@ -70,6 +71,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:onClick="exchangeBook"
         android:text="@string/exchange_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -86,7 +88,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profile_home" />
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/top10list_home"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -105,6 +107,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
+        android:onClick="searchForBooks"
         android:text="@string/search_button"
         app:layout_constraintBottom_toTopOf="@+id/requests_home"
         app:layout_constraintEnd_toEndOf="parent"

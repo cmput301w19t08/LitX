@@ -13,11 +13,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-public class ProfileActivity extends AppCompatActivity {
+import java.util.HashMap;
+
+public class ProfileActivity extends AppCompatActivity implements UserObserver {
     private static final String LOG_TAG = "litX.ProfileActivity";
     private View viewProfile;
     private View editProfile;
@@ -36,6 +40,7 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         viewProfile = getLayoutInflater().inflate(R.layout.view_profile, null);
         editProfile = getLayoutInflater().inflate(R.layout.edit_profile, null);
         setContentView(editProfile); // findViewById only works for visible view (eg views in the content view.
@@ -46,13 +51,10 @@ public class ProfileActivity extends AppCompatActivity {
         userView = findViewById(R.id.UserView);
         emailView = findViewById(R.id.emailView);
         phoneView = findViewById(R.id.phoneView);
-        if (currentUser != null) {
-            userEdit.setText(currentUser.getUserName());
-            userView.setText(currentUser.getUserName());
-            emailEdit.setText(currentUser.getEmail());
-            emailView.setText(currentUser.getEmail());
-            phoneEdit.setText(currentUser.getPhoneNumber());
-            phoneView.setText(currentUser.getPhoneNumber());
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            currentUser = new User(FirebaseAuth.getInstance().getCurrentUser());
+            currentUser.addObserver(this);
+            onUserUpdated(currentUser); // might as well.
         } else {
             userView.setText("???");
             emailView.setText("???");
@@ -96,26 +98,32 @@ public class ProfileActivity extends AppCompatActivity {
             // this whole block is based on Authenticate with Firebase Using Email Link in Android,
             // https://firebase.google.com/docs/auth/android/email-link-auth,
             //
-            ActionCodeSettings settings = ActionCodeSettings.newBuilder()
-                    .setHandleCodeInApp(true)
-                    .setAndroidPackageName("ca.ualberta.cs.phebert.litx", true, "1")
-                    // package name, install if does not exist, min package version
-                    .build();
             FirebaseAuth.getInstance()
-                    .sendSignInLinkToEmail(emailEdit.getText().toString(), settings)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Log.d(LOG_TAG, "Email sent.");
-                                Toast.makeText(ProfileActivity.this,
-                                        "We have sent you an email to verify.",
-                                        Toast.LENGTH_LONG)
-                                        .show();
-                            }
-                        }
-                    });
+                    .signInWithEmailAndPassword(emailView.getText().toString(),"a").addOnSuccessListener(res -> {
+                        Log.v(LOG_TAG,"signed in");
+                        finish();
+            }).addOnFailureListener(e -> {
+                e.printStackTrace();
+                FirebaseAuth.getInstance().createUserWithEmailAndPassword(emailView.getText().toString(),"a23b45")
+                        .addOnSuccessListener(res ->{
+                            HashMap<String, Object> user = new HashMap<>();
+                            user.put("userName", userView.getText().toString());
+                            user.put("email",  emailView.getText().toString());
+                            user.put("phoneNumber", phoneView.getText().toString());
+                            FirebaseFirestore.getInstance()
+                                    .collection(User.USER_COLLECTION)
+                                    .document(res.getUser().getUid())
+                                    .set(user)
+                                    .addOnSuccessListener(ign -> {
 
+                                    })
+                                    .addOnFailureListener(e2 -> Log.wtf("LitX.User", e));
+                            Log.d(LOG_TAG,"signed up");
+                            finish();
+                        }).addOnFailureListener(e2 -> {
+                            Log.e(LOG_TAG, "could not sign up", e2);
+                });
+            });
         }
     }
 
@@ -125,6 +133,18 @@ public class ProfileActivity extends AppCompatActivity {
             finishAffinity();
         } else {
             finish();
+        }
+    }
+
+    @Override
+    public void onUserUpdated(User user) {
+        if(user == currentUser) {
+            userEdit.setText(currentUser.getUserName());
+            userView.setText(currentUser.getUserName());
+            emailEdit.setText(currentUser.getEmail());
+            emailView.setText(currentUser.getEmail());
+            phoneEdit.setText(currentUser.getPhoneNumber());
+            phoneView.setText(currentUser.getPhoneNumber());
         }
     }
 }

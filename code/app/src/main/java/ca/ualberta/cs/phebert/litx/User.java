@@ -1,54 +1,116 @@
 package ca.ualberta.cs.phebert.litx;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import ca.ualberta.cs.phebert.litx.annotations.BorrowerCalled;
 import ca.ualberta.cs.phebert.litx.annotations.OwnerCalled;
 
 public class User {
+    final static String USER_COLLECTION = "Users";
     private String userName;
     private String email;
     private String phoneNumber;
+    private ArrayList<UserObserver> observers;
+    //private int phoneNumber;
     private ArrayList<Request> acceptedRequests;
     private ArrayList<Request> myRequests;
     private ArrayList<Book> borrowedBooks;
     private ArrayList<Book> myBooks;
     private Coordinate myLocation;
     private FirebaseUser certificate;
+    private boolean syncScheduled;
 
-    /**
+
+    /*
      * Check if username is unique
      * Used for creation of new user
      */
     public User(@NonNull String username, @NonNull String email, @NonNull String phone) {
+        observers = new ArrayList<>();
         certificate = null;
         editProfile(username, email, phone);
     }
 
     public User() {
+        observers = new ArrayList<>();
         userName = "";
         email = "";
         phoneNumber = "";
+        syncScheduled = false;
     }
 
     /**
      * called upon authentication. this is
      * @param fbUser
      */
-    public User(FirebaseUser fbUser) {
+    public User(@NonNull FirebaseUser fbUser) {
+        observers = new ArrayList<>();
         // use lazy instantiation.
+        FirebaseFirestore.getInstance()
+                .collection(USER_COLLECTION)
+                .document(fbUser.getUid())
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    userName = snapshot.getString("userName");
+                    email = snapshot.getString("email");
+                    phoneNumber = snapshot.getString("phoneNumber");
+                });
         userName = null;
         email = fbUser.getEmail();
         phoneNumber = null;
         certificate = fbUser;
+        FirebaseFirestore.getInstance()
+                .collection(USER_COLLECTION)
+                .document(fbUser.getUid())
+                .addSnapshotListener((documentSnapshot, e) -> {
+                    if(e == null && documentSnapshot != null) {
+                        userName = documentSnapshot.getString("userName");
+                        email = documentSnapshot.getString("email");
+                        phoneNumber = documentSnapshot.getString("phoneNumber");
+                        for(UserObserver observer:observers) {
+                            observer.onUserUpdated(this);
+                        }
+                    }
+                });
     }
 
-    /**
+    public void scheduleSync() {
+        syncScheduled = true;
+    }
+
+    void addObserver(UserObserver observer) {
+        observers.add(observer);
+    }
+
+    public void sync() {
+        if(syncScheduled) {
+            HashMap<String, Object> user = new HashMap<>();
+            user.put("userName", userName);
+            user.put("email", email);
+            user.put("phoneNumber", phoneNumber);
+            FirebaseFirestore.getInstance()
+                    .collection(USER_COLLECTION)
+                    .document(certificate.getUid())
+                    .set(user)
+                    .addOnSuccessListener(ign -> {
+
+                    })
+                    .addOnFailureListener(e -> Log.wtf("LitX.User", e));
+
+        }
+        syncScheduled = false;
+    }
+
+    /*
      * Method to search for other users
      */
     public static User findByUid (String Uid) {
@@ -60,25 +122,20 @@ public class User {
      */
     public void setUserName(String username) {
         if(certificate != null) {
-            // TODO sync with firebase/store.
-            // if the new username is not unique, do not change it
+            sync();
         }
         this.userName = username;
     }
 
     public String getUserName() {
-        // no need to to sync, should be automaticly set when loading the user
-        if(userName == null && certificate != null) {
-            // TODO get username from firestore
-        }
         return userName;
     }
 
     public void setEmail(@NonNull String newEmail) {
-        // TODO Validate email
         email = newEmail;
         if(certificate != null) {
             certificate.updateEmail(newEmail);
+            sync();
             // TODO sync with firebase/store
         }
     }
@@ -91,7 +148,7 @@ public class User {
         // TODO validate phone Number
         phoneNumber = newPhoneNumber;
         if(certificate != null) {
-            // TODO sync with Firebase/store
+            sync();
         }
     }
 
@@ -106,7 +163,6 @@ public class User {
         return myRequests;
     }
 
-    @BorrowerCalled
     public void removeRequest (Request request) {
 
     }
@@ -114,14 +170,11 @@ public class User {
     /*
      * Notifies user of acceptance on their request
      * Adds this book to their list of acceptedRequests
-     * Maybe call this from Request
      */
-    @BorrowerCalled
-    public void successfulRequest (Request request) { // TODO rename (name is not a verb)
+    public void successfulRequest (Request request) {
 
     }
 
-    @BorrowerCalled
     public ArrayList<Request> getAcceptedRequests () {
         return acceptedRequests;
     }
@@ -134,12 +187,9 @@ public class User {
      * Gets profile information
      * in easily read manor
      */
+    public void getProfile () {
 
-    /**
-     * @deprecated Use ProfileActivity instead.
-     */
-    @Deprecated
-    public void getProfile () { }
+    }
 
     public void editProfile(String username, @NonNull String email, String phone) {
         setUserName(username);
@@ -171,28 +221,27 @@ public class User {
         return certificate.getUid();
     }
 
+    //********************************Owner******************************
 
     /**
      * Used for testing
      * @return mybooks
      */
-    @OwnerCalled
     public ArrayList<Book> getMyBooks() {
         return myBooks;
     }
 
-    @OwnerCalled
     public void addBook(String author, String title, int ISBN) {
-        Book newBook = new Book(this, author, title, ISBN);
-        myBooks.add(newBook);  //Creates instance
+
     }
 
     /*
      * Should delete the book and then remove it form myBooks
      */
-    @OwnerCalled
     public void deleteBook(Book book) {
 
     }
+
+
 
 }
