@@ -10,6 +10,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import ca.ualberta.cs.phebert.litx.annotations.*;
 
@@ -21,10 +22,23 @@ public class Request {
     private Status status;
 
     enum Status {
-        Pending,
-        Accepted,
-        Resolved,
-        Refused
+        Pending("pending"),
+        Accepted("accepted"),
+        Resolved("resolved"),
+        Refused("refused");
+        static Hashtable<String, Status> table = new Hashtable<>();
+        String name;
+        Status(String s) {
+            name = s;
+        }
+
+        String getName() {
+            return name;
+        }
+
+        static Status get(String s) {
+            return table.get(s);
+        }
     }
 
     /**
