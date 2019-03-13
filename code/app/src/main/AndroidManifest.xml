@@ -13,13 +13,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".scan"></activity>
-        <activity android:name=".AddBookActivity" />
+        <activity android:name=".AddBookActivity"
+            android:parentActivityName=".MyBooksActivity"></activity>
         <activity android:name=".BookViewActivity" />
-        <activity android:name=".SearchActivity" />
-        <activity android:name=".ExchangeActivity" />
-        <activity android:name=".annotations.ExchangeActivity" />
-        <activity android:name=".MyBooksActivity" />
-        <activity android:name=".BookStatusActivity" />
+        <activity android:name=".SearchActivity"
+            android:parentActivityName=".MainActivity"></activity>
+        <activity android:name=".ExchangeActivity"
+            android:parentActivityName=".MainActivity"></activity>
+        <activity android:name=".MyBooksActivity"
+            android:parentActivityName=".MainActivity"></activity>
+
+        <activity android:name=".BookStatusActivity"
+            android:parentActivityName=".MainActivity"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,9 +32,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".ProfileActivity"
+            android:parentActivityName=".MainActivity"></activity>
         <meta-data android:name="com.google.android.gms.vision.DEPENDECIES"
             android:value="ocr"/>
     </application>
-
 </manifest>

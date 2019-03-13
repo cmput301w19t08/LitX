@@ -17,9 +17,9 @@ public class RequestTest{
      */
     @Test
     public void acceptedTest(){
-        User owner = new User("Test", "Test@gmail.com", 123457678);
+        User owner = new User("Test", "Test@gmail.com", "123457678");
         Book book = new Book( owner, "Auhtor", "Title", 12345);
-        User requestor = new User("requestor", "requestor@gmail.com", 9876541);
+        User requestor = new User("requestor", "requestor@gmail.com", "9876541");
         Request request = new Request(book,owner, requestor);
 
         // Make sure that both of the arraylists of requests now contain the request
@@ -32,7 +32,7 @@ public class RequestTest{
         assertEquals(requestor, book.getBorrower());
         assertEquals(request, book.getAcceptedRequest());
         // The books status should be 'accepted'
-        assertEquals("Accepted", request.getStatus());
+        assertEquals(Request.Status.Accepted, request.getStatus());
     }
 
     /**
@@ -45,9 +45,9 @@ public class RequestTest{
      **/
     @Test
     public void resolvedTest(){
-        User owner = new User("Test", "Test@gmail.com", 123457678);
+        User owner = new User("Test", "Test@gmail.com", "123457678");
         Book book = new Book( owner, "Auhtor", "Title", 12345);
-        User requestor = new User("requestor", "requestor@gmail.com", 9876541);
+        User requestor = new User("requestor", "requestor@gmail.com", "9876541");
         Request request = new Request(book,owner, requestor);
         assertEquals(0, requestor.viewRequests().size());
         assertEquals(0, book.getRequests().size());
@@ -58,7 +58,7 @@ public class RequestTest{
         // Make sure that accepted request is null
         assertNull(book.getAcceptedRequest());
         //Check to see if the request is still in User.requests
-        assertEquals("Resolved", request.getStatus());
+        assertEquals(Request.Status.Resolved, request.getStatus());
         // Check to see if request has been
         assertFalse(book.getRequests().contains(request));
     }
@@ -69,13 +69,13 @@ public class RequestTest{
     @Test
     public void deleteTest()
     {
-        User owner = new User("Test", "Test@gmail.com", 123457678);
+        User owner = new User("Test", "Test@gmail.com", "123457678");
         Book book = new Book( owner, "Auhtor", "Title", 12345);
-        User requestor = new User("requestor", "requestor@gmail.com", 9876541);
+        User requestor = new User("requestor", "requestor@gmail.com", "9876541");
         Request request = new Request(book,owner, requestor);
 
-        assertEquals("Pending", request.getStatus());
+        assertEquals(Request.Status.Pending, request.getStatus());
         request.delete();
-        assertEquals("Refused", request.getStatus());
+        assertEquals(Request.Status.Refused, request.getStatus());
     }
 }

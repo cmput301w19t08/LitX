@@ -1,6 +1,6 @@
 package ca.ualberta.cs.phebert.litx;
 
-public class Map {
+public class MapObject {
     private Coordinate location; // Not sure how this is going to be implemented.
                                 // But this should be provided by the constructor so the map is
                                 // of this location

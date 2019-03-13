@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/UserView"
+        android:id="@+id/UserEdit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -31,7 +31,7 @@
         android:text="@string/email"
         android:textSize="13pt"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/UserView" />
+        app:layout_constraintTop_toBottomOf="@+id/UserEdit" />
 
     <TextView
         android:id="@+id/textView3"
@@ -42,31 +42,31 @@
         android:text="@string/phone_number"
         android:textSize="13pt"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emailView" />
+        app:layout_constraintTop_toBottomOf="@+id/emailEdit" />
 
     <EditText
-        android:id="@+id/emailView"
+        android:id="@+id/emailEdit"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:hint="@string/email"
-        android:inputType="text"
+        android:inputType="textEmailAddress"
         android:textSize="13pt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <EditText
-        android:id="@+id/phoneView"
+        android:id="@+id/phoneEdit"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:hint="@string/phone_number"
-        android:inputType="text"
+        android:inputType="phone"
         android:textSize="13pt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

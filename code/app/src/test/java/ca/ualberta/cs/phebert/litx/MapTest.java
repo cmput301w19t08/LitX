@@ -14,7 +14,7 @@ public class MapTest {
     public void setLocationTest()
     {
         Coordinate coordinate = new Coordinate(2, 3);
-        Map map = new Map();
+        MapObject map = new MapObject();
         assertNull(map.getLocation());
         map.setLocation(coordinate);
         assertEquals(coordinate, map.getLocation());

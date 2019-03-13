@@ -5,6 +5,7 @@
     <string name="email">Email</string>
     <string name="edit">✎</string>
     <string name="plus">+</string>
+    <string name="logout">🚪➜</string>
     <string name="done">✓</string>
     <string name="profile_button">Profile</string>
     <string name="myBooks_button">My Books</string>
@@ -15,6 +16,15 @@
     <string name="borrowing_button">Borrowed</string>
     <string name="top10">Top 10 Recommended Books on LitX</string>
     <string name="find">🔍</string>
+    <!-- For Mybooks Spinner -->
+    <string-array name="spinnner_array">
+        <item>All</item>
+        <item>Available</item>
+        <item>Requested</item>
+        <item>Accepted</item>
+        <item>Borrowed</item>
+    </string-array>
+
 
     <!-- notification stuff -->
     <string name="channel_name">LitX</string>
