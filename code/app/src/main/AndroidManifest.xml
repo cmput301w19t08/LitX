@@ -11,7 +11,8 @@
         android:theme="@style/AppTheme">
         <activity android:name=".AddBookActivity"
             android:parentActivityName=".MyBooksActivity"></activity>
-        <activity android:name=".BookViewActivity" />
+        <activity android:name=".BookViewActivity"
+            android:parentActivityName=".MyBooksActivity"></activity>
         <activity android:name=".SearchActivity"
             android:parentActivityName=".MainActivity"></activity>
         <activity android:name=".ExchangeActivity"
