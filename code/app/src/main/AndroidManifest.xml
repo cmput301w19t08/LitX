@@ -16,7 +16,6 @@
             android:parentActivityName=".MainActivity"></activity>
         <activity android:name=".ExchangeActivity"
             android:parentActivityName=".MainActivity"></activity>
-        <activity android:name=".annotations.ExchangeActivity" />
         <activity android:name=".MyBooksActivity"
             android:parentActivityName=".MainActivity"></activity>
 
