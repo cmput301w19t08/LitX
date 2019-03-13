@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -69,7 +70,8 @@ public class SearchActivity extends AppCompatActivity  {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         for(DocumentSnapshot ds : queryDocumentSnapshots.getDocuments()){
-                            bookresults.add(new Book(new User(),
+                            if(FirebaseAuth.getInstance().getCurrentUser() == null) return;
+                            bookresults.add(new Book(new User(FirebaseAuth.getInstance().getCurrentUser()).getUserName(),
                                     ds.getString("author"),
                                     ds.getString("title"),
                                     ds.getLong("isbn")));
