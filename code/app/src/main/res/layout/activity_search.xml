@@ -28,6 +28,7 @@
         android:layout_marginEnd="16dp"
         android:text="@string/find"
         android:textSize="10pt"
+        android:onClick="searchPress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

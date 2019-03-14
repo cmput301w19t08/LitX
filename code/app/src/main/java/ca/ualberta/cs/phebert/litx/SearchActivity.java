@@ -28,6 +28,7 @@ public class SearchActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        bookresults = new ArrayList<>();
         recycler = (RecyclerView) findViewById(R.id.search_results);
         recycler.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(SearchActivity.this);
@@ -88,6 +89,7 @@ public class SearchActivity extends AppCompatActivity  {
      * @param v
      */
     public void searchPress (View v) {
+        bookresults.clear();
         keywords = ((EditText)findViewById(R.id.input_search)).getText().toString();
         //FirebaseFirestore.getInstance().collection("User").get()
         FirebaseFirestore.getInstance().collection("Books").get()
@@ -96,16 +98,11 @@ public class SearchActivity extends AppCompatActivity  {
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         for(DocumentSnapshot ds : queryDocumentSnapshots.getDocuments()){
                             if(FirebaseAuth.getInstance().getCurrentUser() == null) return;
-                            bookresults.add(new Book(new User(FirebaseAuth.getInstance().getCurrentUser()).getUserName(),
+                            bookresults.add(new Book(ds.getString("owner"),
                                     ds.getString("author"),
                                     ds.getString("title"),
                                     ds.getLong("isbn")));
-
-                            if(ds.getBoolean("available")) {
-                                bookresults.get(bookresults.size()-1).setAcceptedRequest(null);
-                            } else {
-                                //bookresults.get(bookresults.size()-1).setAcceptedRequest();
-                            }
+                            bookresults.get(bookresults.size()-1).setStatus(ds.getString("status"));
                         }
                         bookresults = findBook(bookresults, keywords.split(" "));
                         updateRecycler();
