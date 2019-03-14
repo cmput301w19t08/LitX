@@ -9,12 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
 
 /**
  * AddBookActivity takes the entered information and if valid, creates a new book object from them
@@ -135,7 +130,7 @@ public class AddBookActivity extends AppCompatActivity {
     }
 
     public void scanISBN(View v) {
-        Intent intent = new Intent(this, scan.class);
+        Intent intent = new Intent(this, ScanBookActivity.class);
         startActivityForResult(intent,155);
     }
 }

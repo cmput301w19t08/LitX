@@ -21,21 +21,17 @@ import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import cz.msebera.android.httpclient.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
-import java.net.URLEncoder;
-import ca.ualberta.cs.phebert.litx.R;
 
 
 /**
@@ -44,7 +40,7 @@ import ca.ualberta.cs.phebert.litx.R;
  * @version 1.0
  * @see AppCompatActivity
  */
-public class scan extends AppCompatActivity {
+public class ScanBookActivity extends AppCompatActivity {
 
     SurfaceView cameraView;
     TextView textView;
@@ -129,7 +125,7 @@ public class scan extends AppCompatActivity {
                     try {
                         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
 
-                            ActivityCompat.requestPermissions(scan.this,new String[]{Manifest.permission.CAMERA},RequestCameraPermissionID);
+                            ActivityCompat.requestPermissions(ScanBookActivity.this,new String[]{Manifest.permission.CAMERA},RequestCameraPermissionID);
                             return;
                         }
                         cameraSource.start(cameraView.getHolder());

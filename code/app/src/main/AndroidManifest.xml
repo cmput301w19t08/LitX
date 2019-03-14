@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".scan"></activity>
+        <activity android:name=".ScanBookActivity"
+            android:parentActivityName=".AddBookActivity" />
         <activity
             android:name=".AddBookActivity"
             android:parentActivityName=".MyBooksActivity" />
