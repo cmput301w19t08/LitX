@@ -1,5 +1,6 @@
 package ca.ualberta.cs.phebert.litx;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -94,6 +95,9 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), BookViewActivity.class);
                 intent.putExtra("Book", book);
+                Activity activity = (Activity) context;
+                String activityName = activity.getLocalClassName();
+                intent.putExtra("ACTIVITY_NAME", activityName);
                 context.startActivity(intent);
             }
         });
