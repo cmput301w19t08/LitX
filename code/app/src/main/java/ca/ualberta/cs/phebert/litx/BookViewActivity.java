@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -43,7 +44,9 @@ public class BookViewActivity extends AppCompatActivity {
         // Receive the book object the user selected
         Intent intent = getIntent();
         final Book book = (Book) intent.getExtras().getSerializable("Book");
-        String previousActivityName = intent.getStringExtra("ACTIVITY_NAME");
+//        String previousActivityName = intent.getStringExtra("ACTIVITY_NAME");
+        Toast.makeText(BookViewActivity.this, FirebaseAuth.getInstance().getCurrentUser().toString(),
+                Toast.LENGTH_SHORT).show();
         // Set descriptiption of book in the textview
         ImageView image = (ImageView) findViewById(R.id.bookImage);
         TextView textView = (TextView) findViewById(R.id.descriptionIDView);
@@ -52,13 +55,14 @@ public class BookViewActivity extends AppCompatActivity {
         textView.setText(description);
         image = book.getPhotograph();
 
+
         firestore = FirebaseFirestore.getInstance();
 
         delete = (Button) findViewById(R.id.deleteButtonID);
         edit = (Button) findViewById(R.id.editButtonID);
         request = (Button) findViewById(R.id.requestButton);
 
-        if (previousActivityName.equals("MyBooksActivity")) {
+        if (book.getOwner().equals(FirebaseAuth.getInstance().getCurrentUser().toString())) {
             // Find buttons in the layout
             request.setVisibility(View.GONE);
 
