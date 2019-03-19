@@ -60,7 +60,7 @@ public class BookViewActivity extends AppCompatActivity {
 
         delete = (Button) findViewById(R.id.deleteButtonID);
         edit = (Button) findViewById(R.id.editButtonID);
-        request = (Button) findViewById(R.id.requestButton);
+        //request = (Button) findViewById(R.id.requestButton);
 
         if (book.getOwner().equals(FirebaseAuth.getInstance().getCurrentUser().toString())) {
             // Find buttons in the layout

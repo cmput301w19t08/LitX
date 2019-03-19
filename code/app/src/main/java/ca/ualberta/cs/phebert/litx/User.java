@@ -8,13 +8,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import ca.ualberta.cs.phebert.litx.annotations.BorrowerCalled;
 import ca.ualberta.cs.phebert.litx.annotations.OwnerCalled;
 
-public class User {
+public class User implements Serializable {
     final static String USER_COLLECTION = "Users";
     private String userName;
     private String email;

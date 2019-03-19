@@ -16,9 +16,12 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -36,6 +39,7 @@ import java.util.Map;
 public class MyBooksActivity extends AppCompatActivity {
 
     private FirebaseUser currentUser;
+    private User user;
     private String username = "";
     private Button addNew;
     private Spinner mySpinner;
@@ -62,6 +66,10 @@ public class MyBooksActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_books);
         mySpinner = (Spinner) findViewById(R.id.spinner);
+
+        Intent intent = getIntent();
+        user = (User) intent.getSerializableExtra("User");
+        //Log.d("User ID", user.getUserid());
 
         // Find the add new button
         addNew = (Button) findViewById(R.id.btnAddNew);
@@ -137,6 +145,33 @@ public class MyBooksActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
 
                                 for (QueryDocumentSnapshot document : task.getResult()) {
+                                    /*DocumentReference docRef = document.getReference();
+                                    docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            Book book = documentSnapshot.toObject(Book.class);
+
+                                            if (filter.equals("All")) {
+                                                newBooks.add(book);
+                                            } else if (filter.equals("Available")) {
+                                                if (book.getStatus().equals("Available")) {
+                                                    newBooks.add(book);
+                                                }
+                                            } else if (filter.equals("Requested")) {
+                                                if (book.getRequests() != null) {
+                                                    newBooks.add(book);
+                                                }
+                                            } else if (filter.equals("Accepted")) {
+                                                if (book.getAcceptedRequest() != null) {
+                                                    newBooks.add(book);
+                                                } else if (filter.equals("Borrowed")) {
+                                                    if (book.getBorrower() != null) {
+                                                        newBooks.add(book);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    });*/
                                     Map<String, Object> temp = document.getData();
                                     Book book = new Book(temp.get("owner").toString(),
                                             temp.get("author").toString(),

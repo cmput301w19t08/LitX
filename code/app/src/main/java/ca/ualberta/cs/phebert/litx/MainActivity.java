@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     public static final String FilterMode = "ca.ualberta.cs.phebert.litx.FilterMode";
-
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             goToProfileView(null);
+        } else {
+            user = new User(FirebaseAuth.getInstance().getCurrentUser());
         }
     }
 
@@ -44,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getMyBooks(View v) {
-        // Should not be BookViewActivity, need a new activity for MyBooks
         Intent intent = new Intent(this, MyBooksActivity.class);
+        //intent.putExtra("User", user);
         startActivity(intent);
     }
 

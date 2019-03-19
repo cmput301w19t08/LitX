@@ -18,6 +18,7 @@ public class Book implements Serializable {
 
     private ArrayList<Request> requests;
     private Request acceptedRequest;
+    private Boolean available;
 
     private ImageView photograph;
 
