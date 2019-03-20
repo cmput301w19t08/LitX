@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="ca.ualberta.cs.phebert.litx">
 
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -14,7 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ScanBookActivity"
+        <activity android:name=".ViewPhotoActivity" />
+        <activity
+            android:name=".ScanBookActivity"
             android:parentActivityName=".AddBookActivity" />
         <activity
             android:name=".AddBookActivity"
@@ -31,7 +33,6 @@
         <activity
             android:name=".MyBooksActivity"
             android:parentActivityName=".MainActivity" />
-
         <activity
             android:name=".BookStatusActivity"
             android:parentActivityName=".MainActivity" />
@@ -45,7 +46,10 @@
         <activity
             android:name=".ProfileActivity"
             android:parentActivityName=".MainActivity" />
-        <meta-data android:name="com.google.android.gms.vision.DEPENDECIES"
-            android:value="ocr"/>
+
+        <meta-data
+            android:name="com.google.android.gms.vision.DEPENDECIES"
+            android:value="ocr" />
     </application>
+
 </manifest>
