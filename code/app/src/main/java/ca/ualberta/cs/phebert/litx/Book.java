@@ -154,7 +154,7 @@ public class Book implements Serializable {
 
     public User getBorrower() {
         if (acceptedRequest != null) {
-            return acceptedRequest.getRequestor();
+            return acceptedRequest.getRequester();
         }
         return null;
     }

@@ -2,12 +2,9 @@ package ca.ualberta.cs.phebert.litx;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -18,7 +15,7 @@ import ca.ualberta.cs.phebert.litx.annotations.*;
 public class Request {
     private static final String CHANNEL_ID = "ca.ualberta.cs.phebert.litx.notifs";
     private static final String TAG = "LitX.Request";
-    private User requestor;
+    private User requester;
     private User bookOwner;
     private Book book;
     private Status status;
@@ -131,7 +128,7 @@ public class Request {
 //        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         String textTitle = "Request";
-        String textContent = requestor.getUserName() + " wants to borrow book";
+        String textContent = requester.getUserName() + " wants to borrow book";
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, CHANNEL_ID)
                 // Error
@@ -176,10 +173,10 @@ public class Request {
     }
 
     @BorrowerCalled
-    public Request(Book book, User owner, User requestor) {
+    public Request(Book book, User owner, User requester) {
         this.book = book;
         this.bookOwner = owner;
-        this.requestor = requestor;
+        this.requester = requester;
         status = Status.Pending;
     }
 
@@ -187,8 +184,8 @@ public class Request {
      * This constructor is used by scan
      */
     @OwnerCalled
-    private Request(Book book, User owner, User Requestor, Status state) {
-        this(book,owner,Requestor);
+    private Request(Book book, User owner, User requester, Status state) {
+        this(book,owner, requester);
         status = state;
     }
 
@@ -200,8 +197,8 @@ public class Request {
         return book;
     }
 
-    public User getRequestor() {
-        return requestor;
+    public User getRequester() {
+        return requester;
     }
 
     public Status getStatus() {
