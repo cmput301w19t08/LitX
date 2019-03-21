@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -16,18 +17,36 @@ import ca.ualberta.cs.phebert.litx.annotations.*;
 
 public class Request {
     private static final String CHANNEL_ID = "ca.ualberta.cs.phebert.litx.notifs";
+    private static final String TAG = "LitX.Request";
     private User requestor;
     private User bookOwner;
     private Book book;
     private Status status;
 
     enum Status {
-        Pending("pending"),
-        Accepted("accepted"),
+        Pending("pending") {
+            @Override
+            public Status accept(Book toModify) {
+                return Accepted;
+            }
+
+            @Override
+            public Status refuse(Book toModify) {
+                return super.refuse();
+            }
+        },
+        Accepted("accepted") {
+            @Override
+            public Status resolve(Book toModify) {
+                return Resolved;
+            }
+        },
         Resolved("resolved"),
         Refused("refused");
+
         static Hashtable<String, Status> table = new Hashtable<>();
         String name;
+
         Status(String s) {
             name = s;
         }
@@ -38,6 +57,38 @@ public class Request {
 
         static Status get(String s) {
             return table.get(s);
+        }
+
+        private String getArticle() {
+            switch(name.charAt(0)) {
+                case 'a':
+                case 'e':
+                case 'i':
+                case 'o':
+                case 'u':
+                    return "an";
+                default:
+                    return "a";
+            }
+        }
+
+        public Status accept(Book b) {
+            Log.w(TAG, "cannot accept {A} {NAME} request"
+                    .replace("{NAME}", getName())
+                    .replace("{A}",getArticle()));
+            return this;
+        }
+
+        public Status refuse(Book b) {
+            Log.w(TAG, "cannot refuse {A} {NAME} request"
+                    .replace("{NAME}", getName())
+                    .replace("{A}", getArticle()));
+            return this;
+        }
+
+        public Status resolve(Book b) {
+            Log.w(TAG, "cannot resolve a {NAME} request".replace("{NAME}", getName()));
+            return this;
         }
     }
 
@@ -163,7 +214,7 @@ public class Request {
      */
     @OwnerCalled
     public void accept() {
-        status = Status.Accepted;
+        status = status.accept(book);
     }
 
     /**
@@ -172,7 +223,7 @@ public class Request {
      */
     @OwnerCalled
     public void resolve() {
-        status = Status.Resolved;
+        status = status.resolve(book);
     }
 
     /**
@@ -180,6 +231,6 @@ public class Request {
      */
     @OwnerCalled
     public void delete() {
-        status = Status.Refused;
+        status = status.refuse(book);
     }
 }
