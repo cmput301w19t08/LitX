@@ -38,8 +38,7 @@ import java.util.Map;
  */
 public class MyBooksActivity extends AppCompatActivity {
 
-    private FirebaseUser currentUser;
-    private User user;
+    private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     private String username = "";
     private Button addNew;
     private Spinner mySpinner;
@@ -66,11 +65,7 @@ public class MyBooksActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_books);
         mySpinner = (Spinner) findViewById(R.id.spinner);
-
-        Intent intent = getIntent();
-        user = (User) intent.getSerializableExtra("User");
-        //Log.d("User ID", user.getUserid());
-
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
         // Find the add new button
         addNew = (Button) findViewById(R.id.btnAddNew);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -112,7 +107,6 @@ public class MyBooksActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MyBooksActivity.this, AddBookActivity.class);
-                intent.putExtra("USERNAME", username);
                 startActivity(intent);
             }
         });
@@ -135,10 +129,8 @@ public class MyBooksActivity extends AppCompatActivity {
             firestore = FirebaseFirestore.getInstance();
             final ArrayList<Book> newBooks = new ArrayList<Book>();
 
-            generateUsername();
-//            Toast.makeText(MyBooksActivity.this, username,
-//                Toast.LENGTH_SHORT).show();
-            firestore.collection("Books").whereEqualTo("owner", username).get()
+
+            firestore.collection("Books").whereEqualTo("owner", currentUser.getDisplayName()).get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -227,29 +219,15 @@ public class MyBooksActivity extends AppCompatActivity {
                         }
 
                     });
-        Toast.makeText(MyBooksActivity.this, username,
-                Toast.LENGTH_SHORT).show();
         }
-
-        public void generateUsername(){
-            if ( currentUser == null){
-                currentUser = FirebaseAuth.getInstance().getCurrentUser();
-            }
-            firestore.collection("Users").whereEqualTo("email",
-                    currentUser.getEmail()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Map<String, Object> temp = document.getData();
-                            Toast.makeText(MyBooksActivity.this, temp.get("userName").toString(),
-                                    Toast.LENGTH_SHORT).show();
-                            username = temp.get("userName").toString();
-                        }
-                    }
-                }
-            });
-        }
-
 }
+
+//        public void generateUsername(){
+//            if ( currentUser == null){
+//                currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//            }
+//
+//        }
+//
+//}
 

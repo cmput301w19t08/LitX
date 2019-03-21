@@ -45,8 +45,7 @@ public class BookViewActivity extends AppCompatActivity {
         Intent intent = getIntent();
         final Book book = (Book) intent.getExtras().getSerializable("Book");
 //        String previousActivityName = intent.getStringExtra("ACTIVITY_NAME");
-        Toast.makeText(BookViewActivity.this, FirebaseAuth.getInstance().getCurrentUser().toString(),
-                Toast.LENGTH_SHORT).show();
+
         // Set descriptiption of book in the textview
         ImageView image = (ImageView) findViewById(R.id.bookImage);
         TextView textView = (TextView) findViewById(R.id.descriptionIDView);
@@ -60,9 +59,9 @@ public class BookViewActivity extends AppCompatActivity {
 
         delete = (Button) findViewById(R.id.deleteButtonID);
         edit = (Button) findViewById(R.id.editButtonID);
-        //request = (Button) findViewById(R.id.requestButton);
+        request = (Button) findViewById(R.id.requestButton);
 
-        if (book.getOwner().equals(FirebaseAuth.getInstance().getCurrentUser().toString())) {
+        if (book.getOwner().equals(FirebaseAuth.getInstance().getCurrentUser().getDisplayName())) {
             // Find buttons in the layout
             request.setVisibility(View.GONE);
 

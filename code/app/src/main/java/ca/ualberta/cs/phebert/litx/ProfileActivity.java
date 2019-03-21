@@ -17,6 +17,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -34,6 +36,7 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
     private EditText userEdit;
     private EditText emailEdit;
     private EditText phoneEdit;
+    private FirebaseUser user;
     private EditText PasswordEdit; // not on xml
 
 
@@ -53,6 +56,8 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
         phoneView = findViewById(R.id.phoneView);
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             currentUser = new User(FirebaseAuth.getInstance().getCurrentUser());
+            user = FirebaseAuth.getInstance().getCurrentUser();
+
             currentUser.addObserver(this);
             onUserUpdated(currentUser); // might as well.
         } else {
@@ -72,6 +77,7 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
         creating = true;
     }
 
+    // TODO on edit update in database
     public void profileDone(View v) {
         setContentView(viewProfile);
         if (currentUser == null) {
@@ -82,6 +88,16 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
         currentUser.setUserName(userEdit.getText().toString());
         if (currentUser.getUserName().equals(userEdit.getText().toString())) {
             userView.setText(userEdit.getText());
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(userView.getText().toString()).build();
+            user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()){
+                        Log.d(LOG_TAG, "User display name added");
+                    }
+                }
+            });
         } else {
             Toast.makeText(this, "Setting the username failed", Toast.LENGTH_SHORT)
                     .show();
@@ -101,7 +117,7 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
             FirebaseAuth.getInstance()
                     .signInWithEmailAndPassword(emailView.getText().toString(),"a").addOnSuccessListener(res -> {
                         Log.v(LOG_TAG,"signed in");
-                        finish();
+//                        finish();
             }).addOnFailureListener(e -> {
                 e.printStackTrace();
                 FirebaseAuth.getInstance().createUserWithEmailAndPassword(emailView.getText().toString(),"a23b45")
@@ -119,11 +135,23 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
                                     })
                                     .addOnFailureListener(e2 -> Log.wtf("LitX.User", e));
                             Log.d(LOG_TAG,"signed up");
-                            finish();
+
                         }).addOnFailureListener(e2 -> {
                             Log.e(LOG_TAG, "could not sign up", e2);
                 });
             });
+          UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                  .setDisplayName(userView.getText().toString()).build();
+          user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+              @Override
+              public void onComplete(@NonNull Task<Void> task) {
+                  if (task.isSuccessful()){
+                      Log.d(LOG_TAG, "User display name added");
+                  }
+              }
+          });
+          finish();
+
         }
     }
 

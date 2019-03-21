@@ -95,9 +95,6 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), BookViewActivity.class);
                 intent.putExtra("Book", book);
-                Activity activity = (Activity) context;
-                String activityName = activity.getLocalClassName();
-                intent.putExtra("ACTIVITY_NAME", activityName);
                 context.startActivity(intent);
             }
         });

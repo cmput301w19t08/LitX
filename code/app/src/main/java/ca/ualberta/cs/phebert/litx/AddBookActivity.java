@@ -33,9 +33,7 @@ public class AddBookActivity extends AppCompatActivity {
     EditText titleView;
     EditText ISBNView;
 
-    private User currentUser;
     private Button btnOkay;
-    private String username;
 
     // Database variables
     private FirebaseFirestore firestore;
@@ -54,8 +52,6 @@ public class AddBookActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_book);
         titleView=(EditText)findViewById(R.id.editTitle);
         ISBNView=(EditText)findViewById(R.id.editISBN);
-        Toast.makeText(AddBookActivity.this, username,
-                Toast.LENGTH_SHORT).show();
         String id = ""; // To determine the document id in Firestore
 
         // Get edittexts
@@ -67,7 +63,6 @@ public class AddBookActivity extends AppCompatActivity {
             // If the book is being edited then get the document id to change in the future
             Intent intent = getIntent();
             final Book book = (Book) intent.getExtras().getSerializable("Book");
-            username = intent.getStringExtra("USERNAME");
 
             id = book.getDocID();
 
@@ -108,7 +103,8 @@ public class AddBookActivity extends AppCompatActivity {
                     //TODO: User should be the one using the app, not newly created user
 
 
-                    Book b = new Book(username, author, title, isbn);
+                    Book b = new Book(FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),
+                            author, title, isbn);
 
                     //TODO: Authentication for the user adding a books
                     //TODO: Add book to owners list of books as well
