@@ -61,6 +61,10 @@ public class BookViewActivity extends AppCompatActivity {
         edit = (Button) findViewById(R.id.editButtonID);
         request = (Button) findViewById(R.id.requestButton);
 
+        TextView ownerUsernameView = (TextView) findViewById(R.id.ownerViewID);
+        String ownerUsername = book.getOwner();
+        ownerUsernameView.setText(ownerUsername);
+
         if (book.getOwner().equals(FirebaseAuth.getInstance().getCurrentUser().getDisplayName())) {
             // Find buttons in the layout
             request.setVisibility(View.GONE);

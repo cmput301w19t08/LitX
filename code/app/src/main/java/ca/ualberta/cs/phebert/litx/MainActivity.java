@@ -44,18 +44,6 @@ public class MainActivity extends AppCompatActivity {
             goToProfileView(null);
         } else {
             user = FirebaseAuth.getInstance().getCurrentUser();
-            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                    .setDisplayName("plontke").build();
-            user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()){
-                        Log.d("Succesful", "DisplayName added");
-
-                    }
-                }
-            });
-
         }
     }
 
