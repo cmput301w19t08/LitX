@@ -125,6 +125,8 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
                 });
             });
         }
+
+        currentUser.sync();
     }
 
     @Override
@@ -135,6 +137,7 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
             finish();
         }
     }
+
 
     @Override
     public void onUserUpdated(User user) {
