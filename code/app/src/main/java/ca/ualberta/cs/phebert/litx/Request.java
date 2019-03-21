@@ -29,7 +29,7 @@ public class Request {
 
             @Override
             public Status refuse(Book toModify) {
-                return super.refuse();
+                return Refused;
             }
         },
         Accepted("accepted") {
