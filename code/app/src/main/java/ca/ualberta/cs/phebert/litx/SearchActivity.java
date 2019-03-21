@@ -4,6 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 
@@ -28,6 +30,7 @@ public class SearchActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
         bookresults = new ArrayList<>();
         recycler = (RecyclerView) findViewById(R.id.search_results);
         recycler.setHasFixedSize(true);
@@ -64,11 +67,10 @@ public class SearchActivity extends AppCompatActivity  {
     }
 
 
-    /*ArrayList<User> findUser (ArrayList<User> userlist, String username, boolean isexact) {
-        if(isexact) {
-
-        }
-    }*/
+    ArrayList<User> findUsers () {
+        FindUser fuser = new FindUser("username", keywords);
+        return fuser.getResults();
+    }
 
     protected void updateRecycler () {
         adapter = new BookListAdapter(SearchActivity.this, bookresults);
