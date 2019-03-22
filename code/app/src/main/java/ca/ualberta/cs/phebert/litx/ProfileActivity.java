@@ -1,5 +1,6 @@
 package ca.ualberta.cs.phebert.litx;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -39,6 +40,10 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
     private FirebaseUser user;
     private EditText PasswordEdit; // not on xml
 
+    private String OWNER_USERNAME = "OWNER_USERNAME_FOR_PROFILE";
+    private String OWNER_EMAIL = "OWNER_EMAIL_FOR_PROFILE";
+    private String OWNER_PHONENUMBER = "OWNER_PHONENUMBER_FOR_PROFILE";
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,19 +56,31 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
         emailEdit = findViewById(R.id.emailEdit);
         phoneEdit = findViewById(R.id.phoneEdit);
         setContentView(viewProfile);
-        userView = findViewById(R.id.UserView);
-        emailView = findViewById(R.id.emailView);
-        phoneView = findViewById(R.id.phoneView);
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            currentUser = new User(FirebaseAuth.getInstance().getCurrentUser());
-            user = FirebaseAuth.getInstance().getCurrentUser();
 
-            currentUser.addObserver(this);
-            onUserUpdated(currentUser); // might as well.
+        Intent intent = getIntent();
+        if (intent != null) {
+            userView = findViewById(R.id.UserView);
+            emailView = findViewById(R.id.emailView);
+            phoneView = findViewById(R.id.phoneView);
+            userView.setText(intent.getStringExtra(OWNER_USERNAME));
+            emailView.setText(intent.getStringExtra(OWNER_EMAIL));
+            phoneView.setText(intent.getStringExtra(OWNER_PHONENUMBER));
+
         } else {
-            userView.setText("???");
-            emailView.setText("???");
-            phoneView.setText("???");
+            userView = findViewById(R.id.UserView);
+            emailView = findViewById(R.id.emailView);
+            phoneView = findViewById(R.id.phoneView);
+            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                currentUser = new User(FirebaseAuth.getInstance().getCurrentUser());
+                user = FirebaseAuth.getInstance().getCurrentUser();
+
+                currentUser.addObserver(this);
+                onUserUpdated(currentUser); // might as well.
+            } else {
+                userView.setText("???");
+                emailView.setText("???");
+                phoneView.setText("???");
+            }
         }
     }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -12,9 +13,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.local.QueryData;
+
+import java.util.Map;
 
 /**
  * Displays the description of a book after a user selected the book to view in the previous
@@ -29,6 +41,9 @@ public class BookViewActivity extends AppCompatActivity {
     private Button edit;
     private Button request;
 
+    private String OWNER_USERNAME = "OWNER_USERNAME_FOR_PROFILE";
+    private String OWNER_EMAIL = "OWNER_EMAIL_FOR_PROFILE";
+    private String OWNER_PHONENUMBER = "OWNER_PHONENUMBER_FOR_PROFILE";
     private FirebaseFirestore firestore;
 
     /**
@@ -64,6 +79,41 @@ public class BookViewActivity extends AppCompatActivity {
         TextView ownerUsernameView = (TextView) findViewById(R.id.ownerViewID);
         String ownerUsername = book.getOwner();
         ownerUsernameView.setText(ownerUsername);
+
+        ownerUsernameView.setOnClickListener(new TextView.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(BookViewActivity.this, ProfileActivity.class);
+                intent.putExtra(OWNER_USERNAME, ownerUsername);
+
+                FirebaseFirestore fireData = FirebaseFirestore.getInstance();
+
+                fireData.collection("Users").whereEqualTo("userName", ownerUsername).get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                  //  Toast.makeText(BookViewActivity.this, "HEY", Toast.LENGTH_SHORT).show();
+
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Map<String, Object> temp = document.getData();
+                                        intent.putExtra(OWNER_USERNAME, temp.get("userName").toString());
+                                        intent.putExtra(OWNER_EMAIL, temp.get("email").toString());
+                                        intent.putExtra(OWNER_PHONENUMBER, temp.get("phoneNumber").toString());
+                                    }
+                                    startActivity(intent);
+                                }
+
+                            }
+                        });
+            }
+        });
+
+
+
+
+
 
         if (book.getOwner().equals(FirebaseAuth.getInstance().getCurrentUser().getDisplayName())) {
             // Find buttons in the layout
