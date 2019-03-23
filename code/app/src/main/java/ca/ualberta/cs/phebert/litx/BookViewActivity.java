@@ -39,7 +39,7 @@ public class BookViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_book);
         request = (Button) findViewById(R.id.viewRequest);
-        delete = (Button) findViewById(R.id.deleteButtonID);
+        delete = (Button) findViewById(R.id.deleteButton);
         edit = (Button) findViewById(R.id.editButtonID);
 
 
@@ -50,7 +50,7 @@ public class BookViewActivity extends AppCompatActivity {
             // A owner of the Book cannot request his own book
             request.setVisibility(View.GONE);
             // Find buttons in the layout
-            delete = (Button) findViewById(R.id.deleteButtonID);
+            delete = (Button) findViewById(R.id.deleteButton);
             edit = (Button) findViewById(R.id.editButtonID);
 
             firestore = FirebaseFirestore.getInstance();
