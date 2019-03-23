@@ -122,7 +122,7 @@ public class User {
      */
     public void setUserName(String username) {
         if(certificate != null) {
-            sync();
+            scheduleSync();
         }
         this.userName = username;
     }
@@ -135,8 +135,7 @@ public class User {
         email = newEmail;
         if(certificate != null) {
             certificate.updateEmail(newEmail);
-            sync();
-            // TODO sync with firebase/store
+            scheduleSync();
         }
     }
 
@@ -148,7 +147,7 @@ public class User {
         // TODO validate phone Number
         phoneNumber = newPhoneNumber;
         if(certificate != null) {
-            sync();
+            scheduleSync();
         }
     }
 

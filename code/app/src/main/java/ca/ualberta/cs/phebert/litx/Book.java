@@ -10,6 +10,8 @@ public class Book implements Serializable {
     private String title;
     private long isbn;
     private String status;
+    private String ownerUid;
+
     // For testing the adapter
     //private User borrower;
 
@@ -21,12 +23,13 @@ public class Book implements Serializable {
 
     private ImageView photograph;
 
-    public Book(String owner, String author, String title, long isbn) {
+    public Book(String owner, String author, String title, long isbn, String ownerUid) {
         this.owner = owner;
         this.author = author;
         this.title = title;
         this.isbn = isbn;
         this.status = "Available";
+        this.ownerUid = ownerUid;
     }
 
     public Book() {
@@ -45,6 +48,9 @@ public class Book implements Serializable {
 
     public void setDocID(String newDocID) { this.docID = newDocID; }
 
+    public String getOwnerUid(){ return ownerUid;}
+
+    public void setOwnerUid(String newUid){this.ownerUid = newUid; }
 
     /**
      * getter for status
@@ -153,7 +159,7 @@ public class Book implements Serializable {
 
     public User getBorrower() {
         if (acceptedRequest != null) {
-            return acceptedRequest.getRequestor();
+            return acceptedRequest.getRequester();
         }
         return null;
     }
