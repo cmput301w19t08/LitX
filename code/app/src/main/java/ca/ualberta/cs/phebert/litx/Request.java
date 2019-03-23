@@ -27,22 +27,33 @@ public class Request {
     private Book book;
     private RequestStatus status;
 
-
     /**
      * Look requests up on firebase, and get all pertaining
      * If any requests are not on disk, Create a notification.
      * This should be called by a daemon/service.
-     * @return all the requests
      */
     @OwnerCalled
-    public static ArrayList<Request> scan(Context ctx) {
+    public static void scan(Context ctx) {
         FirebaseFirestore.getInstance().collection("Requests")
                 .whereEqualTo("owner", FirebaseAuth.getInstance().getCurrentUser())
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<Request> requests = new ArrayList<>();
                     List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
+                    for (DocumentSnapshot doc : docs) {
+                        requests.add(fromSnapshot(doc));
+                    }
                 });
-        return null;
+    }
+
+    private static Request fromSnapshot(DocumentSnapshot snapshot) {
+        return new Request(
+            // need to somehow acces Book.
+                new Book(),
+                User.findByUid(snapshot.getString("owner")),
+                User.findByUid(snapshot.getString("requester")),
+                snapshot.getString("status")
+        );
     }
 
     /**
