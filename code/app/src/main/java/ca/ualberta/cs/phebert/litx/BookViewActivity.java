@@ -1,10 +1,8 @@
 package ca.ualberta.cs.phebert.litx;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -71,6 +69,8 @@ public class BookViewActivity extends AppCompatActivity {
                 }
             });
 
+        // Set description of book in the textview
+
             edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -93,13 +93,24 @@ public class BookViewActivity extends AppCompatActivity {
             });
         }
         // Set descriptiption of book in the textview
+
         ImageView image = (ImageView) findViewById(R.id.bookImage);
         TextView textView = (TextView) findViewById(R.id.descriptionIDView);
         String description = "Title: " + book.getTitle() + "\n" + "Author: " + book.getAuthor()
                 + "\n" + "ISBN: " + String.valueOf(book.getIsbn());
         textView.setText(description);
-        image = book.getPhotograph();
 
+
+
+        // Set an onClickListener for the photo that launches the view photo activity
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BookViewActivity.this, ViewPhotoActivity.class);
+                intent.putExtra("Book", book);
+                startActivity(intent);
+            }
+        });
 
     }
 }
