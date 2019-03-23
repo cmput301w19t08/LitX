@@ -18,76 +18,8 @@ public class Request {
     private User requester;
     private User bookOwner;
     private Book book;
-    private Status status;
+    private RequestStatus status;
 
-    enum Status {
-        Pending("pending") {
-            @Override
-            public Status accept(Book toModify) {
-                return Accepted;
-            }
-
-            @Override
-            public Status refuse(Book toModify) {
-                return Refused;
-            }
-        },
-        Accepted("accepted") {
-            @Override
-            public Status resolve(Book toModify) {
-                return Resolved;
-            }
-        },
-        Resolved("resolved"),
-        Refused("refused");
-
-        static Hashtable<String, Status> table = new Hashtable<>();
-        String name;
-
-        Status(String s) {
-            name = s;
-        }
-
-        String getName() {
-            return name;
-        }
-
-        static Status get(String s) {
-            return table.get(s);
-        }
-
-        private String getArticle() {
-            switch(name.charAt(0)) {
-                case 'a':
-                case 'e':
-                case 'i':
-                case 'o':
-                case 'u':
-                    return "an";
-                default:
-                    return "a";
-            }
-        }
-
-        public Status accept(Book b) {
-            Log.w(TAG, "cannot accept {A} {NAME} request"
-                    .replace("{NAME}", getName())
-                    .replace("{A}",getArticle()));
-            return this;
-        }
-
-        public Status refuse(Book b) {
-            Log.w(TAG, "cannot refuse {A} {NAME} request"
-                    .replace("{NAME}", getName())
-                    .replace("{A}", getArticle()));
-            return this;
-        }
-
-        public Status resolve(Book b) {
-            Log.w(TAG, "cannot resolve a {NAME} request".replace("{NAME}", getName()));
-            return this;
-        }
-    }
 
     /**
      * Look requests up on firebase, and get all pertaining
@@ -177,16 +109,16 @@ public class Request {
         this.book = book;
         this.bookOwner = owner;
         this.requester = requester;
-        status = Status.Pending;
+        status = RequestStatus.Pending;
     }
 
     /**
      * This constructor is used by scan
      */
     @OwnerCalled
-    private Request(Book book, User owner, User requester, Status state) {
+    private Request(Book book, User owner, User requester, String state) {
         this(book,owner, requester);
-        status = state;
+        status = RequestStatus.get(state);
     }
 
     public User getBookOwner() {
@@ -201,7 +133,7 @@ public class Request {
         return requester;
     }
 
-    public Status getStatus() {
+    public RequestStatus getStatus() {
         return status;
     }
 
