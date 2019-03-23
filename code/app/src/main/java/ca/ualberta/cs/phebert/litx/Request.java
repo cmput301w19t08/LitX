@@ -7,14 +7,20 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.function.Consumer;
 
 import ca.ualberta.cs.phebert.litx.annotations.*;
 
 public class Request {
     private static final String CHANNEL_ID = "ca.ualberta.cs.phebert.litx.notifs";
-    private static final String TAG = "LitX.Request";
     private User requester;
     private User bookOwner;
     private Book book;
@@ -29,6 +35,11 @@ public class Request {
      */
     @OwnerCalled
     public static ArrayList<Request> scan(Context ctx) {
+        FirebaseFirestore.getInstance().collection("Requests")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
+                });
         return null;
     }
 
