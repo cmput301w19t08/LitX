@@ -7,13 +7,16 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.function.Consumer;
@@ -34,21 +37,31 @@ public class Request {
      */
     @OwnerCalled
     public static void scan(Context ctx) {
-        FirebaseFirestore.getInstance().collection("Requests")
+        HashMap<String, Request> onlineRequests = new HashMap<>();
+        HashMap<String, Request> offlineRequests = new HashMap<>();
+        Task<QuerySnapshot> task = FirebaseFirestore.getInstance().collection("Requests")
                 .whereEqualTo("owner", FirebaseAuth.getInstance().getCurrentUser())
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<Request> requests = new ArrayList<>();
                     List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
                     for (DocumentSnapshot doc : docs) {
-                        requests.add(fromSnapshot(doc));
+                        onlineRequests.put(doc.getId(), fromSnapshot(doc));
                     }
                 });
+
+        // TODO get stored Requests
+
+        while(!task.isComplete()) {
+            if(task.isCanceled()) return;
+        }
+        if(task.isSuccessful()) {
+            // TODO compare stored requests with online requests
+        }
     }
 
     private static Request fromSnapshot(DocumentSnapshot snapshot) {
         return new Request(
-            // need to somehow acces Book.
+                // need to somehow acces Book.
                 new Book(),
                 User.findByUid(snapshot.getString("owner")),
                 User.findByUid(snapshot.getString("requester")),
