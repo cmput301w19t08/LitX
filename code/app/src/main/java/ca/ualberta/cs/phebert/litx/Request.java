@@ -7,6 +7,7 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -36,6 +37,7 @@ public class Request {
     @OwnerCalled
     public static ArrayList<Request> scan(Context ctx) {
         FirebaseFirestore.getInstance().collection("Requests")
+                .whereEqualTo("owner", FirebaseAuth.getInstance().getCurrentUser())
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
