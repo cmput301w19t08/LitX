@@ -85,7 +85,7 @@ public class Book implements Serializable {
      * @return Boolean
      */
     public Boolean isAvailable() {
-        return this.status == "Available";
+        return this.status.equals("Available");
     }
 
     /**
@@ -169,9 +169,14 @@ public class Book implements Serializable {
      * @param request A request that has been accepted by owner
      */
     public void setAcceptedRequest(Request request) {
-        if (acceptedRequest == null)
+        if(request == null && acceptedRequest != null) {
+            acceptedRequest = null;
+            status = "Available";
+        }
+        if (acceptedRequest == null) {
             acceptedRequest = request;
             status = "accepted";
+        }
     }
 
     /**

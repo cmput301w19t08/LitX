@@ -5,21 +5,16 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.function.Consumer;
 
 import ca.ualberta.cs.phebert.litx.annotations.*;
 
@@ -180,7 +175,7 @@ public class Request {
      */
     @OwnerCalled
     public void accept() {
-        status = status.accept(book);
+        status = status.accept(book, this);
     }
 
     /**
@@ -189,7 +184,7 @@ public class Request {
      */
     @OwnerCalled
     public void resolve() {
-        status = status.resolve(book);
+        status = status.resolve(book, this);
     }
 
     /**
@@ -197,6 +192,6 @@ public class Request {
      */
     @OwnerCalled
     public void delete() {
-        status = status.refuse(book);
+        status = status.refuse(book, this);
     }
 }
