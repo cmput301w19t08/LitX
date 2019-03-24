@@ -1,5 +1,5 @@
 /*
- * Classname: scan.java
+ * Classname: ScanBookActivity.java
  * Version: 1.0
  * Date: 2019-03-11
  * Copyright notice: https://www.youtube.com/watch?v=xoTKpstv9f0 (video on text recognition with Camera using Google Vision)
@@ -35,7 +35,7 @@ import java.io.IOException;
 
 
 /**
- * This is our scan class
+ * This is our ScanBookActivity class
  * @author 150 1248
  * @version 1.0
  * @see AppCompatActivity

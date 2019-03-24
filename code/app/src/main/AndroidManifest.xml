@@ -19,6 +19,9 @@
             android:name=".ScanBookActivity"
             android:parentActivityName=".AddBookActivity" />
         <activity
+            android:name=".MapObject"
+            android:parentActivityName=".MainActivity" />
+        <activity
             android:name=".AddBookActivity"
             android:parentActivityName=".MyBooksActivity" />
         <activity
@@ -50,6 +53,15 @@
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDECIES"
             android:value="ocr" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
     </application>
 
 </manifest>
