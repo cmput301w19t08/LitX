@@ -1,9 +1,6 @@
 package ca.ualberta.cs.phebert.litx;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -58,8 +55,12 @@ public class ViewPhotoActivity extends AppCompatActivity {
         btn_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                StorageReference storageReference = storageRef.child("image.png");
-                storageReference.putFile(uri);
+                String isbn = Long.toString(book.getIsbn());
+                StorageReference storageReference = storageRef.child(/*book.getOwnerUid() + "/" +*/ Long.toString(book.getIsbn()) + ".png");
+
+                if (uri != null) {
+                    storageReference.putFile(uri);
+                }
 
                 Intent view_book = new Intent(ViewPhotoActivity.this, BookViewActivity.class);
                 view_book.putExtra("Book", book);
