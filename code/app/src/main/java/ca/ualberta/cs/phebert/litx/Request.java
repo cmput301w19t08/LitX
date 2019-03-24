@@ -50,7 +50,11 @@ public class Request {
             if(task.isCanceled()) return;
         }
         if(task.isSuccessful()) {
+            Request request; // will be set in a foreach loop
             // TODO compare stored requests with online requests
+            if(false) {
+                request.generateNotification(ctx);
+            }
         }
     }
 
