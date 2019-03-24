@@ -9,7 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Layout;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,13 +60,17 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
         setContentView(viewProfile);
 
         Intent intent = getIntent();
-        if (intent != null) {
+        if (intent.hasExtra(OWNER_USERNAME)) {
             userView = findViewById(R.id.UserView);
             emailView = findViewById(R.id.emailView);
             phoneView = findViewById(R.id.phoneView);
             userView.setText(intent.getStringExtra(OWNER_USERNAME));
             emailView.setText(intent.getStringExtra(OWNER_EMAIL));
             phoneView.setText(intent.getStringExtra(OWNER_PHONENUMBER));
+            TextView editButton = (TextView) findViewById(R.id.EditButton);
+            TextView addAccButton = (TextView) findViewById(R.id.addAccButton);
+            editButton.setVisibility(View.INVISIBLE);
+            addAccButton.setVisibility(View.INVISIBLE);
 
         } else {
             userView = findViewById(R.id.UserView);
