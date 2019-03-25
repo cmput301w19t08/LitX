@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -118,9 +119,9 @@ public class MyBooksActivity extends AppCompatActivity {
      */
     public void query() {
             firestore = FirebaseFirestore.getInstance();
-            final User u = new User("John", "n", "123");
+            String userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
             final ArrayList<Book> newBooks = new ArrayList<Book>();
-            firestore.collection("Books").whereEqualTo("owner", u.getUserName()).get()
+            firestore.collection("Books").whereEqualTo("ownerUid", userName).get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -130,7 +131,8 @@ public class MyBooksActivity extends AppCompatActivity {
                                     Book book = new Book(temp.get("owner").toString(),
                                             temp.get("author").toString(),
                                             temp.get("title").toString(),
-                                            Long.valueOf(temp.get("isbn").toString()));
+                                            Long.valueOf(temp.get("isbn").toString()),
+                                            temp.get("ownerUid").toString());
                                     if (temp.get("acceptedRequest") != null){
                                         book.setStatus("Accepted");
                                     } else {
