@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -58,14 +59,7 @@ public class BookViewActivity extends AppCompatActivity {
         Intent intent = getIntent();
         final Book book = (Book) intent.getExtras().getSerializable("Book");
 
-        // Load the image into the imageview if it exists
-        storageReference = FirebaseStorage.getInstance().getReference();
-        try {
-            StorageReference pathReference = storageReference.child(book.getOwnerUid() + "/" + Long.toString(book.getIsbn()) + ".png");
-            Log.d("Reference", pathReference.toString());
-            GlideApp.with(this).load(pathReference).into(photo);
-        } catch (Exception e) {}
-
+        load_image(book);
 
         if (book.getOwnerUid().equals(uid)){
             // A owner of the Book cannot request his own book
@@ -130,5 +124,14 @@ public class BookViewActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void load_image(Book book) {
+        // Load the image into the imageview if it exists
+        storageReference = FirebaseStorage.getInstance().getReference();
+        try {
+            StorageReference pathReference = storageReference.child(book.getOwnerUid() + "/" + Long.toString(book.getIsbn()) + ".png");
+            GlideApp.with(this).load(pathReference).into(photo);
+        } catch (Exception e) {}
     }
 }
