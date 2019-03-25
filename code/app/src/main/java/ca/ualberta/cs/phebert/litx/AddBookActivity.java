@@ -90,7 +90,7 @@ public class AddBookActivity extends AppCompatActivity {
                     // Create a new book object with those fields
                     firestore = FirebaseFirestore.getInstance();
                     //TODO: User should be the one using the app, not newly created user
-                    User u = new User("John", "n", "123");
+                    User u = new User("Johnnnnnnnyy", "n@n.ca", "1239999780");
                     Book b = new Book(u.getUserName(), author, title, isbn,
                             uid);
 
