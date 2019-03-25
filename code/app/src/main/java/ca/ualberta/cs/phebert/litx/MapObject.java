@@ -49,6 +49,7 @@ public class MapObject extends AppCompatActivity implements OnMapReadyCallback{
             Drag= intent.getBooleanExtra("MOVABLE",Boolean.FALSE);
             if (Drag==Boolean.TRUE){
                 location = new LatLng(53.5304672,-113.5306609);
+                markerLocation = new LatLng(53.5304672,-113.5306609);
 
 
 
@@ -56,6 +57,7 @@ public class MapObject extends AppCompatActivity implements OnMapReadyCallback{
             }
             else {
                 location = new LatLng(Latitude,Longitude);
+                markerLocation= new LatLng(Latitude,Longitude);
 
             }
 
@@ -94,7 +96,7 @@ public class MapObject extends AppCompatActivity implements OnMapReadyCallback{
     public void onMapReady(GoogleMap googleMap) {
         // Add a marker in Sydney, Australia,
         // and move the map's camera to the same location.
-        googleMap.addMarker(new MarkerOptions().position(location)
+        googleMap.addMarker(new MarkerOptions().position(markerLocation)
                 .title("Marker")
                 .draggable(Drag));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(location));

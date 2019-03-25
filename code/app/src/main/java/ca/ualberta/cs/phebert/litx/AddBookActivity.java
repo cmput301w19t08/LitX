@@ -131,7 +131,6 @@ public class AddBookActivity extends AppCompatActivity {
             }
         }
     }
-
     public void scanISBN(View v) {
         //Intent intent = new Intent(this, ScanBookActivity.class);
         //startActivityForResult(intent,155);
@@ -143,7 +142,7 @@ public class AddBookActivity extends AppCompatActivity {
             double RichardISBN=Double.valueOf(ISBNView.getText().toString());
             intent.putExtra("LONG",-97.432404);
             intent.putExtra("LAT",RichardISBN);
-            intent.putExtra("MOVABLE",Boolean.FALSE);
+            intent.putExtra("MOVABLE",Boolean.TRUE);
             startActivity(intent);
 
 
