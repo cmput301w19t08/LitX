@@ -100,7 +100,8 @@ public class ViewPhotoActivity extends AppCompatActivity {
     private void load_image(Book book) {
         // Load the image into the imageview if it exists
         try {
-            GlideApp.with(this).load(pathReference).into(ivPhoto);
+            int iconId = this.getResources().getIdentifier("book_icon", "drawable", this.getPackageName());
+            GlideApp.with(this).load(pathReference).placeholder(iconId).into(ivPhoto);
         } catch (Exception e) {}
     }
 }
