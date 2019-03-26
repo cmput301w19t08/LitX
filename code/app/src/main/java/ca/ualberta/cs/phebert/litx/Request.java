@@ -2,12 +2,10 @@ package ca.ualberta.cs.phebert.litx;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -16,18 +14,36 @@ import ca.ualberta.cs.phebert.litx.annotations.*;
 
 public class Request {
     private static final String CHANNEL_ID = "ca.ualberta.cs.phebert.litx.notifs";
-    private User requestor;
+    private static final String TAG = "LitX.Request";
+    private User requester;
     private User bookOwner;
     private Book book;
     private Status status;
 
     enum Status {
-        Pending("pending"),
-        Accepted("accepted"),
+        Pending("pending") {
+            @Override
+            public Status accept(Book toModify) {
+                return Accepted;
+            }
+
+            @Override
+            public Status refuse(Book toModify) {
+                return Refused;
+            }
+        },
+        Accepted("accepted") {
+            @Override
+            public Status resolve(Book toModify) {
+                return Resolved;
+            }
+        },
         Resolved("resolved"),
         Refused("refused");
+
         static Hashtable<String, Status> table = new Hashtable<>();
         String name;
+
         Status(String s) {
             name = s;
         }
@@ -38,6 +54,38 @@ public class Request {
 
         static Status get(String s) {
             return table.get(s);
+        }
+
+        private String getArticle() {
+            switch(name.charAt(0)) {
+                case 'a':
+                case 'e':
+                case 'i':
+                case 'o':
+                case 'u':
+                    return "an";
+                default:
+                    return "a";
+            }
+        }
+
+        public Status accept(Book b) {
+            Log.w(TAG, "cannot accept {A} {NAME} request"
+                    .replace("{NAME}", getName())
+                    .replace("{A}",getArticle()));
+            return this;
+        }
+
+        public Status refuse(Book b) {
+            Log.w(TAG, "cannot refuse {A} {NAME} request"
+                    .replace("{NAME}", getName())
+                    .replace("{A}", getArticle()));
+            return this;
+        }
+
+        public Status resolve(Book b) {
+            Log.w(TAG, "cannot resolve a {NAME} request".replace("{NAME}", getName()));
+            return this;
         }
     }
 
@@ -80,7 +128,7 @@ public class Request {
 //        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
         String textTitle = "Request";
-        String textContent = requestor.getUserName() + " wants to borrow book";
+        String textContent = requester.getUserName() + " wants to borrow book";
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, CHANNEL_ID)
                 // Error
@@ -125,10 +173,10 @@ public class Request {
     }
 
     @BorrowerCalled
-    public Request(Book book, User owner, User requestor) {
+    public Request(Book book, User owner, User requester) {
         this.book = book;
         this.bookOwner = owner;
-        this.requestor = requestor;
+        this.requester = requester;
         status = Status.Pending;
     }
 
@@ -136,8 +184,8 @@ public class Request {
      * This constructor is used by scan
      */
     @OwnerCalled
-    private Request(Book book, User owner, User Requestor, Status state) {
-        this(book,owner,Requestor);
+    private Request(Book book, User owner, User requester, Status state) {
+        this(book,owner, requester);
         status = state;
     }
 
@@ -149,8 +197,8 @@ public class Request {
         return book;
     }
 
-    public User getRequestor() {
-        return requestor;
+    public User getRequester() {
+        return requester;
     }
 
     public Status getStatus() {
@@ -163,7 +211,7 @@ public class Request {
      */
     @OwnerCalled
     public void accept() {
-        status = Status.Accepted;
+        status = status.accept(book);
     }
 
     /**
@@ -172,7 +220,7 @@ public class Request {
      */
     @OwnerCalled
     public void resolve() {
-        status = Status.Resolved;
+        status = status.resolve(book);
     }
 
     /**
@@ -180,6 +228,6 @@ public class Request {
      */
     @OwnerCalled
     public void delete() {
-        status = Status.Refused;
+        status = status.refuse(book);
     }
 }

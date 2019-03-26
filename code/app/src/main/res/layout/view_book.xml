@@ -44,7 +44,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:srcCompat="@drawable/book_icon" />
 
     <TextView
         android:id="@+id/descriptionIDView"
@@ -63,26 +63,33 @@
         app:layout_constraintVertical_bias="0.542" />
 
     <Button
-        android:id="@+id/deleteButtonID"
+        android:id="@+id/deleteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="39dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:text="Delete"
-        app:layout_constraintEnd_toStartOf="@+id/editButtonID"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/requestsRecycleView" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/viewRequest"
+        app:layout_constraintEnd_toStartOf="@+id/viewRequest"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/editButtonID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:text="Edit"
+        app:layout_constraintBaseline_toBaselineOf="@+id/viewRequest"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/deleteButtonID"
-        app:layout_constraintTop_toBottomOf="@+id/requestsRecycleView" />
+        app:layout_constraintStart_toEndOf="@+id/viewRequest" />
+
+    <Button
+        android:id="@+id/viewRequest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Request"
+        app:layout_constraintTop_toBottomOf="@+id/requestsRecycleView"
+        tools:layout_editor_absoluteX="161dp" />
 </android.support.constraint.ConstraintLayout>

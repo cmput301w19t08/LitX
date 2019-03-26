@@ -105,9 +105,9 @@ public class SearchActivity extends AppCompatActivity  {
                             Book book = new Book(ds.getString("owner"),
                                     ds.getString("author"),
                                     ds.getString("title"),
-                                    ds.getLong("isbn"));
-                            book.setStatus(ds.getString("status"));
-                            booklist.add(book);
+                                    ds.getLong("isbn"),
+                                    ds.getString("ownerUid")));
+                            bookresults.get(bookresults.size()-1).setStatus(ds.getString("status"));
                         }
                         bookresults = findBook(booklist, keywords.split(" "));
                         updateRecycler();

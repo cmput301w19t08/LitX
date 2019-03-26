@@ -5,11 +5,15 @@ import android.widget.ImageView;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import static com.loopj.android.http.AsyncHttpClient.log;
+
 public class Book implements Serializable {
     private String author;
     private String title;
     private long isbn;
-    private String status;
+    private BookStatus status;
+    private String ownerUid;
+
     // For testing the adapter
     //private User borrower;
 
@@ -21,12 +25,13 @@ public class Book implements Serializable {
 
     private ImageView photograph;
 
-    public Book(String owner, String author, String title, long isbn) {
+    public Book(String owner, String author, String title, long isbn, String ownerUid) {
         this.owner = owner;
         this.author = author;
         this.title = title;
         this.isbn = isbn;
-        this.status = "Available";
+        this.status = BookStatus.available;
+        this.ownerUid = ownerUid;
     }
 
     public Book() {
@@ -45,24 +50,40 @@ public class Book implements Serializable {
 
     public void setDocID(String newDocID) { this.docID = newDocID; }
 
+    public String getOwnerUid(){ return ownerUid;}
+
+    public void setOwnerUid(String newUid){this.ownerUid = newUid; }
 
     /**
      * getter for status
      * @return String
      */
-    public String getStatus() {
+    public BookStatus getStatus() {
         return status;
     }
 
     /**
      * Sets this.status to status
      *
-     * @param status String one of accepted, available, borrowed, requested
+     * @param status (String) one of accepted, available, borrowed, requested
      */
     public void setStatus(String status) {
-        this.status = status;
-
+        try {
+            this.status = BookStatus.valueOf(status);
+        } catch(IllegalArgumentException e) {
+            log.e("LitX.Book","status does not exist", e);
+        }
     }
+
+    /**
+     * Sets this book's status
+     * @param status the status to set the book to.
+     */
+    public void setStatus(BookStatus status) {
+        this.status = status;
+    }
+
+
 
     /**
      * Getter for owner
@@ -79,7 +100,7 @@ public class Book implements Serializable {
      * @return Boolean
      */
     public Boolean isAvailable() {
-        return this.status == "Available";
+        return this.status == BookStatus.available;
     }
 
     /**
@@ -153,7 +174,7 @@ public class Book implements Serializable {
 
     public User getBorrower() {
         if (acceptedRequest != null) {
-            return acceptedRequest.getRequestor();
+            return acceptedRequest.getRequester();
         }
         return null;
     }
@@ -163,9 +184,10 @@ public class Book implements Serializable {
      * @param request A request that has been accepted by owner
      */
     public void setAcceptedRequest(Request request) {
-        if (acceptedRequest == null)
+        if (acceptedRequest == null) {
             acceptedRequest = request;
-            status = "accepted";
+            status = BookStatus.accepted;
+        }
     }
 
     /**

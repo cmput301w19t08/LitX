@@ -71,7 +71,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
 
         // Commented out since we cannot get request object from database at this time
         //        if (!book.isAvailable()) {
-        //            holder.borrower.setText(book.getAcceptedRequest().getRequestor().getUserName());
+        //            holder.borrower.setText(book.getAcceptedRequest().getRequester().getUserName());
         //        } else {
         holder.borrower.setText(null);
 
