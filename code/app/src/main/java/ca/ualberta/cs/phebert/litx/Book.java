@@ -69,7 +69,7 @@ public class Book implements Serializable {
      */
     public void setStatus(String status) {
         try {
-            this.status = BookStatus.valueOf(status);
+            this.status = BookStatus.valueOf(status.toLowerCase());
         } catch(IllegalArgumentException e) {
             log.e("LitX.Book","status does not exist", e);
         }

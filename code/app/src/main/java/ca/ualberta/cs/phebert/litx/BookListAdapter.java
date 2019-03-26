@@ -6,14 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.j2objc.annotations.ObjectiveCName;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -75,15 +69,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         //        } else {
         holder.borrower.setText(null);
 
-        if (book.getStatus() == "Available" ) {
-            holder.status.setText("Available");
-        } else if (book.getStatus() == "Borrowed"){
-            holder.status.setText("Borrowed");
-        } else if (book.getStatus() == "Accepted") {
-            holder.status.setText("Accepted");
-        } else if (book.getStatus() == "Requested") {
-            holder.status.setText("Requested");
-        }
+        holder.status.setText(book.getStatus().toString());
         /**
          * Sets the onclick listener for each book to go to the view
          * Books activity  while displaying the book passed

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg"
     tools:context=".AddBookActivity">
 
     <ImageView
@@ -28,6 +29,7 @@
         android:ems="10"
         android:hint="Title"
         android:inputType="textCapWords"
+        android:background="@drawable/round_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
@@ -69,6 +71,10 @@
         android:layout_marginBottom="16dp"
         android:onClick="scanISBN"
         android:text="Scan ISBN"
+        android:textColor="#ffffff"
+        android:textAllCaps="false"
+        android:textSize="16dp"
+        android:background="@drawable/round_button"
         app:layout_constraintBottom_toTopOf="@+id/btnOkay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -81,6 +87,10 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:text="@string/okay"
+        android:textSize="16dp"
+        android:textColor="#ffffff"
+        android:textAllCaps="false"
+        android:background="@drawable/round_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

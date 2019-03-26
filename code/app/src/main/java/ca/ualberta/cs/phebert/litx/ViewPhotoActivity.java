@@ -1,13 +1,11 @@
 package ca.ualberta.cs.phebert.litx;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -30,22 +28,27 @@ public class ViewPhotoActivity extends AppCompatActivity {
     private static final int image = 100;
     Uri uri;
 
+    private ImageView ivPhoto;
+
     private StorageReference storageRef;
-    private FirebaseUser owner = FirebaseAuth.getInstance().getCurrentUser();
+    private StorageReference pathReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_photo);
 
+        Button btn_add = (Button) findViewById(R.id.addPhotoButton);
+        Button btn_delete = (Button) findViewById(R.id.deletePhotoButton);
+        Button btn_done = (Button) findViewById(R.id.donePhotoButton);
+        ivPhoto = (ImageView) findViewById(R.id.photoImageView);
         storageRef = FirebaseStorage.getInstance().getReference();
 
         Intent intent = getIntent();
         final Book book = (Book) intent.getExtras().getSerializable("Book");
 
-        Button btn_add = (Button) findViewById(R.id.addPhotoButton);
-        Button btn_delete = (Button) findViewById(R.id.deletePhotoButton);
-        Button btn_done = (Button) findViewById(R.id.donePhotoButton);
+        pathReference = storageRef.child(book.getOwnerUid() + "/" + Long.toString(book.getIsbn()));
+        load_image(book);
 
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,11 +58,25 @@ public class ViewPhotoActivity extends AppCompatActivity {
             }
         });
 
+        btn_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Delete the file
+                try {
+                    pathReference.delete();
+                    Log.d("Success", "File has been deleted");
+                } catch(Exception e) {
+                    Log.d("Error", "Error occured, file could not be deleted!");
+                }
+            }
+        });
+
         btn_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                StorageReference storageReference = storageRef.child("image.png");
-                storageReference.putFile(uri);
+                if (uri != null) {
+                    pathReference.putFile(uri);
+                }
 
                 Intent view_book = new Intent(ViewPhotoActivity.this, BookViewActivity.class);
                 view_book.putExtra("Book", book);
@@ -72,9 +89,16 @@ public class ViewPhotoActivity extends AppCompatActivity {
         super.onActivityResult(request, result, intent);
         if (result == RESULT_OK && request == image) {
             uri = intent.getData();
-            ImageView ivPhoto = (ImageView) findViewById(R.id.photoImageView);
 
             Glide.with(this).load(uri).into(ivPhoto);
         }
+    }
+
+    private void load_image(Book book) {
+        // Load the image into the imageview if it exists
+        try {
+            int iconId = this.getResources().getIdentifier("book_icon", "drawable", this.getPackageName());
+            GlideApp.with(this).load(pathReference).placeholder(iconId).into(ivPhoto);
+        } catch (Exception e) {}
     }
 }
