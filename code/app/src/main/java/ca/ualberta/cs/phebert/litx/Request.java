@@ -55,9 +55,9 @@ public class Request {
     }
 
     /**
-     * gets a request from an online document
-     * @param docId
-     * @return
+     * gets a request from its online document
+     * @param docId the document's name in the database
+     * @return the request associated with the document.
      */
     @Nullable
     public static Request fromDocId(String docId) {
