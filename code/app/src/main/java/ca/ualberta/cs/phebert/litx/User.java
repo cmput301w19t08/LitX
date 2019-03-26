@@ -16,6 +16,7 @@ import ca.ualberta.cs.phebert.litx.annotations.OwnerCalled;
 
 public class User {
     final static String USER_COLLECTION = "Users";
+    private static User current;
     private String userName;
     private String email;
     private String phoneNumber;
@@ -29,6 +30,15 @@ public class User {
     private FirebaseUser certificate;
     private boolean syncScheduled;
 
+
+    public static User currentUser() {
+        if(current != null) {
+            if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+                current = findByUid(FirebaseAuth.getInstance().getUid());
+            } else return null;
+        }
+        return current;
+    }
 
     /*
      * Check if username is unique

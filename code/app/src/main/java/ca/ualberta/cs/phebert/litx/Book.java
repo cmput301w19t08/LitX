@@ -220,11 +220,7 @@ public class Book implements Serializable {
         this.photograph = photograph;
     }
 
-    /*
-     * Uses the getters for each Request to fill in the views of a viewRequest layout
-     * (Probably going to be some form of a custom adapter layout)
-     */
-    public void viewRequests() {
-
+    public void addRequest() {
+        Request request = new Request(this, this.owner, User.currentUser());
     }
 }

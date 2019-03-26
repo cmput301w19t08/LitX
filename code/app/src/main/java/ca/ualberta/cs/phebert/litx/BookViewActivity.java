@@ -101,6 +101,7 @@ public class BookViewActivity extends AppCompatActivity {
             request.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    book.
                     Toast.makeText(BookViewActivity.this, "Your Request has been sent",
                             Toast.LENGTH_SHORT).show();
                 }
