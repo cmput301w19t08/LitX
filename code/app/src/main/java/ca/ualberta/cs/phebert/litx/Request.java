@@ -68,6 +68,7 @@ public class Request {
      * Look requests up on firebase, and get all pertaining
      * If any requests are not on disk, Create a notification.
      * This should be called by a daemon/service.
+     * FIXME: may be replaced by firebase push notifications.
      * @return all the requests
      * @param ctx
      */
