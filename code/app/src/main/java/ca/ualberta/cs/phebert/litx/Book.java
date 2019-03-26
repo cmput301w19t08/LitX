@@ -5,11 +5,13 @@ import android.widget.ImageView;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import static com.loopj.android.http.AsyncHttpClient.log;
+
 public class Book implements Serializable {
     private String author;
     private String title;
     private long isbn;
-    private String status;
+    private BookStatus status;
     private String ownerUid;
 
     // For testing the adapter
@@ -28,7 +30,7 @@ public class Book implements Serializable {
         this.author = author;
         this.title = title;
         this.isbn = isbn;
-        this.status = "Available";
+        this.status = BookStatus.available;
         this.ownerUid = ownerUid;
     }
 
@@ -56,19 +58,32 @@ public class Book implements Serializable {
      * getter for status
      * @return String
      */
-    public String getStatus() {
+    public BookStatus getStatus() {
         return status;
     }
 
     /**
      * Sets this.status to status
      *
-     * @param status String one of accepted, available, borrowed, requested
+     * @param status (String) one of accepted, available, borrowed, requested
      */
     public void setStatus(String status) {
-        this.status = status;
-
+        try {
+            this.status = BookStatus.valueOf(status);
+        } catch(IllegalArgumentException e) {
+            log.e("LitX.Book","status does not exist", e);
+        }
     }
+
+    /**
+     * Sets this book's status
+     * @param status the status to set the book to.
+     */
+    public void setStatus(BookStatus status) {
+        this.status = status;
+    }
+
+
 
     /**
      * Getter for owner
@@ -85,7 +100,7 @@ public class Book implements Serializable {
      * @return Boolean
      */
     public Boolean isAvailable() {
-        return this.status.equals("Available");
+        return this.status == BookStatus.available;
     }
 
     /**
@@ -169,13 +184,13 @@ public class Book implements Serializable {
      * @param request A request that has been accepted by owner
      */
     public void setAcceptedRequest(Request request) {
-        if(request == null && acceptedRequest != null) {
-            acceptedRequest = null;
-            status = "Available";
-        }
         if (acceptedRequest == null) {
             acceptedRequest = request;
-            status = "accepted";
+            status = BookStatus.accepted;
+        }
+        if (request == null) {
+            acceptedRequest = request;
+            status = BookStatus.available;
         }
     }
 
