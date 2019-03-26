@@ -8,12 +8,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,8 +128,11 @@ public class Request {
                         .document(request.docId)
                         .set(request.toMap());
             } else { // deletable
+                if(request.docId == null) continue;
                 FirebaseFirestore.getInstance()
-                        .collection(REQUESTS_COLLECTION);
+                        .collection(REQUESTS_COLLECTION)
+                        .document(request.docId)
+                        .delete();
             }
         }
     }
