@@ -21,6 +21,7 @@ import java.util.ArrayList;
 public class SearchActivity extends AppCompatActivity  {
 
     private ArrayList<Book> bookresults;
+    private ArrayList<Book> booklist;
     String keywords;
     BookListAdapter adapter;
     RecyclerView recycler;
@@ -50,7 +51,7 @@ public class SearchActivity extends AppCompatActivity  {
             Book book = Original.get(i);
             for (String keyword : keywords) {
                 for(String word: book.getTitle().split(" ")) {
-                    if(word.equals(keyword)) {
+                    if(word.toLowerCase().equals(keyword.toLowerCase()) && book.isAvailable()) {
                         found[i] = true;
                         continue outside;
                     }
@@ -66,18 +67,18 @@ public class SearchActivity extends AppCompatActivity  {
         return ans;
     }
 
-
+    /* // if we want to search for users
     ArrayList<User> findUsers () {
-        FindUser fuser = new FindUser("username", keywords);
-        return fuser.getResults();
+        FindUser fuser = new FindUser();
+        return fuser.findUserByName(keywords);
     }
+    */
 
     protected void updateRecycler () {
         adapter = new BookListAdapter(SearchActivity.this, bookresults);
         recycler.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
-
 
     /*
      * Takes Search string and handles results
@@ -92,21 +93,23 @@ public class SearchActivity extends AppCompatActivity  {
      */
     public void searchPress (View v) {
         bookresults.clear();
+        booklist.clear();
         keywords = ((EditText)findViewById(R.id.input_search)).getText().toString();
-        //FirebaseFirestore.getInstance().collection("User").get()
+        //FirebaseFirestore.getInstance().collection("User").get();
         FirebaseFirestore.getInstance().collection("Books").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         for(DocumentSnapshot ds : queryDocumentSnapshots.getDocuments()){
                             if(FirebaseAuth.getInstance().getCurrentUser() == null) return;
-                            bookresults.add(new Book(ds.getString("owner"),
+                            Book book = new Book(ds.getString("owner"),
                                     ds.getString("author"),
                                     ds.getString("title"),
-                                    ds.getLong("isbn")));
-                            bookresults.get(bookresults.size()-1).setStatus(ds.getString("status"));
+                                    ds.getLong("isbn"));
+                            book.setStatus(ds.getString("status"));
+                            booklist.add(book);
                         }
-                        bookresults = findBook(bookresults, keywords.split(" "));
+                        bookresults = findBook(booklist, keywords.split(" "));
                         updateRecycler();
                     }
                 });
