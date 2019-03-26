@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.tasks.Task;
@@ -20,7 +21,11 @@ import java.util.Map;
 import ca.ualberta.cs.phebert.litx.annotations.*;
 
 public class Request {
+    public static final String REQUESTS_COLLECTION = "Requests";
     private static Map<String, Request> db;
+    /**
+     * The task for fetching db from firestore.
+     */
     private static Task<QuerySnapshot> task;
     private static final String CHANNEL_ID = "ca.ualberta.cs.phebert.litx.notifs";
     private User requester;
@@ -32,8 +37,7 @@ public class Request {
     // Get requests
     static {
         db = new HashMap<>();
-        task = FirebaseFirestore.getInstance().collection("Requests")
-                .whereEqualTo("owner", FirebaseAuth.getInstance().getCurrentUser())
+        task = FirebaseFirestore.getInstance().collection(REQUESTS_COLLECTION)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
@@ -43,11 +47,24 @@ public class Request {
                 });
     }
 
-    private static void getDb() {
-
+    /**
+     * get db. use this over directly using the attribute,
+     * as this will await {@link #task} is complete
+     */
+    private static Map<String,Request> getDb() {
+        while(!task.isComplete()) Thread.yield();
+        return db;
     }
 
-    public static void
+    /**
+     * gets a request from an online document
+     * @param docId
+     * @return
+     */
+    @Nullable
+    public static Request fromDocId(String docId) {
+        return getDb().get(docId);
+    }
 
     /**
      * Look requests up on firebase, and get all pertaining
@@ -96,21 +113,25 @@ public class Request {
     /**
      * Push the given requests to firebase.
      * If any are resolved or refused, delete them from firebase.
-     * @param requests ArrayList of all requests for a book
      */
     @OwnerCalled
-    public static void push(ArrayList<Request> requests) {
-        for(Request request : requests) {
+    public static void push() {
+        for(String id : db.keySet()) {
+            Request request = db.get(id);
+            if(request == null) continue;
             if(!request.status.deletable()) {
                 if(request.docId == null) {
                     request.docId = FirebaseFirestore.getInstance()
-                            .collection("Requests")
+                            .collection(REQUESTS_COLLECTION)
                             .document().getId();
                 }
                 FirebaseFirestore.getInstance()
-                        .collection("Requests")
+                        .collection(REQUESTS_COLLECTION)
                         .document(request.docId)
                         .set(request.toMap());
+            } else { // deletable
+                FirebaseFirestore.getInstance()
+                        .collection(REQUESTS_COLLECTION);
             }
         }
     }
