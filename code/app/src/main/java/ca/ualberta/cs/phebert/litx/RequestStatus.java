@@ -7,7 +7,12 @@ import java.util.Hashtable;
 //static import Request.TAG;
 
 public enum RequestStatus {
-    Pending("pending") {
+    Pending {
+        @Override
+        public boolean deletable() {
+            return false;
+        }
+
         @Override
         public RequestStatus accept(Book toModify, Request r) {
             toModify.setAcceptedRequest(r);
@@ -25,7 +30,12 @@ public enum RequestStatus {
             return Refused;
         }
     },
-    Accepted("accepted") {
+    Accepted {
+        @Override
+        public boolean deletable() {
+            return false;
+        }
+
         @Override
         public RequestStatus resolve(Book toModify, Request request) {
             if(toModify.getAcceptedRequest().equals(request)) {
@@ -37,28 +47,13 @@ public enum RequestStatus {
             return this;
         }
     },
-    Resolved("resolved"),
-    Refused("refused");
+    Resolved,
+    Refused;
 
     private static final String TAG = "LitX.Request";
 
-    static Hashtable<String, RequestStatus> table = new Hashtable<>();
-    String name;
-
-    RequestStatus(String s) {
-        name = s;
-    }
-
-    String getName() {
-        return name;
-    }
-
-    static RequestStatus get(String s) {
-        return table.get(s);
-    }
-
     private String getArticle() {
-        switch(name.charAt(0)) {
+        switch(toString().charAt(0)) {
             case 'a':
             case 'e':
             case 'i':
@@ -70,22 +65,24 @@ public enum RequestStatus {
         }
     }
 
+    public boolean deletable() { return true; }
+
     public RequestStatus accept(Book b, Request r) {
         Log.w(TAG, "cannot accept {A} {NAME} request"
-                .replace("{NAME}", getName())
+                .replace("{NAME}", toString())
                 .replace("{A}",getArticle()));
         return this;
     }
 
     public RequestStatus refuse(Book b, Request r) {
         Log.w(TAG, "cannot refuse {A} {NAME} request"
-                .replace("{NAME}", getName())
+                .replace("{NAME}", toString())
                 .replace("{A}", getArticle()));
         return this;
     }
 
     public RequestStatus resolve(Book b, Request request) {
-        Log.w(TAG, "cannot resolve a {NAME} request".replace("{NAME}", getName()));
+        Log.w(TAG, "cannot resolve a {NAME} request".replace("{NAME}", toString()));
         return this;
     }
 }

@@ -15,15 +15,39 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ca.ualberta.cs.phebert.litx.annotations.*;
 
 public class Request {
+    private static Map<String, Request> db;
+    private static Task<QuerySnapshot> task;
     private static final String CHANNEL_ID = "ca.ualberta.cs.phebert.litx.notifs";
     private User requester;
     private User bookOwner;
     private Book book;
     private RequestStatus status;
+    private String docId;
+
+    // Get requests
+    static {
+        db = new HashMap<>();
+        task = FirebaseFirestore.getInstance().collection("Requests")
+                .whereEqualTo("owner", FirebaseAuth.getInstance().getCurrentUser())
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
+                    for (DocumentSnapshot doc : docs) {
+                        db.put(doc.getId(), fromSnapshot(doc));
+                    }
+                });
+    }
+
+    private static void getDb() {
+
+    }
+
+    public static void
 
     /**
      * Look requests up on firebase, and get all pertaining
@@ -36,15 +60,7 @@ public class Request {
     public static void scan(Context ctx) {
         HashMap<String, Request> onlineRequests = new HashMap<>();
         HashMap<String, Request> offlineRequests = new HashMap<>();
-        Task<QuerySnapshot> task = FirebaseFirestore.getInstance().collection("Requests")
-                .whereEqualTo("owner", FirebaseAuth.getInstance().getCurrentUser())
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
-                    for (DocumentSnapshot doc : docs) {
-                        onlineRequests.put(doc.getId(), fromSnapshot(doc));
-                    }
-                });
+
 
         // TODO get stored Requests
 
@@ -60,14 +76,21 @@ public class Request {
         }
     }
 
+    /**
+     *
+     * @param snapshot
+     * @return
+     */
     private static Request fromSnapshot(DocumentSnapshot snapshot) {
-        return new Request(
+        Request ans = new Request(
                 // need to somehow acces Book.
-                new Book(),
+                new Book(), // need book.byDocId;
                 User.findByUid(snapshot.getString("owner")),
                 User.findByUid(snapshot.getString("requester")),
                 snapshot.getString("status")
         );
+        ans.docId = snapshot.getId();
+        return ans;
     }
 
     /**
@@ -76,7 +99,21 @@ public class Request {
      * @param requests ArrayList of all requests for a book
      */
     @OwnerCalled
-    public static void push(ArrayList<Request> requests) { }
+    public static void push(ArrayList<Request> requests) {
+        for(Request request : requests) {
+            if(!request.status.deletable()) {
+                if(request.docId == null) {
+                    request.docId = FirebaseFirestore.getInstance()
+                            .collection("Requests")
+                            .document().getId();
+                }
+                FirebaseFirestore.getInstance()
+                        .collection("Requests")
+                        .document(request.docId)
+                        .set(request.toMap());
+            }
+        }
+    }
 
     /**
      * create a notification
@@ -168,7 +205,7 @@ public class Request {
     @OwnerCalled
     private Request(Book book, User owner, User requester, String state) {
         this(book,owner, requester);
-        status = RequestStatus.get(state);
+        status = RequestStatus.valueOf(state);
     }
 
     /**
@@ -226,5 +263,15 @@ public class Request {
     @OwnerCalled
     public void delete() {
         status = status.refuse(book, this);
+    }
+
+    @OwnerCalled
+    public Map<String,Object> toMap() {
+        Map<String,Object> ans = new HashMap<>();
+        ans.put("requester",requester.getUserid());
+        ans.put("owner", bookOwner.getUserid());
+        ans.put("book", book.getDocID());
+        ans.put("status", status.name());
+        return ans;
     }
 }
