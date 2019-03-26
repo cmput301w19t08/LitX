@@ -39,7 +39,6 @@ public class BookViewActivity extends AppCompatActivity {
     private String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     private FirebaseFirestore firestore;
-    private StorageReference storageReference;
 
     /**
      * onCreate sets the description of the book selected, and sets onClickListeners to determine
@@ -128,11 +127,15 @@ public class BookViewActivity extends AppCompatActivity {
 
     private void load_image(Book book) {
         // Load the image into the imageview if it exists
-        storageReference = FirebaseStorage.getInstance().getReference();
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         try {
             int iconId = this.getResources().getIdentifier("book_icon", "drawable", this.getPackageName());
-            StorageReference pathReference = storageReference.child(book.getOwnerUid() + "/" + Long.toString(book.getIsbn()) + ".png");
-            GlideApp.with(this).load(pathReference).placeholder(iconId).into(photo);
+            StorageReference pathReference = storageReference.child(book.getOwnerUid() + "/" + Long.toString(book.getIsbn()));
+            //StorageReference pathReference = storageReference.child("sdupasqu-1.png");
+            GlideApp.with(this)
+                    .load(pathReference)
+                    .placeholder(iconId)
+                    .into(photo);
         } catch (Exception e) {}
     }
 }

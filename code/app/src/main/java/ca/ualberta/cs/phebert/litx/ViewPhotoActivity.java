@@ -47,8 +47,7 @@ public class ViewPhotoActivity extends AppCompatActivity {
         Intent intent = getIntent();
         final Book book = (Book) intent.getExtras().getSerializable("Book");
 
-        pathReference = storageRef.child(book.getOwnerUid() + "/" + Long.toString(book.getIsbn()) + ".png");
-
+        pathReference = storageRef.child(book.getOwnerUid() + "/" + Long.toString(book.getIsbn()));
         load_image(book);
 
         btn_add.setOnClickListener(new View.OnClickListener() {
@@ -75,8 +74,6 @@ public class ViewPhotoActivity extends AppCompatActivity {
         btn_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String isbn = Long.toString(book.getIsbn());
-
                 if (uri != null) {
                     pathReference.putFile(uri);
                 }

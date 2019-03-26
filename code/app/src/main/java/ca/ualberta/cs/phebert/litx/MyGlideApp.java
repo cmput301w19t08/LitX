@@ -11,6 +11,13 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.InputStream;
 
+/**
+ * This class is simply for loading an image out of Firebase Storage using Glide, it is a required
+ * class by Glide and was gotten from Firebase Storage site
+ * @author sdupasqu
+ * @version 1.0
+ * @see ViewPhotoActivity
+ */
 @GlideModule
 public class MyGlideApp extends AppGlideModule {
 
