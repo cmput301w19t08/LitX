@@ -287,6 +287,10 @@ public class Request {
         status = status.refuse(book, this);
     }
 
+    /**
+     * turns this Request into a Map, so that it can be pushed.
+     * @return a map version of this request.
+     */
     @OwnerCalled
     public Map<String,Object> toMap() {
         Map<String,Object> ans = new HashMap<>();
