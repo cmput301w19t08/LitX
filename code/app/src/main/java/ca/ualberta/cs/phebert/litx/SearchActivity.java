@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -32,6 +33,7 @@ public class SearchActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        booklist = new ArrayList<>();
         bookresults = new ArrayList<>();
         recycler = (RecyclerView) findViewById(R.id.search_results);
         recycler.setHasFixedSize(true);
@@ -92,24 +94,30 @@ public class SearchActivity extends AppCompatActivity  {
      * @param v
      */
     public void searchPress (View v) {
-        bookresults.clear();
-        booklist.clear();
         keywords = ((EditText)findViewById(R.id.input_search)).getText().toString();
         //FirebaseFirestore.getInstance().collection("User").get();
         FirebaseFirestore.getInstance().collection("Books").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        booklist.clear();
                         for(DocumentSnapshot ds : queryDocumentSnapshots.getDocuments()){
                             if(FirebaseAuth.getInstance().getCurrentUser() == null) return;
                             Book book = new Book(ds.getString("owner"),
                                     ds.getString("author"),
                                     ds.getString("title"),
                                     ds.getLong("isbn"),
-                                    ds.getString("ownerUid")));
-                            bookresults.get(bookresults.size()-1).setStatus(ds.getString("status"));
+                                    ds.getString("ownerUid"));
+                            book.setStatus(ds.getString("status"));
+                            booklist.add(book);
                         }
-                        bookresults = findBook(booklist, keywords.split(" "));
+                        bookresults.clear();
+                        Log.d("HI THERE", "onSuccess: here".replace("here", keywords));
+                        if(keywords.equals("")){
+                            bookresults = booklist;
+                        } else {
+                            bookresults = findBook(booklist, keywords.split(" "));
+                        }
                         updateRecycler();
                     }
                 });
