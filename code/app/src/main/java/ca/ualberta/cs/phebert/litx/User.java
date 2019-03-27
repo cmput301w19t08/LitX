@@ -296,7 +296,7 @@ public class User {
     }
 
     public void acceptRequest(Request request) {
-
+        myRequests.add(request);
     }
 
     public void removeRequest (Request request) {
@@ -352,5 +352,13 @@ public class User {
                     userName.equals(u.userName) &&
                     phoneNumber.equals(u.phoneNumber);
         } else return false;
+    }
+
+    // guarantee if(a.equals(b)) a.hashCode() == b.hashCode()
+    @Override
+    public int hashCode() {
+        return (email.hashCode() % (Integer.MAX_VALUE / 3)) +
+                (userName.hashCode() % (Integer.MAX_VALUE / 3)) +
+                (phoneNumber.hashCode() % (Integer.MAX_VALUE / 3));
     }
 }

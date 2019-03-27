@@ -90,6 +90,9 @@ public class Book implements Serializable {
         } catch(NullPointerException e) {
             // whatever, no isbn, this book is weird
         }
+
+        // could be moved elsewhere, if this method is called more than once for a book.
+        ans.getOwner().addBook(ans);
         return ans;
     }
 
