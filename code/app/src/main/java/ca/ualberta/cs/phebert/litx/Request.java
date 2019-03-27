@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -26,32 +27,58 @@ public class Request {
      */
     private static Task<QuerySnapshot> task;
     private static final String CHANNEL_ID = "ca.ualberta.cs.phebert.litx.notifs";
+
     private User requester;
     private User bookOwner;
     private Book book;
+
     private RequestStatus status;
     private String docId;
 
     // Get requests
-    static {
-        db = new HashMap<>();
-        task = FirebaseFirestore.getInstance().collection(REQUESTS_COLLECTION)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
-                    for (DocumentSnapshot doc : docs) {
-                        db.put(doc.getId(), fromSnapshot(doc));
-                    }
-                });
+    private static void loadDb(){
+        if(db == null || task == null && FirebaseAuth.getInstance().getCurrentUser() != null) {
+            db = new HashMap<>();
+            task = FirebaseFirestore.getInstance().collection(REQUESTS_COLLECTION)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
+                        for (DocumentSnapshot doc : docs) {
+                            db.put(doc.getId(), fromSnapshot(doc));
+                        }
+                    });
+        }
     }
 
     /**
-     * get db. use this over directly using the attribute,
+     * get all the current requests. use this over directly using the attribute,
      * as this will await {@link #task} is complete
      */
-    private static Map<String,Request> getDb() {
+    public static Map<String,Request> getAllRequests() {
+        loadDb();
         while(!task.isComplete()) Thread.yield();
         return db;
+    }
+
+    /**
+     *
+     * @param snapshot
+     * @return
+     */
+    private static Request fromSnapshot(DocumentSnapshot snapshot) {
+        Request ans = new Request(
+                // need to somehow acces Book.
+                new Book(), // need book.byDocId;
+                User.findByUid(snapshot.getString("owner")),
+                User.findByUid(snapshot.getString("requester")),
+                snapshot.getString("status")
+        );
+        ans.docId = snapshot.getId();
+
+        ans.getBook().addRequest(ans);
+        ans.requester.addRequest(ans);
+
+        return ans;
     }
 
     /**
@@ -60,8 +87,8 @@ public class Request {
      * @return the request associated with the document.
      */
     @Nullable
-    public static Request fromDocId(String docId) {
-        return getDb().get(docId);
+    public static Request findByDocId(String docId) {
+        return getAllRequests().get(docId);
     }
 
     /**
@@ -90,23 +117,6 @@ public class Request {
                 request.generateNotification(ctx);
             }
         }
-    }
-
-    /**
-     *
-     * @param snapshot
-     * @return
-     */
-    private static Request fromSnapshot(DocumentSnapshot snapshot) {
-        Request ans = new Request(
-                // need to somehow acces Book.
-                new Book(), // need book.byDocId;
-                User.findByUid(snapshot.getString("owner")),
-                User.findByUid(snapshot.getString("requester")),
-                snapshot.getString("status")
-        );
-        ans.docId = snapshot.getId();
-        return ans;
     }
 
     /**

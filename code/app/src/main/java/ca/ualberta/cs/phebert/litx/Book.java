@@ -278,7 +278,19 @@ public class Book implements Serializable {
         this.photograph = photograph;
     }
 
+    /**
+     * Add a new request created by this user
+     */
     public void addRequest() {
         Request request = new Request(this, this.owner, User.currentUser());
+        addRequest(request);
+    }
+
+    /**
+     * add a requests to this book's requests
+     * @param request
+     */
+    void addRequest(Request request) {
+       requests.add(request);
     }
 }

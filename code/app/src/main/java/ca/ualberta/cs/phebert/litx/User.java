@@ -17,6 +17,8 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import ca.ualberta.cs.phebert.litx.annotations.BorrowerCalled;
+
 @SuppressWarnings("WeakerAccess")
 public class User {
     private final static String TAG = "LitX.User";
@@ -289,6 +291,11 @@ public class User {
 
     public ArrayList<Request> getRequests() {
         return myRequests;
+    }
+
+    @BorrowerCalled
+    public void addRequest(Request request) {
+        myRequests.add(request);
     }
 
     public ArrayList<Request> getAcceptedRequests() {
