@@ -62,6 +62,21 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.542" />
 
+    <TextView
+        android:id="@+id/ownerViewID"
+        android:layout_width="113dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="44dp"
+        android:layout_marginEnd="288dp"
+        android:layout_marginBottom="476dp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bookImage" />
+
     <Button
         android:id="@+id/deleteButton"
         android:layout_width="wrap_content"
@@ -88,8 +103,13 @@
         android:id="@+id/viewRequest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="52dp"
+        android:layout_marginBottom="93dp"
         android:text="Request"
-        app:layout_constraintTop_toBottomOf="@+id/requestsRecycleView"
-        tools:layout_editor_absoluteX="161dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/editButtonID"
+        app:layout_constraintStart_toEndOf="@+id/deleteButton"
+        app:layout_constraintTop_toBottomOf="@+id/requestsRecycleView" />
 </android.support.constraint.ConstraintLayout>
