@@ -38,7 +38,6 @@ public class BookViewActivity extends AppCompatActivity {
     private ImageView photo;
     private String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-    private FirebaseFirestore firestore;
 
     /**
      * onCreate sets the description of the book selected, and sets onClickListeners to determine
@@ -68,8 +67,6 @@ public class BookViewActivity extends AppCompatActivity {
             delete = (Button) findViewById(R.id.deleteButton);
             edit = (Button) findViewById(R.id.editButtonID);
 
-            firestore = FirebaseFirestore.getInstance();
-
         /* When delete button is clicked remove the book from the database, then go back to MyBooks
         screen
          */
@@ -77,7 +74,7 @@ public class BookViewActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //TODO: Authentication of deleting book in database
-                    firestore.collection("Books").document(book.getDocID()).delete();
+                    book.delete();
 
                     Intent intent = new Intent(BookViewActivity.this, MyBooksActivity.class);
                     startActivity(intent);

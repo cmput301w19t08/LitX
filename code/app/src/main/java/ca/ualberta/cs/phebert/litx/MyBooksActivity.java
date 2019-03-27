@@ -39,19 +39,17 @@ public class MyBooksActivity extends AppCompatActivity {
     private String filter;
 
     // Variables required to display books in the database
-    private ArrayList<Book> myBooks = new ArrayList<Book>();
+    private ArrayList<Book> filteredBooks = new ArrayList<Book>();
     BookListAdapter adapter;
+    BookListAdapter booksAdapter;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
-
-
-
-    private FirebaseFirestore firestore;
 
     /**
      * onCreate finds all the books in the database that the user owns and displays them in the
      * RecyclerView. It allows the user to add a new book to this list as well as select a book
      * to display
+     *
      * @param savedInstanceState
      */
     @Override
@@ -71,22 +69,27 @@ public class MyBooksActivity extends AppCompatActivity {
             // When an item is selected in the spinner the results in the RecyclerView should change
             // to show that
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                switch (position){
+                switch (position) {
                     //
-                    case 0: filter = "All";
-                            break;
+                    case 0:
+                        filter = "All";
+                        break;
                     // Case 1 is available
-                    case 1: filter = "Available";
-                            break;
+                    case 1:
+                        filter = "Available";
+                        break;
                     // case 2 is Requested
-                    case 2: filter = "Requested";
-                            break;
+                    case 2:
+                        filter = "Requested";
+                        break;
                     // Case 3 is Accepted
-                    case 3: filter = "Accepted";
-                            break;
+                    case 3:
+                        filter = "Accepted";
+                        break;
                     // Case 4 is borrowed
-                    case 4: filter = "Borrowed";
-                            break;
+                    case 4:
+                        filter = "Borrowed";
+                        break;
 
                 }
                 query();
@@ -104,6 +107,15 @@ public class MyBooksActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(MyBooksActivity.this);
+        recyclerView.setLayoutManager(layoutManager);
+        filteredBooks = new ArrayList<>();
+        booksAdapter = new BookListAdapter(
+                MyBooksActivity.this, filteredBooks);
+        recyclerView.setAdapter(booksAdapter);
     }
 
 //        //Testing purposes only, following two lines need to be removed
@@ -114,74 +126,20 @@ public class MyBooksActivity extends AppCompatActivity {
 //        myBooks.add(b);*/
 
     /**
-     *
      * Query will be called after anything is selected in the spinner
      */
     public void query() {
-            firestore = FirebaseFirestore.getInstance();
-            String userName = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            final ArrayList<Book> newBooks = new ArrayList<Book>();
-            firestore.collection("Books").whereEqualTo("ownerUid", userName).get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Map<String, Object> temp = document.getData();
-                                    Book book = new Book(temp.get("owner").toString(),
-                                            temp.get("author").toString(),
-                                            temp.get("title").toString(),
-                                            Long.valueOf(temp.get("isbn").toString()));
-                                    if (temp.get("acceptedRequest") != null){
-                                        book.setStatus("Accepted");
-                                    } else {
-                                        book.setStatus("Available");
-                                    }
-                                    //book.setDocID(document.getId());
-// TODO: Need to figure out how to get the request back to set properly for looks
-//TODO: Set all book information
-//                                book.setPhotograph(temp.get("photograph").toString());
-//                                book.setAcceptedRequest(temp.get("acceptedRequest").toString());
-//                                book.setAvailable(temp.get("available").toString());
-//                                book.setBorrower(temp.get("borrower").toString());
-//                                book.setRequests(temp.get("requests").toString());
+        filteredBooks.clear();
 
-                                    if (filter.equals("All")) {
-                                        newBooks.add(book);
-                                    } else if (filter.equals("Available")) {
-                                        boolean available = (boolean) temp.get("available");
-                                        if (available) {
-                                            newBooks.add(book);
-                                        }
-                                    } else if (filter.equals("Requested")) {
-                                        if (temp.get("requests") != null) {
-                                            newBooks.add(book);
-                                        }
-                                    } else if (filter.equals("Accepted")) {
-                                        if (temp.get("acceptedRequest") != null) {
-                                            newBooks.add(book);
-                                    } else if (filter.equals("Borrowed")) {
-                                        if (temp.get("borrower") != null) {
-                                            newBooks.add(book);
-                                            }
-                                        }
-                                    }
-                                }
-
-                                recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-                                recyclerView.setHasFixedSize(true);
-                                layoutManager = new LinearLayoutManager(MyBooksActivity.this);
-                                recyclerView.setLayoutManager(layoutManager);
-                                BookListAdapter adapter = new BookListAdapter(
-                                        MyBooksActivity.this, newBooks);
-                                recyclerView.setAdapter(adapter);
-                                adapter.notifyDataSetChanged();
-
-                            }
-                        }
-                    });
+        for (Book book : User.currentUser().getMyBooks()) {
+            if (filter.equals("All")) {
+                filteredBooks.add(book);
+            } else {
+                if (BookStatus.valueOf(filter.toLowerCase()) == book.getStatus()) {
+                    filteredBooks.add(book);
+                }
+            }
         }
-
-
+        booksAdapter.notifyDataSetChanged();
+    }
 }
-

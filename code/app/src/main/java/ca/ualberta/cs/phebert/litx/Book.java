@@ -106,7 +106,11 @@ public class Book implements Serializable {
     }
 
     public void delete() {
-        // TODO delete method.
+        FirebaseFirestore.getInstance()
+                .collection(BOOK_COLLECTION)
+                .document(getDocID())
+                .delete();
+        db.remove(getDocID());
     }
 
     public String getDocID() { return docID; }

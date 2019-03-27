@@ -124,8 +124,8 @@ public class User implements Serializable {
     }
 
     public static User currentUser() {
-        if(current != null) {
-            if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if(current == null) {
+            if(isSignedIn()) {
                 current = findByUid(FirebaseAuth.getInstance().getUid());
                 current.certificate = FirebaseAuth.getInstance().getCurrentUser();
             } else return null;
