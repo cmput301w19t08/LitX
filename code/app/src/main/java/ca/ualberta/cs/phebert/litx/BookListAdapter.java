@@ -138,7 +138,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
     private void load_image(ViewHolder holder, Book book) {
         int iconId = context.getResources().getIdentifier("book_icon", "drawable", context.getPackageName());
         StorageReference storage = FirebaseStorage.getInstance().getReference();
-        StorageReference path = storage.child(book.getOwnerUid() + "/" + Long.toString(book.getIsbn()));
+        StorageReference path = storage.child(book.getOwner().getUserid() + "/" + Long.toString(book.getIsbn()));
         path.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
