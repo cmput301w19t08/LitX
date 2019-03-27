@@ -1,14 +1,11 @@
 package ca.ualberta.cs.phebert.litx;
 
-import android.support.constraint.solver.widgets.Snapshot;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
@@ -72,7 +69,7 @@ public class Book implements Serializable {
         }
     }
 
-    public static Map<String, Book> getAllBooks() {
+    public static Map<String, Book> getAll() {
         loadDb();
         while(!task.isComplete()) Thread.yield();
         return db;
@@ -97,7 +94,7 @@ public class Book implements Serializable {
     }
 
     public static Book findByDocId(String docId) {
-        return getAllBooks().get(docId);
+        return getAll().get(docId);
     }
 
     public void delete() {

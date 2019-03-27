@@ -54,7 +54,7 @@ public class Request {
      * get all the current requests. use this over directly using the attribute,
      * as this will await {@link #task} is complete
      */
-    public static Map<String,Request> getAllRequests() {
+    public static Map<String,Request> getAll() {
         loadDb();
         while(!task.isComplete()) Thread.yield();
         return db;
@@ -88,7 +88,7 @@ public class Request {
      */
     @Nullable
     public static Request findByDocId(String docId) {
-        return getAllRequests().get(docId);
+        return getAll().get(docId);
     }
 
     /**

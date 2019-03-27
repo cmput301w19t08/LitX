@@ -143,14 +143,14 @@ public class User {
                 doc.getString("phoneNumber"));
     }
 
-    static public Map<String, User> getAllUsers() {
+    static public Map<String, User> getAll() {
         loadDb();
         while(!task.isComplete()) Thread.yield();
         return db;
     }
 
     public static User findByUid(String Uid) {
-        return getAllUsers().get(Uid);
+        return getAll().get(Uid);
     }
 
     public static User currentUser() {
@@ -233,10 +233,13 @@ public class User {
         });
     }
 
+    public static boolean isSignedIn() {
+        return FirebaseAuth.getInstance().getCurrentUser() != null;
+    }
+
     public String getUserid () {
         return (certificate != null) ? certificate.getUid() : null;
     }
-
 
     ////////////////////////////////// setters and getters /////////////////////////////////////////
 
