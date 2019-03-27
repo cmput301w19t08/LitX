@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg">
 
     <ListView
         android:id="@+id/requestsRecycleView"
@@ -26,11 +27,40 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="16dp"
-        android:text="Requests"
+        android:text="@string/requests"
+        android:textColor="#ffffff"
         android:textSize="10pt"
         app:layout_constraintBottom_toTopOf="@+id/requestsRecycleView"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:layout_toLeftOf="@id/top10text_home"
+        android:background="#ffffff"
+        app:layout_constraintEnd_toStartOf="@+id/requestsTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/requestsTextView" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:layout_toRightOf="@id/top10text_home"
+        android:background="#ffffff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/requestsTextView"
+        app:layout_constraintTop_toTopOf="@+id/requestsTextView" />
 
     <ImageView
         android:id="@+id/bookImage"
@@ -54,7 +84,8 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="460dp"
-        android:text="Description"
+        android:text=""
+        android:textColor="#ffffff"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -69,7 +100,11 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
-        android:text="Delete"
+        android:background="@drawable/round_button"
+        android:text="@string/delete_button"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:textAllCaps="false"
         app:layout_constraintEnd_toStartOf="@+id/editButtonID"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/requestsRecycleView" />
@@ -81,7 +116,11 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="18dp"
         android:layout_marginEnd="50dp"
-        android:text="Edit"
+        android:background="@drawable/round_button"
+        android:text="@string/edit_button"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/deletePhotoButton"
         app:layout_constraintTop_toBottomOf="@+id/requestsRecycleView" />
@@ -94,7 +133,11 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Request"
+        android:background="@drawable/round_button"
+        android:text="@string/request_button"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

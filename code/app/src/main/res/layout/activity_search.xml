@@ -4,18 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/viewSearch"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg">
 
     <EditText
         android:id="@+id/input_search"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
+        android:background="@drawable/round_edittext"
         android:hint="@string/search_button"
         android:inputType="text"
-        android:textSize="10pt"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:textColor="#ffffff"
+        android:textColorHint="#d3d3d3"
         app:layout_constraintEnd_toStartOf="@+id/find_search"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -26,8 +31,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:background="@null"
         android:text="@string/find"
-        android:textSize="10pt"
+        android:textSize="24sp"
         android:onClick="searchPress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
