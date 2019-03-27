@@ -5,6 +5,7 @@ import android.widget.ImageView;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -116,6 +117,24 @@ public class Book implements Serializable {
     public String getDocID() { return docID; }
 
     private void setDocID(String newDocID) { this.docID = newDocID; }
+
+    public void push() {
+        Map<String, Object> b = new HashMap<>();
+        b.put("ownerUid",getOwner().getUserid());
+        b.put("status", getStatus().toString());
+        b.put("author",getAuthor());
+        b.put("title", getTitle());
+        b.put("isbn",getIsbn());
+        CollectionReference collection = FirebaseFirestore.getInstance()
+                .collection("Books");
+        if (docID.equals("")) {
+            // Create a new book and add it to firestore
+            collection.document().set(b);
+        } else {
+            // Update the firestore document since the book already exists
+            firestore.collection("Books").document(docID).set(b);
+        }
+    }
 
     ////////////////////////////////// settters and getters ////////////////////////////////////////
 

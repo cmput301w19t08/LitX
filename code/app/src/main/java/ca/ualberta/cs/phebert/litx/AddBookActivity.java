@@ -99,13 +99,7 @@ public class AddBookActivity extends AppCompatActivity {
                     // create a new document to store the book
 
                     // TODO put this portion into the book class, change to Map
-                    if (docID.equals("")) {
-                        // Create a new book and add it to firestore
-                        firestore.collection("Books").document().set(b);
-                    } else {
-                        // Update the firestore document since the book already exists
-                        firestore.collection("Books").document(docID).set(b);
-                    }
+                    b.push();
                     // Go back to MyBooksActivity after the book has been added
                     Intent intent = new Intent(AddBookActivity.this, MyBooksActivity.class);
                     startActivity(intent);
