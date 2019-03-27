@@ -22,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class AddBookActivity extends AppCompatActivity {
     EditText titleView;
     EditText ISBNView;
+    EditText authorView;
     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     private Button btnOkay;
@@ -43,6 +44,7 @@ public class AddBookActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_book);
         titleView=(EditText)findViewById(R.id.editTitle);
         ISBNView=(EditText)findViewById(R.id.editISBN);
+        authorView=(EditText)findViewById(R.id.editAuthor);
         String id = ""; // To determine the document id in Firestore
 
         // Get edittexts
@@ -121,25 +123,35 @@ public class AddBookActivity extends AppCompatActivity {
         //titleView.setText("" + resultCode);
         if(requestCode == 155) {
             if(data != null) {
-                String title = data.getStringExtra("Title");
-                String ISBN = data.getStringExtra("ISBN");
-                ISBNView.setText(ISBN);
-                titleView.setText(title);
-                Log.d(TAG, title);
+                //try {
+
+                    String title = data.getStringExtra("Title");
+                    String ISBN = data.getStringExtra("ISBN");
+                    String author = data.getStringExtra("Author");
+                    ISBNView.setText(ISBN);
+                    titleView.setText(title);
+                    authorView.setText(author);
+                //} catch (Exception e){
+                    //If the book is not in the WorldLibrary database print only the ISBN
+                //    String ISBN = data.getStringExtra("ISBN");
+                 //   ISBNView.setText(ISBN);
+                //}
+
             } else {
                 Log.w(TAG,"data is null");
             }
         }
     }
     public void scanISBN(View v) {
-        //Intent intent = new Intent(this, ScanBookActivity.class);
-        //startActivityForResult(intent,155);
+        Intent intent = new Intent(this, ScanBookActivity.class);
+        startActivityForResult(intent,155);
 
         //This is how the Map Object is to be used!
-
+        /*
         try {
             Intent intent = new Intent(this, MapObject.class);
-            double RichardISBN=Double.valueOf(ISBNView.getText().toString());
+            //double RichardISBN=Double.valueOf(ISBNView.getText().toString());
+            double RichardISBN=50;
             intent.putExtra("LONG",-97.432404);
             intent.putExtra("LAT",RichardISBN);
             intent.putExtra("MOVABLE",Boolean.TRUE);
@@ -148,6 +160,8 @@ public class AddBookActivity extends AppCompatActivity {
 
 
         } catch (Exception e) {}
+        */
+
 
 
 

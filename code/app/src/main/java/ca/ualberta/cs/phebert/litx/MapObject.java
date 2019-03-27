@@ -27,11 +27,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapObject extends AppCompatActivity implements OnMapReadyCallback{
-    //private Coordinate location;
     private Request request;
     private LatLng location;
-    private LatLng markerLocation;
-    private Boolean Drag;
+    private Boolean Moveable;
+    private Marker marker;
     TextView myTextView;
 
     @Override
@@ -46,10 +45,9 @@ public class MapObject extends AppCompatActivity implements OnMapReadyCallback{
             Intent intent = getIntent();
             double Latitude = intent.getDoubleExtra("LAT",0);
             double Longitude = intent.getDoubleExtra("LONG",0);
-            Drag= intent.getBooleanExtra("MOVABLE",Boolean.FALSE);
-            if (Drag==Boolean.TRUE){
+            Moveable= intent.getBooleanExtra("MOVABLE",Boolean.FALSE);
+            if (Moveable==Boolean.TRUE){
                 location = new LatLng(53.5304672,-113.5306609);
-                markerLocation = new LatLng(53.5304672,-113.5306609);
 
 
 
@@ -57,7 +55,6 @@ public class MapObject extends AppCompatActivity implements OnMapReadyCallback{
             }
             else {
                 location = new LatLng(Latitude,Longitude);
-                markerLocation= new LatLng(Latitude,Longitude);
 
             }
 
@@ -70,57 +67,41 @@ public class MapObject extends AppCompatActivity implements OnMapReadyCallback{
 
 
     }
-    /*
-    @Override
-    protected void onStart() {
-        super.onStart();
-        setContentView(R.layout.activity_map);
-        try {
-            // Uses the intent to find the Latitude and Longitude of our Point and then assigns the LatLng variable a value
-            //corresponding to the points in the intent
-            Intent intent = getIntent();
-            double Latitude = intent.getDoubleExtra("LAT",0);
-            double Longitude = intent.getDoubleExtra("LONG",0);
-            location = new LatLng(Latitude,Longitude);
-
-
-        } catch (Exception e) {}
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-
-    }
-    */
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         // Add a marker in Sydney, Australia,
         // and move the map's camera to the same location.
-        googleMap.addMarker(new MarkerOptions().position(markerLocation)
-                .title("Marker")
-                .draggable(Drag));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(location));
-        googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+        if (Moveable==Boolean.TRUE){
+            googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                @Override
+                public void onMapClick(LatLng latLng) {
+                    googleMap.clear();
+                    marker = googleMap.addMarker(new MarkerOptions().position(latLng)
+                            .title("Marker")
+                            .draggable(Moveable));
 
-            @Override
-            public void onMarkerDragStart(Marker marker) {
-            }
-            @Override
-            public void onMarkerDrag(Marker marker) {
-            }
+                }
+            });
 
-            @Override
-            public void onMarkerDragEnd(Marker marker) {
-                markerLocation = marker.getPosition();
-            }
-        });
+        }
+        else {
+            googleMap.addMarker(new MarkerOptions().position(location)
+                    .title("Marker")
+                    .draggable(Boolean.FALSE));
+        }
+
     }
 
 
 
     public void getLocation(View v) {
-        double agh =markerLocation.latitude;
-        myTextView.setText(Double.toString(agh));
+        double specifiedLatitude = marker.getPosition().latitude;
+        double specifiedLongitude = marker.getPosition().longitude;
+        LatLng specifiedLocation = new LatLng(specifiedLatitude,specifiedLongitude);
+        myTextView.setText(Double.toString(specifiedLocation.latitude));
+
     }
 
 

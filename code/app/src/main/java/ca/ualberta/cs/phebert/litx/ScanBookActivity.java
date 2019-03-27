@@ -5,6 +5,7 @@
  * Copyright notice: https://www.youtube.com/watch?v=xoTKpstv9f0 (video on text recognition with Camera using Google Vision)
  * https://codelabs.developers.google.com/codelabs/barcodes/#4 (guide on Barcode Reading)
  * https://guides.codepath.com/android/Book-Search-Tutorial (guide on searching for books using ISBN)
+ * https://stackoverflow.com/questions/13153697/how-to-replace-with-in-a-java-string (help with replace and replaceAll)
 
 
  */
@@ -49,8 +50,9 @@ public class ScanBookActivity extends AppCompatActivity {
     private String NoISBN= "No ISBN";
     private String ISBN;
     private Boolean ReadISBN = Boolean.TRUE;
-    private String title;
-
+    private String title="";
+    private String authorKey;
+    private String author="";
 
     /**
      * Sets up our camera for reading in barcodes
@@ -208,33 +210,182 @@ public class ScanBookActivity extends AppCompatActivity {
      * @see AddBookActivity
      */
     public void confirmISBN(View v) {
-        ReadISBN = Boolean.TRUE;
-        String Author;
-        BookClient client = new BookClient();
-        client.getBooks(ISBN, new JsonHttpResponseHandler(){
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                if (response!=null){
-                    try {
+        ReadISBN = Boolean.FALSE;
 
-                        if (response.has("title")){
+        BookClient client = new BookClient();
+        client.getBooks(ISBN, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                if (response != null) {
+                    try {
+                        if (response.has("title")) {
                             title = response.getString("title");
+                                //intent.putExtra("Title",title);
+                                //intent.putExtra("ISBN",ISBN);
+                                //setResult(RESULT_OK,intent);
+                                //finish();
+
+                        }
+                        else {
+                            title = "";
+                        }
+                            //Not Done Yet! For part 5
+                        if (response.has("authors")) {
+                            final JSONArray authors = response.getJSONArray("authors");
+                            authorKey = authors.getString(0);
+                            authorKey = authorKey.replaceAll("\"", "");
+                            authorKey = authorKey.replaceAll("", "");
+                            authorKey = authorKey.replace("{", "");
+                            authorKey = authorKey.replace("}", "");
+                            authorKey = authorKey.replaceAll("\\\\", "");
+                            authorKey = authorKey.replaceAll("key:", "");
+                            AuthorClient authorClient = new AuthorClient();
+
+                            authorClient.getAuthor(authorKey, new JsonHttpResponseHandler() {
+                                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                                    if (response != null) {
+                                        try {
+                                            if (response.has("name")) {
+                                                author = response.getString("name");
+                                                Intent intent = new Intent();
+                                                intent.putExtra("Author", author);
+                                                intent.putExtra("Title", title);
+                                                intent.putExtra("ISBN", ISBN);
+                                                setResult(RESULT_OK, intent);
+                                                finish();
+
+                                            }
+
+
+                                        }
+                                        catch (JSONException e) {
+                                            e.printStackTrace();
+                                            //ReadISBN = Boolean.TRUE;
+                                        }
+
+
+                                    } else {
+                                        //ReadISBN = Boolean.TRUE;
+                                        textView.setText(NoISBN);
+
+
+                                    }
+
+                                }
+
+
+                            });
+
+
+                        } else {
+                            author = "";
                             Intent intent = new Intent();
-                            intent.putExtra("Title",title);
-                            intent.putExtra("ISBN",ISBN);
-                            setResult(RESULT_OK,intent);
+                            intent.putExtra("Author", author);
+                            intent.putExtra("Title", title);
+                            intent.putExtra("ISBN", ISBN);
+                            setResult(RESULT_OK, intent);
                             finish();
 
                         }
-                        //Not Done Yet! For part 5
-                        if (response.has("authors")){
-                            final JSONArray authors = response.getJSONArray("author_name");
-                            int numAuthors = authors.length();
+                            //here
 
-                            final String[] authorStrings = new String[numAuthors];
-                            for (int i = 0; i < numAuthors; ++i) {
-                                authorStrings[i] = authors.getString(i);
-                            }
-                            textView.setText(authorStrings[0]);
+
+                    } catch (JSONException e) {
+                        //ReadISBN = Boolean.TRUE;
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    //ReadISBN = Boolean.TRUE;
+                    textView.setText(NoISBN);
+
+
+                }
+
+
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                Intent intent = new Intent();
+                intent.putExtra("Author",author);
+                intent.putExtra("Title",title);
+                intent.putExtra("ISBN",ISBN);
+                setResult(RESULT_OK,intent);
+                finish();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+                Intent intent = new Intent();
+                intent.putExtra("Author",author);
+                intent.putExtra("Title",title);
+                intent.putExtra("ISBN",ISBN);
+                setResult(RESULT_OK,intent);
+                finish();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                Intent intent = new Intent();
+                intent.putExtra("Author",author);
+                intent.putExtra("Title",title);
+                intent.putExtra("ISBN",ISBN);
+                setResult(RESULT_OK,intent);
+                finish();
+            }
+        });
+
+
+
+        /*
+        try {
+            Intent intent = new Intent();
+            intent.putExtra("Author",author);
+            intent.putExtra("Title",title);
+            intent.putExtra("ISBN",ISBN);
+            setResult(RESULT_OK,intent);
+            finish();
+            textView.setText(author);
+
+
+        }catch (Exception e){
+            Intent intent = new Intent();
+            intent.putExtra("ISBN",ISBN);
+            setResult(RESULT_OK,intent);
+            finish();
+
+        }
+        */
+
+
+
+
+        /*
+        AuthorClient authorClient = new AuthorClient();
+
+        authorClient.getAuthor(authorKey, new JsonHttpResponseHandler(){
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+
+                if (response!=null){
+
+
+                    try {
+
+                        if (response.has("name")){
+                            author = response.getString("name");
+                            textView.setText(author);
+
+                            //textView.setText(authorKey);
+
+                            //Intent intent = new Intent();
+                            //intent.putExtra("Title",title);
+                            //intent.putExtra("ISBN",ISBN);
+                            //setResult(RESULT_OK,intent);
+                            //finish();
 
                         }
 
@@ -261,6 +412,7 @@ public class ScanBookActivity extends AppCompatActivity {
 
 
         });
+        */
 
 
     }
