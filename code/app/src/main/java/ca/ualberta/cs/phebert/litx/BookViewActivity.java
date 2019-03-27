@@ -108,7 +108,7 @@ public class BookViewActivity extends AppCompatActivity {
             delete.setVisibility(View.GONE);
 
             TextView ownerUsernameView = (TextView) findViewById(R.id.ownerViewID);
-            String ownerUsername = book.getOwner();
+            String ownerUsername = book.getOwner().getUserName();
             ownerUsernameView.setText(ownerUsername);
 
             ownerUsernameView.setOnClickListener(new TextView.OnClickListener() {
@@ -118,24 +118,10 @@ public class BookViewActivity extends AppCompatActivity {
                     Intent intent = new Intent(BookViewActivity.this, ProfileActivity.class);
                     intent.putExtra(OWNER_USERNAME, ownerUsername);
 
-                    FirebaseFirestore fireData = FirebaseFirestore.getInstance();
-                    fireData.collection("Users").whereEqualTo("userName", ownerUsername).get()
-                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        for (QueryDocumentSnapshot document : task.getResult()) {
-                                            Map<String, Object> temp = document.getData();
-                                            intent.putExtra(OWNER_USERNAME, temp.get("userName").toString());
-                                            intent.putExtra(OWNER_EMAIL, temp.get("email").toString());
-                                            intent.putExtra(OWNER_PHONENUMBER, temp.get("phoneNumber").toString());
-                                        }
-                                        // starts profileActivity
-                                        startActivity(intent);
-                                    }
+                    intent.putExtra(OWNER_EMAIL, book.getOwner().getEmail());
+                    intent.putExtra(OWNER_PHONENUMBER, book.getOwner().getPhoneNumber());
 
-                                }
-                            });
+                    startActivity(intent);
                 }
             });
             // Owner can not request their own books

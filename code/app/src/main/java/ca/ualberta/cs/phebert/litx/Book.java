@@ -153,9 +153,9 @@ public class Book implements Serializable {
      * Sets this book's status
      * @param status the status to set the book to.
      */
-    private void setStatus(BookStatus status) {
-        this.status = status;
-    }
+    //private void setStatus(BookStatus status) {
+    //    this.status = status;
+    //}
 
     /**
      * Getter for owner

@@ -89,14 +89,16 @@ public class AddBookActivity extends AppCompatActivity {
                     }
                     // Create a new book object with those fields
                     firestore = FirebaseFirestore.getInstance();
-                    //TODO: User should be the one using the app, not newly created user
-                    User u = new User("John", "n", "123");
+                    //TO DO: User should be the one using the app, not newly created user
+                    User u = User.currentUser();
                     Book b = new Book(u, author, title, isbn);
 
-                    //TODO: Authentication for the user adding a books
-                    //TODO: Add book to owners list of books as well
+                    //TO DO: Authentication for the user adding a books
+                    //TO DO: Add book to owners list of books as well
                     // If document id exists overwrite the book in their, if it does not exist
                     // create a new document to store the book
+
+                    // TODO put this portion into the book class, change to Map
                     if (docID.equals("")) {
                         // Create a new book and add it to firestore
                         firestore.collection("Books").document().set(b);
@@ -108,7 +110,9 @@ public class AddBookActivity extends AppCompatActivity {
                     Intent intent = new Intent(AddBookActivity.this, MyBooksActivity.class);
                     startActivity(intent);
                 }
-                catch(Exception e) {} // If fields are invalid do nothing
+                catch(Exception e) {
+                    Log.d("LitX", "fields not set properly", e);
+                } // If fields are invalid do nothing
             }
         });
     }
