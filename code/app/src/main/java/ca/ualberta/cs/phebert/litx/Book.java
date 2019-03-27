@@ -127,7 +127,7 @@ public class Book implements Serializable {
         b.put("isbn",getIsbn());
         CollectionReference collection = FirebaseFirestore.getInstance()
                 .collection("Books");
-        if (docID.equals("")) {
+        if (docID == null || docID.equals("")) {
             // Create a new book and add it to firestore
             collection.document().set(b);
         } else {
