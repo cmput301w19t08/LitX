@@ -36,7 +36,7 @@ public class MyBooksActivity extends AppCompatActivity {
 
     private Button addNew;
     private Spinner mySpinner;
-    private String filter;
+    private BookStatus filter;
 
     // Variables required to display books in the database
     private ArrayList<Book> filteredBooks = new ArrayList<Book>();
@@ -70,41 +70,28 @@ public class MyBooksActivity extends AppCompatActivity {
             // to show that
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
-                    //
                     case 0:
-                        filter = "All";
+                        filter = BookStatus.all;
                         break;
-                    // Case 1 is available
                     case 1:
-                        filter = "Available";
+                        filter = BookStatus.available;
                         break;
-                    // case 2 is Requested
                     case 2:
-                        filter = "Requested";
+                        filter = BookStatus.requested;
                         break;
-                    // Case 3 is Accepted
                     case 3:
-                        filter = "Accepted";
+                        filter = BookStatus.accepted;
                         break;
-                    // Case 4 is borrowed
                     case 4:
-                        filter = "Borrowed";
+                        filter = BookStatus.borrowed;
                         break;
 
                 }
                 query();
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
-            }
-        });
-        addNew.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MyBooksActivity.this, AddBookActivity.class);
-                startActivity(intent);
             }
         });
 
@@ -112,10 +99,16 @@ public class MyBooksActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(MyBooksActivity.this);
         recyclerView.setLayoutManager(layoutManager);
+
         filteredBooks = new ArrayList<>();
-        booksAdapter = new BookListAdapter(
-                MyBooksActivity.this, filteredBooks);
-        recyclerView.setAdapter(booksAdapter);
+
+        addNew.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MyBooksActivity.this, AddBookActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 //        //Testing purposes only, following two lines need to be removed
@@ -130,16 +123,30 @@ public class MyBooksActivity extends AppCompatActivity {
      */
     public void query() {
         filteredBooks.clear();
-
+        Log.d("LitX","Querying myBooks");
+        if(!User.isSignedIn()) return;
+        //noinspection ConstantConditions
         for (Book book : User.currentUser().getMyBooks()) {
-            if (filter.equals("All")) {
+            Log.v("LitX",book.getTitle());
+            Log.v("LitX", "filter is " + filter);
+            if (filter == BookStatus.all) {
                 filteredBooks.add(book);
             } else {
-                if (BookStatus.valueOf(filter.toLowerCase()) == book.getStatus()) {
+                if (book.getStatus() == filter) {
                     filteredBooks.add(book);
                 }
             }
         }
+
+        if(filteredBooks.size() > 0) {
+            Log.d("LitX", filteredBooks.get(0).getTitle());
+        }
+
+        booksAdapter = new BookListAdapter(
+                MyBooksActivity.this, filteredBooks);
+        recyclerView.setAdapter(booksAdapter);
+
         booksAdapter.notifyDataSetChanged();
+
     }
 }

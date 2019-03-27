@@ -28,6 +28,7 @@ public class User implements Serializable {
     private static Task<QuerySnapshot> task;
     private static boolean ready = false;
     private static User current;
+    private String uid;
     private String userName;
     private String email;
     private String phoneNumber;
@@ -98,6 +99,7 @@ public class User implements Serializable {
         ans.userName = doc.getString("userName");
         ans.email = doc.getString("email");
         ans.phoneNumber = doc.getString("phoneNumber");
+        ans.uid = doc.getId();
         return ans;
     }
 
@@ -208,7 +210,7 @@ public class User implements Serializable {
     }
 
     public String getUserid () {
-        return (certificate != null) ? certificate.getUid() : null;
+        return uid;
     }
 
     ////////////////////////////////// setters and getters /////////////////////////////////////////
