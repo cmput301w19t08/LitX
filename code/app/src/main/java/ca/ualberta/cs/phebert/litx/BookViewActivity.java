@@ -56,11 +56,12 @@ public class BookViewActivity extends AppCompatActivity {
 
         // Receive the book object the user selected
         Intent intent = getIntent();
-        final Book book = (Book) intent.getExtras().getSerializable("Book");
+        String bookId = intent.getExtras().getString("Book");
+        final Book book = Book.findByDocId(bookId);
 
         load_image(book);
 
-        if (book.getOwnerUid().equals(uid)){
+        if (book.getOwner().getUserid().equals(uid)){
             // A owner of the Book cannot request his own book
             request.setVisibility(View.GONE);
             // Find buttons in the layout
@@ -101,7 +102,7 @@ public class BookViewActivity extends AppCompatActivity {
             request.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    book.
+                    //book.
                     Toast.makeText(BookViewActivity.this, "Your Request has been sent",
                             Toast.LENGTH_SHORT).show();
                 }
@@ -131,7 +132,7 @@ public class BookViewActivity extends AppCompatActivity {
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         try {
             int iconId = this.getResources().getIdentifier("book_icon", "drawable", this.getPackageName());
-            StorageReference pathReference = storageReference.child(book.getOwnerUid() + "/" + Long.toString(book.getIsbn()));
+            StorageReference pathReference = storageReference.child(book.getOwner().getUserid() + "/" + Long.toString(book.getIsbn()));
             //StorageReference pathReference = storageReference.child("sdupasqu-1.png");
             GlideApp.with(this)
                     .load(pathReference)

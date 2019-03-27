@@ -4,25 +4,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firestore.v1.StructuredQuery;
-
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class SearchActivity extends AppCompatActivity  {
 
     private ArrayList<Book> bookresults;
-    private ArrayList<Book> booklist;
     String keywords;
     BookListAdapter adapter;
     RecyclerView recycler;
@@ -33,21 +24,21 @@ public class SearchActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        booklist = new ArrayList<>();
         bookresults = new ArrayList<>();
         recycler = (RecyclerView) findViewById(R.id.search_results);
         recycler.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(SearchActivity.this);
         recycler.setLayoutManager(layoutManager);
+        searchPress(null);
     }
 
     /**
      * Finds list of Books who match all keywords (separated by " ") to the search input
-     * @param Original Full list of books on the Database
      * @param keywords List of words that the query must match
      * @return The list of selected book that match all keywords
      */
-    ArrayList<Book> findBook(ArrayList<Book> Original, String... keywords) {
+    ArrayList<Book> findBook(String... keywords) {
+        ArrayList<Book> Original = new ArrayList<>(Book.getAll().values());
         boolean[] found = new boolean[Original.size()];
         outside: for(int i = 0; i < Original.size(); i++) {
             Book book = Original.get(i);
@@ -95,31 +86,14 @@ public class SearchActivity extends AppCompatActivity  {
      */
     public void searchPress (View v) {
         keywords = ((EditText)findViewById(R.id.input_search)).getText().toString();
-        //FirebaseFirestore.getInstance().collection("User").get();
-        FirebaseFirestore.getInstance().collection("Books").get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        booklist.clear();
-                        for(DocumentSnapshot ds : queryDocumentSnapshots.getDocuments()){
-                            if(FirebaseAuth.getInstance().getCurrentUser() == null) return;
-                            Book book = new Book(ds.getString("owner"),
-                                    ds.getString("author"),
-                                    ds.getString("title"),
-                                    ds.getLong("isbn"),
-                                    ds.getString("ownerUid"));
-                            book.setStatus(ds.getString("status"));
-                            booklist.add(book);
-                        }
-                        bookresults.clear();
-                        Log.d("HI THERE", "onSuccess: here".replace("here", keywords));
-                        if(keywords.equals("")){
-                            bookresults = booklist;
-                        } else {
-                            bookresults = findBook(booklist, keywords.split(" "));
-                        }
-                        updateRecycler();
-                    }
-                });
+        bookresults.clear();
+        if(keywords.isEmpty()) {
+            Log.d("LitX", "search was empty, showing all books");
+            bookresults.addAll(Book.getAll().values());
+        } else {
+            Log.d("LitX", "searching for keywords");
+            bookresults = findBook(keywords.split(" "));
+        }
+        updateRecycler();
     }
 }

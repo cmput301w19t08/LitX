@@ -131,14 +131,13 @@ public class MyBooksActivity extends AppCompatActivity {
                                     Book book = new Book(temp.get("owner").toString(),
                                             temp.get("author").toString(),
                                             temp.get("title").toString(),
-                                            Long.valueOf(temp.get("isbn").toString()),
-                                            temp.get("ownerUid").toString());
+                                            Long.valueOf(temp.get("isbn").toString()));
                                     if (temp.get("acceptedRequest") != null){
                                         book.setStatus("Accepted");
                                     } else {
                                         book.setStatus("Available");
                                     }
-                                    book.setDocID(document.getId());
+                                    //book.setDocID(document.getId());
 // TODO: Need to figure out how to get the request back to set properly for looks
 //TODO: Set all book information
 //                                book.setPhotograph(temp.get("photograph").toString());

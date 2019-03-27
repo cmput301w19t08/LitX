@@ -1,5 +1,6 @@
 package ca.ualberta.cs.phebert.litx;
 
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.google.android.gms.tasks.Task;
@@ -16,6 +17,7 @@ import java.util.Map;
 import static com.loopj.android.http.AsyncHttpClient.log;
 
 public class Book implements Serializable {
+    private static final String TAG = "LitX.Book";
     private static final String BOOK_COLLECTION = "Books";
     private static Map<String, Book> db;
     private static Task<QuerySnapshot> task;
@@ -52,35 +54,40 @@ public class Book implements Serializable {
     ///////////////////////////////////// Database Stuff ///////////////////////////////////////////
 
     static private void loadDb() {
-        if(db == null && task == null && FirebaseAuth.getInstance().getCurrentUser() != null) {
-            db = new HashMap<>();
+        if(task == null && FirebaseAuth.getInstance().getCurrentUser() != null) {
             task = FirebaseFirestore.getInstance()
                     .collection(BOOK_COLLECTION)
                     .get()
-                    .addOnCompleteListener(self -> {
-                        if(self.isSuccessful()) {
-                            QuerySnapshot result = self.getResult();
-                            if(result == null) return;
-                            for(DocumentSnapshot snapshot : result.getDocuments()) {
-                                db.put(snapshot.getId(), fromSnapshot(snapshot));
-                            }
-                        }
-                    });
+                    ;
         }
     }
 
     public static Map<String, Book> getAll() {
         loadDb();
+        if(!User.isSignedIn()) return null;
         while(!task.isComplete()) Thread.yield();
+        if(!task.isSuccessful()) return null;
+        if(db == null) {
+            db = new HashMap<>();
+            for (DocumentSnapshot snapshot : task.getResult().getDocuments()) {
+                Log.v(TAG, snapshot.getId());
+                db.put(snapshot.getId(), fromSnapshot(snapshot));
+            }
+            Log.v(TAG, "amount of books: " + db.size());
+        }
+
         return db;
     }
 
     private static Book fromSnapshot(DocumentSnapshot doc) {
         Book ans = new Book();
         ans.setDocID(doc.getId());
-        ans.setOwner(doc.getString("owner"));
+        String ownerUid = doc.getString("ownerUid");
+        //Log.d(TAG, "Owner UID = " + ownerUid);
+        ans.setOwner(ownerUid);
         ans.setStatus(doc.getString("status"));
         ans.setAuthor(doc.getString("author"));
+        ans.setTitle(doc.getString("title"));
         // TODO (Scott): set/get photograph, might want to change this to a filename
         try {
             ans.setIsbn(doc.getLong("isbn"));
@@ -89,6 +96,7 @@ public class Book implements Serializable {
         }
 
         // could be moved elsewhere, if this method is called more than once for a book.
+        //Log.d(TAG,ans.getOwner() == null ? "user is null" : "user is not null");
         ans.getOwner().addBook(ans);
         return ans;
     }
@@ -129,7 +137,7 @@ public class Book implements Serializable {
      *
      * @param status (String) one of accepted, available, borrowed, requested
      */
-    private void setStatus(String status) {
+    public void setStatus(String status) {
         try {
             this.status = BookStatus.valueOf(status.toLowerCase());
         } catch(IllegalArgumentException e) {

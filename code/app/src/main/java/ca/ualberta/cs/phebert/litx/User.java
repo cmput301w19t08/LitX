@@ -11,6 +11,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,11 +21,12 @@ import javax.annotation.Nullable;
 import ca.ualberta.cs.phebert.litx.annotations.BorrowerCalled;
 
 @SuppressWarnings("WeakerAccess")
-public class User {
+public class User implements Serializable {
     private final static String TAG = "LitX.User";
     final static String USER_COLLECTION = "Users";
     private static Map<String,User> db;
     private static Task<QuerySnapshot> task;
+    private static boolean ready = false;
     private static User current;
     private String userName;
     private String email;
@@ -32,7 +34,6 @@ public class User {
     private ArrayList<UserObserver> observers;
     private ArrayList<Request> acceptedRequests;
     private ArrayList<Request> myRequests;
-    private ArrayList<Book> borrowedBooks;
     private ArrayList<Book> myBooks;
     private Coordinate myLocation;
     private FirebaseUser certificate;
@@ -45,77 +46,32 @@ public class User {
      */
     public User(String username, String email, String phone) {
         observers = new ArrayList<>();
+        acceptedRequests = new ArrayList<>();
+        myRequests = new ArrayList<>();
+        myBooks = new ArrayList<>();
         certificate = null;
         editProfile(username, email, phone);
     }
 
     public User() {
         observers = new ArrayList<>();
+        acceptedRequests = new ArrayList<>();
+        myRequests = new ArrayList<>();
+        myBooks = new ArrayList<>();
         userName = "";
         email = "";
         phoneNumber = "";
         syncScheduled = false;
     }
 
-    /**
-     * called upon authentication.
-     * @deprecated Use {@link #currentUser()} instead.
-     * @param fbUser a firebase user
-     */
-    @Deprecated
-    public User(@NonNull FirebaseUser fbUser) {
-        observers = new ArrayList<>();
-        // use lazy instantiation.
-        FirebaseFirestore.getInstance()
-                .collection(USER_COLLECTION)
-                .document(fbUser.getUid())
-                .get()
-                .addOnSuccessListener(snapshot -> {
-                    userName = snapshot.getString("userName");
-                    email = snapshot.getString("email");
-                    phoneNumber = snapshot.getString("phoneNumber");
-                });
-        userName = null;
-        email = fbUser.getEmail();
-        phoneNumber = null;
-        certificate = fbUser;
-        FirebaseFirestore.getInstance()
-                .collection(USER_COLLECTION)
-                .document(fbUser.getUid())
-                .addSnapshotListener((documentSnapshot, e) -> {
-                    if(e == null && documentSnapshot != null) {
-                        userName = documentSnapshot.getString("userName");
-                        email = documentSnapshot.getString("email");
-                        phoneNumber = documentSnapshot.getString("phoneNumber");
-                        for(UserObserver observer:observers) {
-                            observer.onUserUpdated(this);
-                        }
-                    }
-                });
-    }
-
     ///////////////////////////////////  Database stuff ////////////////////////////////////////////
-    static {
-        // attempt to load all users as soon as possible.
-        loadDb();
-    }
-
 
     static private void loadDb() {
-        if(db == null && task == null && FirebaseAuth.getInstance().getCurrentUser() != null) {
-            db = new HashMap<>();
+        if(task == null && FirebaseAuth.getInstance().getCurrentUser() != null) {
+
             task = FirebaseFirestore.getInstance()
                     .collection(USER_COLLECTION)
-                    .get()
-                    .addOnCompleteListener(self -> {
-                        if(self.isSuccessful()) {
-                            QuerySnapshot result = self.getResult();
-                            if(result == null) return;
-                            for(DocumentSnapshot snapshot : result.getDocuments()) {
-                                db.put(snapshot.getId(), fromSnapshot(snapshot));
-                            }
-                        }
-                    });
+                    .get();
             FirebaseFirestore.getInstance()
                     .collection(USER_COLLECTION)
                     .addSnapshotListener((result, e) -> {
@@ -138,19 +94,33 @@ public class User {
     }
 
     static public User fromSnapshot(DocumentSnapshot doc) {
-        return new User(doc.getString("userName"),
-                doc.getString("email"),
-                doc.getString("phoneNumber"));
+        User ans = new User();
+        ans.userName = doc.getString("userName");
+        ans.email = doc.getString("email");
+        ans.phoneNumber = doc.getString("phoneNumber");
+        return ans;
     }
 
     static public Map<String, User> getAll() {
         loadDb();
+        if(!isSignedIn()) return null;
         while(!task.isComplete()) Thread.yield();
+        if(!task.isSuccessful()) return null;
+
+        if(db == null) {
+            db = new HashMap<>();
+            for(DocumentSnapshot snapshot : task.getResult().getDocuments()) {
+                Log.v(TAG,snapshot.getId());
+                db.put(snapshot.getId(), fromSnapshot(snapshot));
+            }
+        }
+
         return db;
     }
 
-    public static User findByUid(String Uid) {
-        return getAll().get(Uid);
+    public static User findByUid(String uid) {
+        User ans = getAll().get(uid);
+        return ans;
     }
 
     public static User currentUser() {
@@ -314,10 +284,6 @@ public class User {
     }
 
     /////////////////////////////////////// books //////////////////////////////////////////////////
-
-    public ArrayList<Book> getBorrowedBooks() {
-        return borrowedBooks;
-    }
 
     /**
      * Used for testing
