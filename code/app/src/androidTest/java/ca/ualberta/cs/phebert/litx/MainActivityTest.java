@@ -31,7 +31,7 @@ public class MainActivityTest {
     public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void changeText_sameActivity() {
+    public void mainActivityButtonsTest() {
         onView(withId(R.id.profile_home)).perform(click());
         onView(withId(R.id.EditButton)).perform(click());
         Espresso.pressBack();
