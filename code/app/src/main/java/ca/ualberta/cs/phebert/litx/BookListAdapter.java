@@ -2,12 +2,17 @@ package ca.ualberta.cs.phebert.litx;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -61,7 +66,8 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         holder.title.setText(book.getTitle());
         holder.author.setText(book.getAuthor());
         holder.isbn.setText(Long.toString(book.getIsbn()));
-        holder.photo = book.getPhotograph();
+
+        load_image(holder, book);
 
         // Commented out since we cannot get request object from database at this time
         //        if (!book.isAvailable()) {
@@ -127,5 +133,18 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
             borrower = (TextView) itemView.findViewById(R.id.book_borrower);
 
         }
+    }
+
+    private void load_image(ViewHolder holder, Book book) {
+        int iconId = context.getResources().getIdentifier("book_icon", "drawable", context.getPackageName());
+        StorageReference storage = FirebaseStorage.getInstance().getReference();
+        StorageReference path = storage.child(book.getOwnerUid() + "/" + Long.toString(book.getIsbn()));
+        path.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                String imageURL = uri.toString();
+                GlideApp.with(context).load(imageURL).placeholder(iconId).into(holder.photo);
+            }
+        });
     }
 }
