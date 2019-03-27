@@ -45,4 +45,5 @@
     <string name="confirm_button">Confirm</string>
     <string name="clear_button">Clear</string>
     <string name="no_isbn">No ISBN</string>
+    <string name="cancel_button">Cancel</string>
 </resources>
