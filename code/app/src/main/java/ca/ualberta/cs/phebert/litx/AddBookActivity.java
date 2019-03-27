@@ -49,7 +49,7 @@ public class AddBookActivity extends AppCompatActivity {
         try {
             // If the book is being edited then get the document id to change in the future
             Intent intent = getIntent();
-            final Book book = (Book) intent.getExtras().getSerializable("Book");
+            final Book book = Book.findByDocId(intent.getExtras().getString("Book"));
             id = book.getDocID();
 
             //Fill the edit text boxes with the book information

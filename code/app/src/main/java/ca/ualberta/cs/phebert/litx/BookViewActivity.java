@@ -82,7 +82,7 @@ public class BookViewActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     //Pass Book object into AddBookActivity and start the activity
                     Intent intent = new Intent(BookViewActivity.this, AddBookActivity.class);
-                    intent.putExtra("Book", book);
+                    intent.putExtra("Book", book.getDocID());
                     startActivity(intent);
                 }
             });
@@ -132,7 +132,7 @@ public class BookViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(BookViewActivity.this, ViewPhotoActivity.class);
-                intent.putExtra("Book", book);
+                intent.putExtra("Book", book.getDocID());
                 startActivity(intent);
             }
         });

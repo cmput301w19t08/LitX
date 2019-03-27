@@ -68,7 +68,11 @@ public class ViewPhotoActivity extends AppCompatActivity {
         storageRef = FirebaseStorage.getInstance().getReference();
 
         Intent intent = getIntent();
-        final Book book = (Book) intent.getExtras().getSerializable("Book");
+        if(intent.getExtras() == null) {
+            finish();
+            return;
+        }
+        final Book book = Book.findByDocId(intent.getExtras().getString("Book"));
 
         pathReference = storageRef.child(book.getOwner().getUserid() + "/" + Long.toString(book.getIsbn()));
         iconId = this.getResources().getIdentifier("book_icon", "drawable", this.getPackageName());
@@ -105,10 +109,7 @@ public class ViewPhotoActivity extends AppCompatActivity {
         btn_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent view_book = new Intent(ViewPhotoActivity.this, BookViewActivity.class);
-                view_book.putExtra("Book", book);
                 finish();
-                startActivity(view_book);
             }
         });
 
