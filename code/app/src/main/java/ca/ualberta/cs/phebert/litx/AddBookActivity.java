@@ -26,10 +26,6 @@ public class AddBookActivity extends AppCompatActivity {
 
     private Button btnOkay;
 
-    // Database variables
-    private FirebaseFirestore firestore;
-    //private FirebaseAuth auth;
-
     /**
      * onCreate automatically fills in the book information if it is being edited, otherwise
      * it leaves the fields blank and the user can provide new information. From this activity,
@@ -87,18 +83,12 @@ public class AddBookActivity extends AppCompatActivity {
                             (String.valueOf(isbn).length() != 13 && String.valueOf(isbn).length() != 10)) {
                         throw new Exception("Invalid fields");
                     }
-                    // Create a new book object with those fields
-                    firestore = FirebaseFirestore.getInstance();
+
+                    if(!User.isSignedIn()) return;
                     //TO DO: User should be the one using the app, not newly created user
                     User u = User.currentUser();
                     Book b = new Book(u, author, title, isbn);
 
-                    //TODO: Authentication for the user adding a books
-                    //TODO: Add book to owners list of books as well
-                    // If document id exists overwrite the book in there, if it does not exist
-                    // create a new document to store the book
-
-                    // TODO put this portion into the book class, change to Map
                     b.push();
                     // Go back to MyBooksActivity after the book has been added
                     Intent intent = new Intent(AddBookActivity.this, MyBooksActivity.class);
