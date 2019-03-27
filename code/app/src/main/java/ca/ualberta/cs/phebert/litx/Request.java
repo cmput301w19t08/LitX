@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,16 +38,9 @@ public class Request {
 
     // Get requests
     private static void loadDb(){
-        if(db == null || task == null && FirebaseAuth.getInstance().getCurrentUser() != null) {
-            db = new HashMap<>();
+        if(task == null && User.isSignedIn()) {
             task = FirebaseFirestore.getInstance().collection(REQUESTS_COLLECTION)
-                    .get()
-                    .addOnSuccessListener(queryDocumentSnapshots -> {
-                        List<DocumentSnapshot> docs = queryDocumentSnapshots.getDocuments();
-                        for (DocumentSnapshot doc : docs) {
-                            db.put(doc.getId(), fromSnapshot(doc));
-                        }
-                    });
+                    .get();
         }
     }
 
@@ -56,7 +50,19 @@ public class Request {
      */
     public static Map<String,Request> getAll() {
         loadDb();
+        if(!User.isSignedIn()) return null;
         while(!task.isComplete()) Thread.yield();
+        if(!task.isSuccessful()) return null;
+
+        if(db == null) {
+            db = new HashMap<>();
+            List<DocumentSnapshot> docs = task.getResult().getDocuments();
+            for (DocumentSnapshot doc : docs) {
+                Log.v("LitX.Request", doc.getId());
+                db.put(doc.getId(), fromSnapshot(doc));
+            }
+        }
+
         return db;
     }
 

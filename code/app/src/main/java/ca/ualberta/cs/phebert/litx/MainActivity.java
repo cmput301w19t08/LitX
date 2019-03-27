@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Thread loader = new Thread(Request::getAll);
+        loader.run();
         if(FirebaseAuth.getInstance().getCurrentUser() == null) {
             goToProfileView(null);
         }
