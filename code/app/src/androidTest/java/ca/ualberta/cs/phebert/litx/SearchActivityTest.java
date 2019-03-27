@@ -52,9 +52,8 @@ public class SearchActivityTest {
      //   onData(anything()).atPosition(0).perform(scrollTo()).perform(click());
        // onView(withId(R.id.search_results)).perform(scrollTo()).perform(click());
 
-
         //onView(withId(R.id.search_results)).perform(
-          //      RecyclerViewActions.actionOnItemAtPosition(0, click()));
+          //      RecyclerViewActions.scrollToPosition(0)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
     }
 
 }
