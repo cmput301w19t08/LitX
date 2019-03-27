@@ -1,25 +1,15 @@
 package ca.ualberta.cs.phebert.litx;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
 
 public class ProfileActivity extends AppCompatActivity implements UserObserver {
     private static final String LOG_TAG = "litX.ProfileActivity";
@@ -30,11 +20,9 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
     private TextView userView;
     private TextView emailView;
     private TextView phoneView;
-    private TextView passwordEntry; // not on xml
     private EditText userEdit;
     private EditText emailEdit;
     private EditText phoneEdit;
-    private EditText PasswordEdit; // not on xml
 
 
     @Override
@@ -52,7 +40,8 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
         emailView = findViewById(R.id.emailView);
         phoneView = findViewById(R.id.phoneView);
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            currentUser = new User(FirebaseAuth.getInstance().getCurrentUser());
+            currentUser = User.currentUser();
+            assert currentUser != null;
             currentUser.addObserver(this);
             onUserUpdated(currentUser); // might as well.
         } else {
@@ -95,35 +84,11 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
         phoneView.setText(phoneEdit.getText());
 
         if (creating) {
-            // this whole block is based on Authenticate with Firebase Using Email Link in Android,
-            // https://firebase.google.com/docs/auth/android/email-link-auth,
-            //
-            FirebaseAuth.getInstance()
-                    .signInWithEmailAndPassword(emailView.getText().toString(),"a").addOnSuccessListener(res -> {
-                        Log.v(LOG_TAG,"signed in");
-                        finish();
-            }).addOnFailureListener(e -> {
-                e.printStackTrace();
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(emailView.getText().toString(),"a23b45")
-                        .addOnSuccessListener(res ->{
-                            HashMap<String, Object> user = new HashMap<>();
-                            user.put("userName", userView.getText().toString());
-                            user.put("email",  emailView.getText().toString());
-                            user.put("phoneNumber", phoneView.getText().toString());
-                            FirebaseFirestore.getInstance()
-                                    .collection(User.USER_COLLECTION)
-                                    .document(res.getUser().getUid())
-                                    .set(user)
-                                    .addOnSuccessListener(ign -> {
-
-                                    })
-                                    .addOnFailureListener(e2 -> Log.wtf("LitX.User", e));
-                            Log.d(LOG_TAG,"signed up");
-                            finish();
-                        }).addOnFailureListener(e2 -> {
-                            Log.e(LOG_TAG, "could not sign up", e2);
-                });
-            });
+            User.logIn(
+                    userView.getText().toString(),
+                    emailView.getText().toString(),
+                    phoneView.getText().toString(),
+                    this);
         }
 
         currentUser.sync();
