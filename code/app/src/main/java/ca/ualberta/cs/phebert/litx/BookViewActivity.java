@@ -28,6 +28,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.InputStream;
 
+import static ca.ualberta.cs.phebert.litx.ProfileActivity.UID_IN;
+
 
 /**
  * Displays the description of a book after a user selected the book to view in the previous
@@ -42,12 +44,7 @@ public class BookViewActivity extends AppCompatActivity {
     private Button edit;
     private Button request;
     private ImageView photo;
-    private String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-
-    private String OWNER_USERNAME = "OWNER_USERNAME_STRING";
-    private String OWNER_EMAIL = "OWNER_EMAIL_STRING";
-    private String OWNER_PHONENUMBER = "OWNER_PHONENUMBER_STRING";
+    private String uid = User.currentUser().getUserid();
 
     /**
      * onCreate sets the description of the book selected, and sets onClickListeners to determine
@@ -116,10 +113,7 @@ public class BookViewActivity extends AppCompatActivity {
                 public void onClick(View v) {
 
                     Intent intent = new Intent(BookViewActivity.this, ProfileActivity.class);
-                    intent.putExtra(OWNER_USERNAME, ownerUsername);
-
-                    intent.putExtra(OWNER_EMAIL, book.getOwner().getEmail());
-                    intent.putExtra(OWNER_PHONENUMBER, book.getOwner().getPhoneNumber());
+                    intent.putExtra(UID_IN, book.getOwner().getUserid());
 
                     startActivity(intent);
                 }

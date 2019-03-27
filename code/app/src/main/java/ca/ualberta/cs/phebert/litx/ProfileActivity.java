@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class ProfileActivity extends AppCompatActivity implements UserObserver {
     private static final String LOG_TAG = "litX.ProfileActivity";
+    public static final String UID_IN = "UserUID";
     private View viewProfile;
     private View editProfile;
     private User currentUser;
@@ -24,9 +25,6 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
     private EditText userEdit;
     private EditText emailEdit;
     private EditText phoneEdit;
-    private String OWNER_USERNAME = "OWNER_USERNAME_STRING";
-    private String OWNER_EMAIL = "OWNER_EMAIL_STRING";
-    private String OWNER_PHONENUMBER = "OWNER_PHONENUMBER_STRING";
 
 
     @Override
@@ -45,18 +43,16 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
         phoneView = findViewById(R.id.phoneView);
 
         Intent intent = getIntent();
-        if (intent.hasExtra(OWNER_USERNAME)) {
-            userView.setText(intent.getStringExtra(OWNER_USERNAME));
-            emailView.setText(intent.getStringExtra(OWNER_EMAIL));
-            phoneView.setText(intent.getStringExtra(OWNER_PHONENUMBER));
+        if (intent.hasExtra(UID_IN)) {
+            currentUser = User.findByUid(intent.getStringExtra(UID_IN));
+            onUserUpdated(currentUser);
             TextView editButton = (TextView) findViewById(R.id.EditButton);
             TextView addAccButton = (TextView) findViewById(R.id.addAccButton);
             // Only the owner would be able to edit or add
             editButton.setVisibility(View.INVISIBLE);
             addAccButton.setVisibility(View.INVISIBLE);
-
         } else {
-            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            if (User.isSignedIn()) {
                 currentUser = User.currentUser();
                 assert currentUser != null;
                 currentUser.addObserver(this);
