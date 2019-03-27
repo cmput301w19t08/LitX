@@ -96,7 +96,7 @@ public class AddBookActivity extends AppCompatActivity {
 
                     //TODO: Authentication for the user adding a books
                     //TODO: Add book to owners list of books as well
-                    // If document id exists overwrite the book in their, if it does not exist
+                    // If document id exists overwrite the book in there, if it does not exist
                     // create a new document to store the book
                     if (docID.equals("")) {
                         // Create a new book and add it to firestore

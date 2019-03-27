@@ -55,6 +55,7 @@ public class ViewPhotoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_photo);
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         cancel = false;
 
         btn_add = (Button) findViewById(R.id.addPhotoButton);
@@ -72,6 +73,12 @@ public class ViewPhotoActivity extends AppCompatActivity {
         pathReference = storageRef.child(book.getOwnerUid() + "/" + Long.toString(book.getIsbn()));
         iconId = this.getResources().getIdentifier("book_icon", "drawable", this.getPackageName());
         load_image();
+
+        if (!book.getOwnerUid().equals(uid)) {
+            // Don't allow adding/deleting if the user accessing the photo doesn't own the book
+            btn_delete.setVisibility(View.GONE);
+            btn_add.setVisibility(View.GONE);
+        }
 
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
