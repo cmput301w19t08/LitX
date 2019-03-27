@@ -11,7 +11,7 @@
     <string name="myBooks_button">My Books</string>
     <string name="exchange_button">Exchange</string>
     <string name="search_button">Search</string>
-    <string name="request_button">Requested</string>
+    <string name="request_button">Request</string>
     <string name="accept_button">Accepted</string>
     <string name="borrowing_button">Borrowed</string>
     <string name="top10">Top 10 Recommended Books on LitX</string>
@@ -31,4 +31,19 @@
     <string name="channel_description">A wild request has appeared.</string>
     <string name="add_new">Add New</string>
     <string name="okay">Okay</string>
+    <string name="add_button">Add</string>
+    <string name="delete_button">Delete</string>
+    <string name="done_button">Done</string>
+    <string name="edit_button">Edit</string>
+    <string name="borrowed_button">Borrowed</string>
+    <string name="isbn">ISBN</string>
+    <string name="scan_isbn">Scan ISBN</string>
+    <string name="title">Title</string>
+    <string name="author">Author</string>
+    <string name="requests">Requests</string>
+    <string name="requested_button">Requested</string>
+    <string name="confirm_button">Confirm</string>
+    <string name="clear_button">Clear</string>
+    <string name="no_isbn">No ISBN</string>
+    <string name="cancel_button">Cancel</string>
 </resources>

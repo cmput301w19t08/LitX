@@ -13,8 +13,7 @@
         android:layout_height="30dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        app:srcCompat="@drawable/googleg_standard_color_18"
-        />
+        app:srcCompat="@drawable/book_icon" />
 
     <TextView
         android:id="@+id/book_title"
@@ -22,13 +21,15 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/book_photo"
         android:paddingLeft="10dp"
-        android:text="Title" />
+        android:text="Title"
+        android:textColor="#ffffff"/>
 
     <TextView
         android:id="@+id/book_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Robert Munsch"
+        android:text="Author"
+        android:textColor="#ffffff"
         android:paddingLeft="10dp"
         android:layout_below="@+id/book_title"
         android:layout_toRightOf="@+id/book_photo" />
@@ -41,12 +42,14 @@
         android:layout_alignBottom="@id/book_borrower"
         android:gravity="bottom"
         android:text="Available"
+        android:textColor="#ffffff"
         android:layout_alignParentStart="true"
         />
     <TextView
 
         android:id="@+id/book_borrower"
-        android:text="Borrower Example "
+        android:text="Borrower Example"
+        android:textColor="#ffffff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/book_author"
@@ -57,6 +60,7 @@
     <TextView
         android:id="@+id/book_isbn"
         android:text="123456789123"
+        android:textColor="#ffffff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
