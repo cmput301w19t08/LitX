@@ -154,6 +154,20 @@ public class Request {
         }
     }
 
+    public void selfPush() {
+        Log.v("LitX.Request","pushing");
+        if (docId == null || docId.isEmpty()) {
+            docId = FirebaseFirestore.getInstance()
+                    .collection(REQUESTS_COLLECTION)
+                    .document().getId();
+
+        }
+        FirebaseFirestore.getInstance()
+                .collection(REQUESTS_COLLECTION)
+                .document(docId)
+                .set(toMap());
+    }
+
     /**
      * create a notification
      * <p>
@@ -235,7 +249,7 @@ public class Request {
     }
 
     /**
-     * This constructor is used by scan
+     * This constructor is used by firebase.
      * @param book The book that is being requested
      * @param owner The owner of the book
      * @param requester The requestor of the book
