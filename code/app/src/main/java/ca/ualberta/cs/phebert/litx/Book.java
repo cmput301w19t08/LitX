@@ -132,7 +132,7 @@ public class Book implements Serializable {
             collection.document().set(b);
         } else {
             // Update the firestore document since the book already exists
-            firestore.collection("Books").document(docID).set(b);
+            collection.document(docID).set(b);
         }
     }
 
