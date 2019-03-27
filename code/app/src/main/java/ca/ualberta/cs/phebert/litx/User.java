@@ -117,7 +117,7 @@ public class User {
             FirebaseFirestore.getInstance()
                     .collection(USER_COLLECTION)
                     .addSnapshotListener((result, e) -> {
-                        if(e == null) Log.e(TAG,"firebase error", e);
+                        if(e != null) Log.e(TAG,"firebase error", e);
                         if (result == null) return;
                         for (DocumentSnapshot doc: result.getDocuments()) {
                             User oldVal = findByUid(doc.getId());
