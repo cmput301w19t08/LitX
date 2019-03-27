@@ -50,6 +50,7 @@
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDECIES"
             android:value="ocr" />
+        <uses-library android:name="android.test.runner" />
     </application>
 
 </manifest>
