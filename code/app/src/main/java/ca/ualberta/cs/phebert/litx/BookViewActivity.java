@@ -1,32 +1,19 @@
 package ca.ualberta.cs.phebert.litx;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import java.util.Map;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.io.InputStream;
 
 import static ca.ualberta.cs.phebert.litx.ProfileActivity.UID_IN;
 
@@ -127,7 +114,7 @@ public class BookViewActivity extends AppCompatActivity {
             request.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //book.
+                    //book.addRequest();
                     Toast.makeText(BookViewActivity.this, "Your Request has been sent",
                             Toast.LENGTH_SHORT).show();
                 }
@@ -155,14 +142,15 @@ public class BookViewActivity extends AppCompatActivity {
     private void load_image(Book book) {
         // Load the image into the imageview if it exists
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-        try {
-            int iconId = this.getResources().getIdentifier("book_icon", "drawable", this.getPackageName());
-            StorageReference pathReference = storageReference.child(book.getOwner().getUserid() + "/" + Long.toString(book.getIsbn()));
-            //StorageReference pathReference = storageReference.child("sdupasqu-1.png");
-            GlideApp.with(this)
-                    .load(pathReference)
-                    .placeholder(iconId)
-                    .into(photo);
-        } catch (Exception e) {}
+        int iconId = this.getResources().getIdentifier("book_icon", "drawable", this.getPackageName());
+        StorageReference pathReference = storageReference.child(book.getOwner().getUserid() + "/" + Long.toString(book.getIsbn()));
+
+        pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                String imageURL = uri.toString();
+                GlideApp.with(BookViewActivity.this).load(imageURL).placeholder(iconId).into(photo);
+            }
+        });
     }
 }

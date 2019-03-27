@@ -93,9 +93,9 @@ public class AddBookActivity extends AppCompatActivity {
                     User u = User.currentUser();
                     Book b = new Book(u, author, title, isbn);
 
-                    //TO DO: Authentication for the user adding a books
-                    //TO DO: Add book to owners list of books as well
-                    // If document id exists overwrite the book in their, if it does not exist
+                    //TODO: Authentication for the user adding a books
+                    //TODO: Add book to owners list of books as well
+                    // If document id exists overwrite the book in there, if it does not exist
                     // create a new document to store the book
 
                     // TODO put this portion into the book class, change to Map
