@@ -35,12 +35,11 @@ public class BookViewActivity extends AppCompatActivity {
     private Button delete;
     private Button edit;
     private Button request;
-    private String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    private String uid = User.currentUser().getUserid();
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
-    private FirebaseFirestore firestore;
     private ImageView photo;
 
     /**
