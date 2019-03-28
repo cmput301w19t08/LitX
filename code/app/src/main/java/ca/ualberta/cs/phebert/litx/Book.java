@@ -1,58 +1,151 @@
 package ca.ualberta.cs.phebert.litx;
 
+import android.util.Log;
 import android.widget.ImageView;
+
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.loopj.android.http.AsyncHttpClient.log;
 
 public class Book implements Serializable {
+    private static final String TAG = "LitX.Book";
+    private static final String BOOK_COLLECTION = "Books";
+    private static Map<String, Book> db;
+    private static Task<QuerySnapshot> task;
+
     private String author;
     private String title;
     private long isbn;
     private BookStatus status;
-    private String ownerUid;
-
-    // For testing the adapter
-    //private User borrower;
-
-    private String owner;
+    private User owner;
     private String docID; // Document ID in Firestore
-
     private ArrayList<Request> requests;
     private Request acceptedRequest;
-
     private ImageView photograph;
 
-    public Book(String owner, String author, String title, long isbn, String ownerUid) {
+    public Book(User owner, String author, String title, long isbn) {
         this.owner = owner;
         this.author = author;
         this.title = title;
         this.isbn = isbn;
         this.status = BookStatus.available;
-        this.ownerUid = ownerUid;
+    }
+
+    public Book(String owner, String author, String title, long isbn) {
+        setOwner(owner);
+        this.author = author;
+        this.title = title;
+        this.isbn = isbn;
     }
 
     public Book() {
     } // For firestore
 
-    /**
-     * sets Owner of the book
-     *
-     * @param owner string of the owner of the book
-     */
-    public void setOwner(String owner) {
-        this.owner = owner;
+
+    ///////////////////////////////////// Database Stuff ///////////////////////////////////////////
+
+    static private void loadDb() {
+        if(task == null && FirebaseAuth.getInstance().getCurrentUser() != null) {
+            task = FirebaseFirestore.getInstance()
+                    .collection(BOOK_COLLECTION)
+                    .get()
+                    ;
+        }
+    }
+
+    public static Map<String, Book> getAll() {
+        loadDb();
+        if(!User.isSignedIn()) return null;
+        while(!task.isComplete()) Thread.yield();
+        if(!task.isSuccessful()) return null;
+        if(db == null) {
+            db = new HashMap<>();
+            for (DocumentSnapshot snapshot : task.getResult().getDocuments()) {
+                Log.v(TAG, snapshot.getId());
+                db.put(snapshot.getId(), fromSnapshot(snapshot));
+            }
+            Log.v(TAG, "amount of books: " + db.size());
+        }
+
+        return db;
+    }
+
+    private static Book fromSnapshot(DocumentSnapshot doc) {
+        Book ans = new Book();
+        ans.setDocID(doc.getId());
+        String ownerUid = doc.getString("ownerUid");
+        //Log.d(TAG, "Owner UID = " + ownerUid);
+        ans.setOwner(ownerUid);
+        ans.setStatus(doc.getString("status"));
+        ans.setAuthor(doc.getString("author"));
+        ans.setTitle(doc.getString("title"));
+        // TODO (Scott): set/get photograph, might want to change this to a filename
+        try {
+            ans.setIsbn(doc.getLong("isbn"));
+        } catch(NullPointerException e) {
+            // whatever, no isbn, this book is weird
+        }
+
+        // could be moved elsewhere, if this method is called more than once for a book.
+        //Log.d(TAG,ans.getOwner() == null ? "user is null" : "user is not null");
+        ans.getOwner().addBook(ans);
+        return ans;
+    }
+
+    public static Book findByDocId(String docId) {
+        return getAll().get(docId);
+    }
+
+    public void delete() {
+        FirebaseFirestore.getInstance()
+                .collection(BOOK_COLLECTION)
+                .document(getDocID())
+                .delete();
+        db.remove(getDocID());
     }
 
     public String getDocID() { return docID; }
 
-    public void setDocID(String newDocID) { this.docID = newDocID; }
+    private void setDocID(String newDocID) { this.docID = newDocID; }
 
-    public String getOwnerUid(){ return ownerUid;}
+    public void push() {
+        Map<String, Object> b = new HashMap<>();
+        b.put("ownerUid",getOwner().getUserid());
+        b.put("status", getStatus().toString());
+        b.put("author",getAuthor());
+        b.put("title", getTitle());
+        b.put("isbn",getIsbn());
+        CollectionReference collection = FirebaseFirestore.getInstance()
+                .collection("Books");
+        if (docID == null || docID.equals("")) {
+            // Create a new book and add it to firestore
+            collection.document().set(b);
+        } else {
+            // Update the firestore document since the book already exists
+            collection.document(docID).set(b);
+        }
+    }
 
-    public void setOwnerUid(String newUid){this.ownerUid = newUid; }
+    ////////////////////////////////// settters and getters ////////////////////////////////////////
+
+    /**
+     * Returns if the book is available
+     *
+     * @return Boolean
+     */
+    public Boolean isAvailable() {
+        return this.status == BookStatus.available;
+    }
 
     /**
      * getter for status
@@ -69,7 +162,7 @@ public class Book implements Serializable {
      */
     public void setStatus(String status) {
         try {
-            this.status = BookStatus.valueOf(status);
+            this.status = BookStatus.valueOf(status.toLowerCase());
         } catch(IllegalArgumentException e) {
             log.e("LitX.Book","status does not exist", e);
         }
@@ -79,28 +172,26 @@ public class Book implements Serializable {
      * Sets this book's status
      * @param status the status to set the book to.
      */
-    public void setStatus(BookStatus status) {
-        this.status = status;
-    }
-
-
+    //private void setStatus(BookStatus status) {
+    //    this.status = status;
+    //}
 
     /**
      * Getter for owner
      *
      * @return String
      */
-    public String getOwner() {
+    public User getOwner() {
         return owner;
     }
 
     /**
-     * Returns if the book is available
+     * sets Owner of the book.
      *
-     * @return Boolean
+     * @param ownerUid user ID string of the owner of the book
      */
-    public Boolean isAvailable() {
-        return this.status == BookStatus.available;
+    private void setOwner(String ownerUid) {
+        owner = User.findByUid(ownerUid);
     }
 
     /**
@@ -167,11 +258,6 @@ public class Book implements Serializable {
     }
 
 
-    /*public void setBorrower(User user) {
-        this.borrower = user;
-
-    }*/
-
     public User getBorrower() {
         if (acceptedRequest != null) {
             return acceptedRequest.getRequester();
@@ -188,6 +274,10 @@ public class Book implements Serializable {
             acceptedRequest = request;
             status = BookStatus.accepted;
         }
+        if (request == null) {
+            acceptedRequest = request;
+            status = BookStatus.available;
+        }
     }
 
     /**
@@ -201,7 +291,7 @@ public class Book implements Serializable {
     /**
      * getter for the photograph
      *
-     * @return ImageView
+     * @return an ImageView of the photograph
      */
     public ImageView getPhotograph() {
         return photograph;
@@ -216,11 +306,19 @@ public class Book implements Serializable {
         this.photograph = photograph;
     }
 
-    /*
-     * Uses the getters for each Request to fill in the views of a viewRequest layout
-     * (Probably going to be some form of a custom adapter layout)
+    /**
+     * Add a new request created by this user
      */
-    public void viewRequests() {
+    public void addRequest() {
+        Request request = new Request(this, this.owner, User.currentUser());
+        addRequest(request);
+    }
 
+    /**
+     * add a requests to this book's requests
+     * @param request
+     */
+    void addRequest(Request request) {
+       requests.add(request);
     }
 }

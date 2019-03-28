@@ -22,13 +22,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class AddBookActivity extends AppCompatActivity {
     EditText titleView;
     EditText ISBNView;
+    EditText authorView;
     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     private Button btnOkay;
-
-    // Database variables
-    private FirebaseFirestore firestore;
-    //private FirebaseAuth auth;
 
     /**
      * onCreate automatically fills in the book information if it is being edited, otherwise
@@ -43,6 +40,7 @@ public class AddBookActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_book);
         titleView=(EditText)findViewById(R.id.editTitle);
         ISBNView=(EditText)findViewById(R.id.editISBN);
+        authorView=(EditText)findViewById(R.id.editAuthor);
         String id = ""; // To determine the document id in Firestore
 
         // Get edittexts
@@ -53,7 +51,7 @@ public class AddBookActivity extends AppCompatActivity {
         try {
             // If the book is being edited then get the document id to change in the future
             Intent intent = getIntent();
-            final Book book = (Book) intent.getExtras().getSerializable("Book");
+            final Book book = Book.findByDocId(intent.getExtras().getString("Book"));
             id = book.getDocID();
 
             //Fill the edit text boxes with the book information
@@ -87,29 +85,20 @@ public class AddBookActivity extends AppCompatActivity {
                             (String.valueOf(isbn).length() != 13 && String.valueOf(isbn).length() != 10)) {
                         throw new Exception("Invalid fields");
                     }
-                    // Create a new book object with those fields
-                    firestore = FirebaseFirestore.getInstance();
-                    //TODO: User should be the one using the app, not newly created user
-                    User u = new User("John", "n", "123");
-                    Book b = new Book(u.getUserName(), author, title, isbn,
-                            uid);
 
-                    //TODO: Authentication for the user adding a books
-                    //TODO: Add book to owners list of books as well
-                    // If document id exists overwrite the book in their, if it does not exist
-                    // create a new document to store the book
-                    if (docID.equals("")) {
-                        // Create a new book and add it to firestore
-                        firestore.collection("Books").document().set(b);
-                    } else {
-                        // Update the firestore document since the book already exists
-                        firestore.collection("Books").document(docID).set(b);
-                    }
+                    if(!User.isSignedIn()) return;
+                    //TO DO: User should be the one using the app, not newly created user
+                    User u = User.currentUser();
+                    Book b = new Book(u, author, title, isbn);
+
+                    b.push();
                     // Go back to MyBooksActivity after the book has been added
                     Intent intent = new Intent(AddBookActivity.this, MyBooksActivity.class);
                     startActivity(intent);
                 }
-                catch(Exception e) {} // If fields are invalid do nothing
+                catch(Exception e) {
+                    Log.d("LitX", "fields not set properly", e);
+                } // If fields are invalid do nothing
             }
         });
     }
@@ -121,19 +110,48 @@ public class AddBookActivity extends AppCompatActivity {
         //titleView.setText("" + resultCode);
         if(requestCode == 155) {
             if(data != null) {
-                String title = data.getStringExtra("Title");
-                String ISBN = data.getStringExtra("ISBN");
-                ISBNView.setText(ISBN);
-                titleView.setText(title);
-                Log.d(TAG, title);
+                //try {
+
+                    String title = data.getStringExtra("Title");
+                    String ISBN = data.getStringExtra("ISBN");
+                    String author = data.getStringExtra("Author");
+                    ISBNView.setText(ISBN);
+                    titleView.setText(title);
+                    authorView.setText(author);
+                //} catch (Exception e){
+                    //If the book is not in the WorldLibrary database print only the ISBN
+                //    String ISBN = data.getStringExtra("ISBN");
+                 //   ISBNView.setText(ISBN);
+                //}
+
             } else {
                 Log.w(TAG,"data is null");
             }
         }
     }
-
     public void scanISBN(View v) {
         Intent intent = new Intent(this, ScanBookActivity.class);
         startActivityForResult(intent,155);
+
+        //This is how the Map Object is to be used!
+        /*
+        try {
+            Intent intent = new Intent(this, MapObject.class);
+            //double RichardISBN=Double.valueOf(ISBNView.getText().toString());
+            double RichardISBN=50;
+            intent.putExtra("LONG",-97.432404);
+            intent.putExtra("LAT",RichardISBN);
+            intent.putExtra("MOVABLE",Boolean.TRUE);
+            startActivity(intent);
+
+
+
+        } catch (Exception e) {}
+        */
+
+
+
+
+
     }
 }
