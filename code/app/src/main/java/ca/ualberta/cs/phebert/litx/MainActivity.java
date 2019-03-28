@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         if (User.isSignedIn()) {
             Thread loader = new Thread(this::getAllData);
-            loader.run();
+            loader.start();
         }
     }
 
