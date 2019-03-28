@@ -18,7 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 public class AuthorClient {
-    private static final String API_BASE_URL = "http://openlibrary.org/authors/";
+    private static final String API_BASE_URL = "http://openlibrary.org";
     private static final String API_END_URL = ".json";
 
     private AsyncHttpClient client;

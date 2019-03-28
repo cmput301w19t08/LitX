@@ -1,28 +1,36 @@
 package ca.ualberta.cs.phebert.litx;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Toast;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     public static final String FilterMode = "ca.ualberta.cs.phebert.litx.FilterMode";
 
+    void getAllData() {
+        Request.getAll(); // this should be enough if requests weren't empty
+        Book.getAll();
+        User.getAll();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+
+        if(!User.isSignedIn()) {
             goToProfileView(null);
+        }
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (User.isSignedIn()) {
+            Thread loader = new Thread(this::getAllData);
+            loader.run();
         }
     }
 

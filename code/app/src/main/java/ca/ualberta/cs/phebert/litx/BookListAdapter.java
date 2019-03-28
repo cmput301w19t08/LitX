@@ -2,18 +2,17 @@ package ca.ualberta.cs.phebert.litx;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.j2objc.annotations.ObjectiveCName;
-
-import org.w3c.dom.Text;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -67,7 +66,8 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         holder.title.setText(book.getTitle());
         holder.author.setText(book.getAuthor());
         holder.isbn.setText(Long.toString(book.getIsbn()));
-        holder.photo = book.getPhotograph();
+
+        load_image(holder, book);
 
         // Commented out since we cannot get request object from database at this time
         //        if (!book.isAvailable()) {
@@ -75,15 +75,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         //        } else {
         holder.borrower.setText(null);
 
-        if (book.getStatus() == "Available" ) {
-            holder.status.setText("Available");
-        } else if (book.getStatus() == "Borrowed"){
-            holder.status.setText("Borrowed");
-        } else if (book.getStatus() == "Accepted") {
-            holder.status.setText("Accepted");
-        } else if (book.getStatus() == "Requested") {
-            holder.status.setText("Requested");
-        }
+        holder.status.setText(book.getStatus().toString());
         /**
          * Sets the onclick listener for each book to go to the view
          * Books activity  while displaying the book passed
@@ -93,7 +85,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), BookViewActivity.class);
-                intent.putExtra("Book", book);
+                intent.putExtra("Book", book.getDocID());
                 context.startActivity(intent);
             }
         });
@@ -141,5 +133,18 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
             borrower = (TextView) itemView.findViewById(R.id.book_borrower);
 
         }
+    }
+
+    private void load_image(ViewHolder holder, Book book) {
+        int iconId = context.getResources().getIdentifier("book_icon", "drawable", context.getPackageName());
+        StorageReference storage = FirebaseStorage.getInstance().getReference();
+        StorageReference path = storage.child(book.getOwner().getUserid() + "/" + Long.toString(book.getIsbn()));
+        path.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                String imageURL = uri.toString();
+                GlideApp.with(context).load(imageURL).placeholder(iconId).into(holder.photo);
+            }
+        });
     }
 }

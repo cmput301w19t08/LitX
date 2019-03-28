@@ -6,6 +6,14 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@drawable/bg</item>
+        <item name="editTextColor">@color/textColor</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:textColorHint">@color/hintColor</item>
+        <item name="android:spinnerDropDownItemStyle">@style/Spinners</item>
     </style>
 
+    <style name="Spinners">
+        <item name="android:background">@color/colorPrimaryDark</item>
+    </style>
 </resources>
