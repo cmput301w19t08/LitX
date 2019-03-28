@@ -68,7 +68,7 @@ public class User implements Serializable {
     ///////////////////////////////////  Database stuff ////////////////////////////////////////////
 
     static private void loadDb() {
-        if(task == null && FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if(task == null && isSignedIn()) {
 
             task = FirebaseFirestore.getInstance()
                     .collection(USER_COLLECTION)
