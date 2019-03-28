@@ -49,6 +49,7 @@ public class Book implements Serializable {
     }
 
     public Book() {
+        requests = new ArrayList<>();
     } // For firestore
 
 
@@ -311,6 +312,7 @@ public class Book implements Serializable {
      */
     public void addRequest() {
         Request request = new Request(this, this.owner, User.currentUser());
+        request.selfPush();
         addRequest(request);
     }
 
