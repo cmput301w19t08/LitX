@@ -3,15 +3,9 @@ package ca.ualberta.cs.phebert.litx;
 import org.junit.Rule;
 import org.junit.Test;
 
-//import androidx.test.espresso.Espresso;
 import androidx.test.espresso.Espresso;
 import androidx.test.rule.ActivityTestRule;
 
-/*import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;*/
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -19,9 +13,7 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.CoreMatchers.anything;
-//import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-//import static androidx.test.espresso.action.ViewActions.typeText;
-//import static androidx.test.espresso.matcher.ViewMatchers.withId;
+
 
 
 public class MyBooksActivityTest {
@@ -36,7 +28,7 @@ public class MyBooksActivityTest {
     public ActivityTestRule<MyBooksActivity> activityRule = new ActivityTestRule<>(MyBooksActivity.class);
 
     @Test
-    public void spinnerandAddBook() {
+    public void spinnerTest() {
         onView(withId(R.id.spinner)).perform(click());
         onData(anything()).atPosition(0).perform(click());
         onView(withId(R.id.spinner)).perform(click());
@@ -47,7 +39,9 @@ public class MyBooksActivityTest {
         onData(anything()).atPosition(3).perform(click());
         onView(withId(R.id.spinner)).perform(click());
         onData(anything()).atPosition(4).perform(click());
-
+    }
+    @Test
+    public void AddBookTest() {
         onView(withId(R.id.btnAddNew)).perform(click());
         onView(withId(R.id.editTitle)).perform(typeText(stringTitle), closeSoftKeyboard());
         onView(withId(R.id.editAuthor)).perform(typeText(stringAuthor), closeSoftKeyboard());
