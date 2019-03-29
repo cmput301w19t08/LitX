@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,6 +21,8 @@ import com.google.firebase.storage.StorageReference;
 import static ca.ualberta.cs.phebert.litx.ProfileActivity.UID_IN;
 
 
+import java.util.ArrayList;
+
 /**
  * Displays the description of a book after a user selected the book to view in the previous
  * screen
@@ -30,8 +35,12 @@ public class BookViewActivity extends AppCompatActivity {
     private Button delete;
     private Button edit;
     private Button request;
-    private ImageView photo;
     private String uid = User.currentUser().getUserid();
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
+
+    private ImageView photo;
 
     /**
      * onCreate sets the description of the book selected, and sets onClickListeners to determine
@@ -45,6 +54,7 @@ public class BookViewActivity extends AppCompatActivity {
         request = (Button) findViewById(R.id.viewRequest);
         delete = (Button) findViewById(R.id.deleteButton);
         edit = (Button) findViewById(R.id.editButtonID);
+        recyclerView = (RecyclerView) findViewById(R.id.requestsRecycleView);
         photo = (ImageView) findViewById(R.id.bookImage);
 
         // Receive the book object the user selected
@@ -60,6 +70,18 @@ public class BookViewActivity extends AppCompatActivity {
             // Find buttons in the layout
             delete = (Button) findViewById(R.id.deleteButton);
             edit = (Button) findViewById(R.id.editButtonID);
+            recyclerView.setHasFixedSize(true);
+            layoutManager = new LinearLayoutManager(this);
+            recyclerView.setLayoutManager(layoutManager);
+
+            ArrayList<Request> requests = new ArrayList<>();
+            adapter = new RequestListAdapter(this, requests);
+
+            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
+                    recyclerView.getContext(),1);
+            recyclerView.addItemDecoration(dividerItemDecoration);
+            recyclerView.setAdapter(adapter);
+
 
         /* When delete button is clicked remove the book from the database, then go back to MyBooks
         screen
@@ -114,7 +136,7 @@ public class BookViewActivity extends AppCompatActivity {
             request.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //book.addRequest();
+                    book.addRequest();
                     Toast.makeText(BookViewActivity.this, "Your Request has been sent",
                             Toast.LENGTH_SHORT).show();
                 }

@@ -68,7 +68,7 @@ public class User implements Serializable {
     ///////////////////////////////////  Database stuff ////////////////////////////////////////////
 
     static private void loadDb() {
-        if(task == null && FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if(task == null && isSignedIn()) {
 
             task = FirebaseFirestore.getInstance()
                     .collection(USER_COLLECTION)
@@ -81,6 +81,7 @@ public class User implements Serializable {
                         for (DocumentSnapshot doc: result.getDocuments()) {
                             User oldVal = findByUid(doc.getId());
                             User newVal = fromSnapshot(doc);
+                            if(oldVal == null || newVal == null) continue;
                             if(oldVal.equals(newVal)) continue;
                             // not using setters because they write to firebase, infinite loop
                             oldVal.email = newVal.email;
