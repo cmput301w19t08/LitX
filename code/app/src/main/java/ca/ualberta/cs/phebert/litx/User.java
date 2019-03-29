@@ -106,9 +106,15 @@ public class User implements Serializable {
 
     static public Map<String, User> getAll() {
         loadDb();
-        if(!isSignedIn()) return null;
+        if(!isSignedIn()) {
+            Log.d(TAG,"User is not logged in");
+            return null;
+        }
         while(!task.isComplete()) Thread.yield();
-        if(!task.isSuccessful()) return null;
+        if(!task.isSuccessful()) {
+            Log.e(TAG, "Task was not successful", task.getException());
+            return null;
+        }
 
         if(db == null) {
             db = new HashMap<>();
@@ -116,7 +122,9 @@ public class User implements Serializable {
                 Log.v(TAG,snapshot.getId());
                 db.put(snapshot.getId(), fromSnapshot(snapshot));
             }
+            ready = true;
         }
+        while(!ready) Thread.yield();
 
         return db;
     }

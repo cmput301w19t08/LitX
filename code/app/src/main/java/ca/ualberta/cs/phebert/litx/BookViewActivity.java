@@ -35,12 +35,17 @@ public class BookViewActivity extends AppCompatActivity {
     private Button delete;
     private Button edit;
     private Button request;
+    /**
+     * hello
+     */
     private ImageView photo;
     private String uid = User.currentUser().getUserid();
     private RecyclerView recycler;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<User> requesters;
     private UserListAdapter useradapter;
+
+    private Book book;
 
     /**
      * onCreate sets the description of the book selected, and sets onClickListeners to determine
@@ -62,7 +67,7 @@ public class BookViewActivity extends AppCompatActivity {
         // Receive the book object the user selected
         Intent intent = getIntent();
         String bookId = intent.getExtras().getString("Book");
-        final Book book = Book.findByDocId(bookId);
+        book = Book.findByDocId(bookId);
 
         load_image(book);
 
@@ -157,15 +162,37 @@ public class BookViewActivity extends AppCompatActivity {
             request.setVisibility(View.GONE);
         }
 
-        request.setOnClickListener(new View.OnClickListener() {
+            request.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    book.addRequest();
+                    Toast.makeText(BookViewActivity.this, "Your Request has been sent",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        // Set descriptiption of book in the textview
+
+        // Set an onClickListener for the photo that launches the view photo activity
+        photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                book.addRequest();
-                Toast.makeText(BookViewActivity.this, "Your Request has been sent",
-                        Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(BookViewActivity.this, ViewPhotoActivity.class);
+                intent.putExtra("Book", book.getDocID());
+                startActivity(intent);
             }
         });
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        TextView textView = (TextView) findViewById(R.id.descriptionIDView);
+        String description = "Title: " + book.getTitle() + "\n" + "Author: " + book.getAuthor()
+                + "\n" + "ISBN: " + String.valueOf(book.getIsbn());
+        textView.setText(description);
     }
 
     private void load_image(Book book) {

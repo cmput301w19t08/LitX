@@ -1,5 +1,6 @@
 package ca.ualberta.cs.phebert.litx;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -126,14 +127,26 @@ public class Book implements Serializable {
         b.put("author",getAuthor());
         b.put("title", getTitle());
         b.put("isbn",getIsbn());
+
+        for(Book book : Book.getAll().values()) {
+            if(this.equals(book)) setDocID(book.docID);
+        }
+
         CollectionReference collection = FirebaseFirestore.getInstance()
                 .collection("Books");
         if (docID == null || docID.equals("")) {
             // Create a new book and add it to firestore
-            collection.document().set(b);
+            setDocID(collection.document().getId());
+            collection.document(getDocID()).set(b);
+            db.put(getDocID(),this);
+            owner.getMyBooks().add(this);
         } else {
             // Update the firestore document since the book already exists
             collection.document(docID).set(b);
+            db.get(getDocID()).setTitle(getTitle());
+            db.get(getDocID()).setAuthor(getAuthor());
+            db.get(getDocID()).setIsbn(getIsbn());
+            owner.getMyBooks().set(owner.getMyBooks().indexOf(this), this);
         }
     }
 
@@ -322,5 +335,21 @@ public class Book implements Serializable {
      */
     void addRequest(Request request) {
        requests.add(request);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if(obj == null) return false;
+        if(obj instanceof Book) {
+            Book other = (Book) obj;
+            return owner.equals(other.owner) &&
+                    isbn == other.isbn;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (isbn % Integer.MAX_VALUE);
     }
 }
