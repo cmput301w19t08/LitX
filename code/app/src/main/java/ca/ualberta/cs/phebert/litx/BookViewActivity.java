@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -35,10 +36,6 @@ public class BookViewActivity extends AppCompatActivity {
     private Button delete;
     private Button edit;
     private Button request;
-    /**
-     * hello
-     */
-    private ImageView photo;
     private String uid = User.currentUser().getUserid();
     private RecyclerView recycler;
     private RecyclerView.LayoutManager layoutManager;
@@ -165,6 +162,7 @@ public class BookViewActivity extends AppCompatActivity {
         photo.setOnClickListener(v -> {
             Intent intent = new Intent(BookViewActivity.this, ViewPhotoActivity.class);
             intent.putExtra("Book", book.getDocID());
+            finish();
             startActivity(intent);
         });
 

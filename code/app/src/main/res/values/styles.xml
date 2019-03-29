@@ -16,4 +16,9 @@
     <style name="Spinners">
         <item name="android:background">@color/colorPrimaryDark</item>
     </style>
+
+    <style name="LoadingScreenActivity" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/load_screen</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    </style>
 </resources>
