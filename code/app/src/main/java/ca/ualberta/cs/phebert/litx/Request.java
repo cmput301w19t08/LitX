@@ -20,6 +20,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import ca.ualberta.cs.phebert.litx.annotations.*;
 
@@ -188,12 +189,15 @@ public class Request {
         // Not sure what activity should be started when the notification is clicked. Change 'User.class'
         // Error Comment out Intent was wrong
         Intent intentForOwner = new Intent(ctx, BookViewActivity.class);
+        intentForOwner.putExtra("Book", book.getDocID());
         // Error comment out
         intentForOwner.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, intentForOwner, 0);
 
         String textTitle = "Request";
-        String textContent = requester.getUserName() + " wants to borrow book";
+        String bookTitle = book.getTitle();
+
+        String textContent = requester.getUserName() + " wants to borrow " + bookTitle;
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, CHANNEL_ID)
                 // Error
@@ -210,7 +214,8 @@ public class Request {
 
         // notificationId is a unique int for each notification that you must define
         // right now its a magic number
-        int notificationId = 123;
+        Random rand = new Random();
+        int notificationId = rand.nextInt(10000);
         notificationManager.notify(notificationId, builder.build());
     }
 
