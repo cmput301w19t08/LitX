@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -145,6 +146,7 @@ public class BookViewActivity extends AppCompatActivity {
         // Set descriptiption of book in the textview
 
         TextView textView = (TextView) findViewById(R.id.descriptionIDView);
+        textView.setMovementMethod(new ScrollingMovementMethod());
         String description = "Title: " + book.getTitle() + "\n" + "Author: " + book.getAuthor()
                 + "\n" + "ISBN: " + String.valueOf(book.getIsbn());
         textView.setText(description);
@@ -155,6 +157,7 @@ public class BookViewActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(BookViewActivity.this, ViewPhotoActivity.class);
                 intent.putExtra("Book", book.getDocID());
+                finish();
                 startActivity(intent);
             }
         });
