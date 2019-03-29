@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
@@ -30,17 +28,22 @@ import static ca.ualberta.cs.phebert.litx.ProfileActivity.UID_IN;
  * @version 1.0
  * @see MyBooksActivity, AddBookActivity, Book
  */
-public class BookViewActivity extends AppCompatActivity {
+public class BookOwnerViewActivity extends AppCompatActivity {
 
     private Button delete;
     private Button edit;
     private Button request;
+    private TextView header;
+    private TextView owner;
+    private TextView ownerusername;
     private ImageView photo;
     private String uid = User.currentUser().getUserid();
-    private RecyclerView recycler;
-    private RecyclerView.LayoutManager layoutManager;
-    private ArrayList<User> requesters;
+    private ArrayList<User> owners;
+    private ArrayList<User> requestors;
+
     private UserListAdapter useradapter;
+    RecyclerView recycler;
+    RecyclerView.LayoutManager layoutManager;
 
     /**
      * onCreate sets the description of the book selected, and sets onClickListeners to determine
@@ -56,8 +59,10 @@ public class BookViewActivity extends AppCompatActivity {
         edit = (Button) findViewById(R.id.editButtonID);
         photo = (ImageView) findViewById(R.id.bookImage);
         recycler = (RecyclerView) findViewById(R.id.requestsRecycleView);
+        ownerusername = (TextView) findViewById(R.id.ownerViewID);
 
-        requesters = new ArrayList<>();
+        owners = new ArrayList<>();
+        requestors = new ArrayList<>();
 
         // Receive the book object the user selected
         Intent intent = getIntent();
@@ -65,17 +70,6 @@ public class BookViewActivity extends AppCompatActivity {
         final Book book = Book.findByDocId(bookId);
 
         load_image(book);
-
-        for(Request req: book.getRequests()) {
-            requesters.add(req.getRequester());
-        }
-
-        recycler.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(BookViewActivity.this);
-        recycler.setLayoutManager(layoutManager);
-        useradapter = new UserListAdapter(BookViewActivity.this, requesters);
-        recycler.setAdapter(useradapter);
-        useradapter.notifyDataSetChanged();
 
         if (book.getOwner().getUserid().equals(uid)){
             loadOwnersView(book);
@@ -93,7 +87,7 @@ public class BookViewActivity extends AppCompatActivity {
         photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(BookViewActivity.this, ViewPhotoActivity.class);
+                Intent intent = new Intent(BookOwnerViewActivity.this, ViewPhotoActivity.class);
                 intent.putExtra("Book", book);
                 startActivity(intent);
             }
@@ -103,7 +97,10 @@ public class BookViewActivity extends AppCompatActivity {
 
     private void loadOwnersView (Book book) {
         // A owner of the Book cannot request his own book
+        edit.setVisibility(View.VISIBLE);
+        delete.setVisibility(View.VISIBLE);
         request.setVisibility(View.GONE);
+        ownerusername.setVisibility(View.GONE);
 
         /* When delete button is clicked remove the book from the database, then go back to MyBooks
         screen
@@ -114,10 +111,10 @@ public class BookViewActivity extends AppCompatActivity {
                 //TODO: Authentication of deleting book in database
                 book.delete();
 
-                Intent intent = new Intent(BookViewActivity.this, MyBooksActivity.class);
+                Intent intent = new Intent(BookOwnerViewActivity.this, MyBooksActivity.class);
                 startActivity(intent);
-                }
-            });
+            }
+        });
 
         // Set description of book in the textview
 
@@ -125,8 +122,8 @@ public class BookViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Pass Book object into AddBookActivity and start the activity
-                Intent intent = new Intent(BookViewActivity.this, AddBookActivity.class);
-                intent.putExtra("Book", book.getDocID());
+                Intent intent = new Intent(BookOwnerViewActivity.this, AddBookActivity.class);
+                intent.putExtra("Book", book);
                 startActivity(intent);
             }
         });
@@ -136,16 +133,17 @@ public class BookViewActivity extends AppCompatActivity {
         // If the Owner is not viewing the book he cannot delete or edit it just Request it
         edit.setVisibility(View.GONE);
         delete.setVisibility(View.GONE);
+        request.setVisibility(View.VISIBLE);
+        ownerusername.setVisibility(View.VISIBLE);
 
-        TextView ownerUsernameView = (TextView) findViewById(R.id.ownerViewID);
-        String ownerUsername = book.getOwner().getUserName();
-        ownerUsernameView.setText(ownerUsername);
+        String ownername = book.getOwner().getUserName();
+        ownerusername.setText(ownername);
 
-        ownerUsernameView.setOnClickListener(new TextView.OnClickListener() {
+        ownerusername.setOnClickListener(new TextView.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(BookViewActivity.this, ProfileActivity.class);
+                Intent intent = new Intent(BookOwnerViewActivity.this, ProfileActivity.class);
                 intent.putExtra(UID_IN, book.getOwner().getUserid());
 
                 startActivity(intent);
@@ -160,12 +158,11 @@ public class BookViewActivity extends AppCompatActivity {
         request.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                book.addRequest();
-                Toast.makeText(BookViewActivity.this, "Your Request has been sent",
+                //book.addRequest();
+                Toast.makeText(BookOwnerViewActivity.this, "Your Request has been sent",
                         Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     private void load_image(Book book) {
@@ -178,7 +175,7 @@ public class BookViewActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Uri uri) {
                 String imageURL = uri.toString();
-                GlideApp.with(BookViewActivity.this).load(imageURL).placeholder(iconId).into(photo);
+                GlideApp.with(BookOwnerViewActivity.this).load(imageURL).placeholder(iconId).into(photo);
             }
         });
     }

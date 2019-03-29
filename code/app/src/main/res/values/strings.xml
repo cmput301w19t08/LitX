@@ -40,6 +40,7 @@
     <string name="scan_isbn">Scan ISBN</string>
     <string name="title">Title</string>
     <string name="author">Author</string>
+    <string name="owners">Owners</string>
     <string name="requests">Requests</string>
     <string name="requested_button">Requested</string>
     <string name="confirm_button">Confirm</string>

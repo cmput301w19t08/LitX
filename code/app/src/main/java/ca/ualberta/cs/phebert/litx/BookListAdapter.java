@@ -125,12 +125,12 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
             super(itemView);
             context = itemView.getContext();
 
-            title = (TextView) itemView.findViewById(R.id.book_title);
-            status = (TextView) itemView.findViewById(R.id.book_status);
-            author = (TextView) itemView.findViewById(R.id.book_author);
+            title = (TextView) itemView.findViewById(R.id.user_name);
+            status = (TextView) itemView.findViewById(R.id.user_phone);
+            author = (TextView) itemView.findViewById(R.id.user_email);
             isbn = (TextView) itemView.findViewById(R.id.book_isbn);
             photo = (ImageView) itemView.findViewById(R.id.book_photo);
-            borrower = (TextView) itemView.findViewById(R.id.book_borrower);
+            borrower = (TextView) itemView.findViewById(R.id.user_type);
 
         }
     }
