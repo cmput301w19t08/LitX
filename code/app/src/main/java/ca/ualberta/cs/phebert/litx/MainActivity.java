@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
     public static final String FilterMode = "ca.ualberta.cs.phebert.litx.FilterMode";
+    static Thread loader;
 
     void getAllData() {
         Request.getAll(); // this should be enough if requests weren't empty
@@ -29,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         if (User.isSignedIn()) {
-            Thread loader = new Thread(this::getAllData);
+            loader = new Thread(this::getAllData);
             loader.start();
         }
     }
