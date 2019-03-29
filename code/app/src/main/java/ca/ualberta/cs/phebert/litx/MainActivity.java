@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String FilterMode = "ca.ualberta.cs.phebert.litx.FilterMode";
     private RecyclerView recyclerView;
     private ArrayList<Book> books;
+    private ArrayList<Book> booksToShow;
     private TopTenAdapter adapter;
     private RecyclerView.LayoutManager manager;
 
@@ -34,10 +35,19 @@ public class MainActivity extends AppCompatActivity {
         }
         recyclerView = findViewById(R.id.top10list_home);
         books = new ArrayList<>();
+        booksToShow = new ArrayList<>();
         manager = new LinearLayoutManager(MainActivity.this);
         recyclerView.setHasFixedSize(true);
         books.addAll(Book.getAll().values());
-        adapter = new TopTenAdapter(this, books);
+        int compareValue = 0;
+        for (Book book : books) {
+            if ((book.getViews() >= compareValue) && (booksToShow.size()<=2)) {
+                booksToShow.add(book);
+            }
+        }
+
+
+        adapter = new TopTenAdapter(this, booksToShow);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(manager);
 

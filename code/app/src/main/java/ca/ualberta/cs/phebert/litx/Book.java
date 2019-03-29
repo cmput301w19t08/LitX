@@ -33,6 +33,9 @@ public class Book implements Serializable {
     private Request acceptedRequest;
     private ImageView photograph;
 
+    private int views;
+    private int borrows;
+
     public Book(User owner, String author, String title, long isbn) {
         this.owner = owner;
         this.author = author;
@@ -257,6 +260,39 @@ public class Book implements Serializable {
     public ArrayList<Request> getRequests() {
         return requests;
     }
+
+    /**
+     *
+     * @param views
+     */
+    public void setViews(int views) {
+        this.views = views;
+    }
+
+    /**
+     *
+     * @param borrows
+     */
+    public void setBorrows(int borrows) {
+        this.borrows = borrows;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getViews() {
+        return views;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getBorrows() {
+        return borrows;
+    }
+
 
 
     public User getBorrower() {
