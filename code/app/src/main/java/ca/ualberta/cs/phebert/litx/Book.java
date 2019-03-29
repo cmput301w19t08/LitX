@@ -143,6 +143,9 @@ public class Book implements Serializable {
         } else {
             // Update the firestore document since the book already exists
             collection.document(docID).set(b);
+            db.get(getDocID()).setTitle(getTitle());
+            db.get(getDocID()).setAuthor(getAuthor());
+            db.get(getDocID()).setIsbn(getIsbn());
             owner.getMyBooks().set(owner.getMyBooks().indexOf(this), this);
         }
     }

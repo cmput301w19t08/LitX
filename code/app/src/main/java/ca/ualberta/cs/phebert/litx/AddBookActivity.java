@@ -93,8 +93,7 @@ public class AddBookActivity extends AppCompatActivity {
 
                     b.push();
                     // Go back to MyBooksActivity after the book has been added
-                    Intent intent = new Intent(AddBookActivity.this, MyBooksActivity.class);
-                    startActivity(intent);
+                    finish();
                 }
                 catch(Exception e) {
                     Log.d("LitX", "fields not set properly", e);
