@@ -109,7 +109,10 @@ public class ViewPhotoActivity extends AppCompatActivity {
         btn_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent bookView = new Intent(ViewPhotoActivity.this, BookViewActivity.class);
+                bookView.putExtra("Book", book.getDocID());
                 finish();
+                startActivity(bookView);
             }
         });
 
