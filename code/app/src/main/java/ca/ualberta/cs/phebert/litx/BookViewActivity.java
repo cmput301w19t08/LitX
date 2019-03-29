@@ -113,27 +113,21 @@ public class BookViewActivity extends AppCompatActivity {
         /* When delete button is clicked remove the book from the database, then go back to MyBooks
         screen
          */
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO: Authentication of deleting book in database
-                book.delete();
+        delete.setOnClickListener(v -> {
+            //TODO: Authentication of deleting book in database
+            book.delete();
 
-                Intent intent = new Intent(BookViewActivity.this, MyBooksActivity.class);
-                startActivity(intent);
-                }
+            Intent intent = new Intent(BookViewActivity.this, MyBooksActivity.class);
+            startActivity(intent);
             });
 
         // Set description of book in the textview
 
-        edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Pass Book object into AddBookActivity and start the activity
-                Intent intent = new Intent(BookViewActivity.this, AddBookActivity.class);
-                intent.putExtra("Book", book.getDocID());
-                startActivity(intent);
-            }
+        edit.setOnClickListener(v -> {
+            //Pass Book object into AddBookActivity and start the activity
+            Intent intent = new Intent(BookViewActivity.this, AddBookActivity.class);
+            intent.putExtra("Book", book.getDocID());
+            startActivity(intent);
         });
     }
 
@@ -146,15 +140,12 @@ public class BookViewActivity extends AppCompatActivity {
         String ownerUsername = book.getOwner().getUserName();
         ownerUsernameView.setText(ownerUsername);
 
-        ownerUsernameView.setOnClickListener(new TextView.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        ownerUsernameView.setOnClickListener(v -> {
 
-                Intent intent = new Intent(BookViewActivity.this, ProfileActivity.class);
-                intent.putExtra(UID_IN, book.getOwner().getUserid());
+            Intent intent = new Intent(BookViewActivity.this, ProfileActivity.class);
+            intent.putExtra(UID_IN, book.getOwner().getUserid());
 
-                startActivity(intent);
-            }
+            startActivity(intent);
         });
         // Owner can not request their own books
         if (book.getOwner().equals(FirebaseAuth.getInstance().getCurrentUser().getDisplayName())) {
@@ -162,25 +153,19 @@ public class BookViewActivity extends AppCompatActivity {
             request.setVisibility(View.GONE);
         }
 
-            request.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    book.addRequest();
-                    Toast.makeText(BookViewActivity.this, "Your Request has been sent",
-                            Toast.LENGTH_SHORT).show();
-                }
+            request.setOnClickListener(v -> {
+                book.addRequest();
+                Toast.makeText(BookViewActivity.this, "Your Request has been sent",
+                        Toast.LENGTH_SHORT).show();
             });
-        }
+
         // Set descriptiption of book in the textview
 
         // Set an onClickListener for the photo that launches the view photo activity
-        photo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(BookViewActivity.this, ViewPhotoActivity.class);
-                intent.putExtra("Book", book.getDocID());
-                startActivity(intent);
-            }
+        photo.setOnClickListener(v -> {
+            Intent intent = new Intent(BookViewActivity.this, ViewPhotoActivity.class);
+            intent.putExtra("Book", book.getDocID());
+            startActivity(intent);
         });
 
     }
