@@ -3,12 +3,20 @@ package ca.ualberta.cs.phebert.litx;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
     public static final String FilterMode = "ca.ualberta.cs.phebert.litx.FilterMode";
+    private RecyclerView recyclerView;
+    private ArrayList<Book> books;
+    private TopTenAdapter adapter;
+    private RecyclerView.LayoutManager manager;
 
     void getAllData() {
         Request.getAll(); // this should be enough if requests weren't empty
@@ -24,6 +32,17 @@ public class MainActivity extends AppCompatActivity {
         if(!User.isSignedIn()) {
             goToProfileView(null);
         }
+        recyclerView = findViewById(R.id.top10list_home);
+        books = new ArrayList<>();
+        manager = new LinearLayoutManager(MainActivity.this);
+        recyclerView.setHasFixedSize(true);
+        books.addAll(Book.getAll().values());
+        adapter = new TopTenAdapter(this, books);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(manager);
+
+
+
     }
     @Override
     public void onStart() {
