@@ -130,11 +130,11 @@ public class AddBookActivity extends AppCompatActivity {
         }
     }
     public void scanISBN(View v) {
-        Intent intent = new Intent(this, ScanBookActivity.class);
-        startActivityForResult(intent,155);
+        //Intent intent = new Intent(this, ScanBookActivity.class);
+        //startActivityForResult(intent,155);
 
         //This is how the Map Object is to be used!
-        /*
+
         try {
             Intent intent = new Intent(this, MapObject.class);
             //double RichardISBN=Double.valueOf(ISBNView.getText().toString());
@@ -147,7 +147,7 @@ public class AddBookActivity extends AppCompatActivity {
 
 
         } catch (Exception e) {}
-        */
+
 
 
 
