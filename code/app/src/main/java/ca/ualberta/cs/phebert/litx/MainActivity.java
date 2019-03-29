@@ -22,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Request.createNotificationChannel(this);
+
         if(!User.isSignedIn()) {
             goToProfileView(null);
         }
@@ -67,5 +69,14 @@ public class MainActivity extends AppCompatActivity {
     public void searchForBooks(View v) {
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onStop() {
+        for(Request request :Request.getAll().values()) {
+            request.generateNotification(this);
+            break;
+        }
+        super.onStop();
     }
 }

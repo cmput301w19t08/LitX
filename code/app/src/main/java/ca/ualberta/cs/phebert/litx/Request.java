@@ -2,10 +2,13 @@ package ca.ualberta.cs.phebert.litx;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.google.android.gms.tasks.Task;
@@ -178,37 +181,37 @@ public class Request {
      * </p>
      * @param ctx
      */
-    private void generateNotification(Context ctx) {
+    public void generateNotification(Context ctx) {
         // TODO
 
         // Create an explicit intent for an Activity in your app
         // Not sure what activity should be started when the notification is clicked. Change 'User.class'
         // Error Comment out Intent was wrong
-//        Intent intent = new Intent(this, User.class);
+        Intent intentForOwner = new Intent(ctx, BookViewActivity.class);
         // Error comment out
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        intentForOwner.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, intentForOwner, 0);
 
         String textTitle = "Request";
         String textContent = requester.getUserName() + " wants to borrow book";
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, CHANNEL_ID)
                 // Error
-//                .setSmallIcon(R.drawable.notification_icon)
+                .setSmallIcon(R.drawable.book_icon2)
                 .setContentTitle(textTitle)
                 .setContentText(textContent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 //error
-//                .setContentIntent(pendingIntent)
+                .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
         //error
         // shows the Notification
-//        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(ctx);
 
         // notificationId is a unique int for each notification that you must define
         // right now its a magic number
         int notificationId = 123;
-//        notificationManager.notify(notificationId, builder.build());
+        notificationManager.notify(notificationId, builder.build());
     }
 
     /**
