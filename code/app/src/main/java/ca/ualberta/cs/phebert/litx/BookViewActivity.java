@@ -41,6 +41,8 @@ public class BookViewActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
+    private Book book;
+
     private ImageView photo;
 
     /**
@@ -61,7 +63,7 @@ public class BookViewActivity extends AppCompatActivity {
         // Receive the book object the user selected
         Intent intent = getIntent();
         String bookId = intent.getExtras().getString("Book");
-        final Book book = Book.findByDocId(bookId);
+        book = Book.findByDocId(bookId);
 
         load_image(book);
 
@@ -143,14 +145,7 @@ public class BookViewActivity extends AppCompatActivity {
                 }
             });
         }
-        // Set descriptiption of book in the textview
-
-        TextView textView = (TextView) findViewById(R.id.descriptionIDView);
-        textView.setMovementMethod(new ScrollingMovementMethod());
-        String description = "Title: " + book.getTitle() + "\n" + "Author: " + book.getAuthor()
-                + "\n" + "ISBN: " + String.valueOf(book.getIsbn());
-        textView.setText(description);
-
+        
         // Set an onClickListener for the photo that launches the view photo activity
         photo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +157,16 @@ public class BookViewActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        TextView textView = (TextView) findViewById(R.id.descriptionIDView);
+        String description = "Title: " + book.getTitle() + "\n" + "Author: " + book.getAuthor()
+                + "\n" + "ISBN: " + String.valueOf(book.getIsbn());
+        textView.setText(description);
     }
 
     private void load_image(Book book) {
