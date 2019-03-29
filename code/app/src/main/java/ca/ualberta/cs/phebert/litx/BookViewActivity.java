@@ -37,6 +37,7 @@ public class BookViewActivity extends AppCompatActivity {
     private Button edit;
     private Button request;
     private String uid = User.currentUser().getUserid();
+    private ImageView photo;
     private RecyclerView recycler;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<User> requesters;
