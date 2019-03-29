@@ -8,6 +8,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -62,7 +63,8 @@ public class BookViewActivity extends AppCompatActivity {
 
         // Receive the book object the user selected
         Intent intent = getIntent();
-        String bookId = intent.getExtras().getString("Book");
+        String bookId = intent.getStringExtra("Book");
+        Log.i("bookID", bookId);
         book = Book.findByDocId(bookId);
 
         load_image(book);

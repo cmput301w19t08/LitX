@@ -188,11 +188,11 @@ public class Request {
         // Create an explicit intent for an Activity in your app
         // Not sure what activity should be started when the notification is clicked. Change 'User.class'
         // Error Comment out Intent was wrong
-        Intent intentForOwner = new Intent(ctx, BookViewActivity.class);
+        Intent intentForOwner = new Intent(ctx.getApplicationContext(), BookViewActivity.class);
         intentForOwner.putExtra("Book", book.getDocID());
         // Error comment out
         intentForOwner.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, intentForOwner, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, intentForOwner, PendingIntent.FLAG_UPDATE_CURRENT);
 
         String textTitle = "Request";
         String bookTitle = book.getTitle();
