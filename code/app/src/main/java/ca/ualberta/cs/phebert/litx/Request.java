@@ -74,7 +74,7 @@ public class Request {
     private static Request fromSnapshot(DocumentSnapshot snapshot) {
         Request ans = new Request(
                 // need to somehow acces Book.
-                new Book(), // need book.byDocId;
+                Book.findByDocId(snapshot.getString("book")), // need book.byDocId;
                 User.findByUid(snapshot.getString("owner")),
                 User.findByUid(snapshot.getString("requester")),
                 snapshot.getString("status")
