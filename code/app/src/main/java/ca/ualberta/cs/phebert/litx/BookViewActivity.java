@@ -41,7 +41,7 @@ public class BookViewActivity extends AppCompatActivity {
     private RecyclerView recycler;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<User> requesters;
-    private UserListAdapter useradapter;
+    private RequestListAdapter useradapter;
 
     private Book book;
 
@@ -69,22 +69,22 @@ public class BookViewActivity extends AppCompatActivity {
 
         load_image(book);
 
-        for(Request req: book.getRequests()) {
-            requesters.add(req.getRequester());
-        }
-
         recycler.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(BookViewActivity.this);
         recycler.setLayoutManager(layoutManager);
-        useradapter = new UserListAdapter(BookViewActivity.this, requesters);
-        recycler.setAdapter(useradapter);
-        useradapter.notifyDataSetChanged();
 
         if (book.getOwner().getUserid().equals(uid)){
             loadOwnersView(book);
+            useradapter = new RequestListAdapter(BookViewActivity.this, book.getRequests(), true);
         } else {
             loadRequestsView(book);
+            useradapter = new RequestListAdapter(BookViewActivity.this, book.getRequests(), false);
         }
+
+        //update recycler view
+        recycler.setAdapter(useradapter);
+        useradapter.notifyDataSetChanged();
+
         // Set descriptiption of book in the textview
 
         TextView textView = (TextView) findViewById(R.id.descriptionIDView);
