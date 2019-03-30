@@ -1,11 +1,13 @@
 package ca.ualberta.cs.phebert.litx;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.ImageView;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -62,8 +64,7 @@ public class Book implements Serializable {
         if(task == null && FirebaseAuth.getInstance().getCurrentUser() != null) {
             task = FirebaseFirestore.getInstance()
                     .collection(BOOK_COLLECTION)
-                    .get()
-                    ;
+                    .get();
         }
     }
 
@@ -87,6 +88,7 @@ public class Book implements Serializable {
     private static Book fromSnapshot(DocumentSnapshot doc) {
         Book ans = new Book();
         ans.setDocID(doc.getId());
+
         String ownerUid = doc.getString("ownerUid");
         //Log.d(TAG, "Owner UID = " + ownerUid);
         ans.setOwner(ownerUid);
@@ -99,7 +101,7 @@ public class Book implements Serializable {
         } catch(NullPointerException e) {
             // whatever, no isbn, this book is weird
         }
-
+        log.d("LitX.Book", ans.getTitle());
         // could be moved elsewhere, if this method is called more than once for a book.
         //Log.d(TAG,ans.getOwner() == null ? "user is null" : "user is not null");
         ans.getOwner().addBook(ans);
@@ -110,12 +112,15 @@ public class Book implements Serializable {
         return getAll().get(docId);
     }
 
-    public void delete() {
+    public void delete(Book book) {
         FirebaseFirestore.getInstance()
                 .collection(BOOK_COLLECTION)
                 .document(getDocID())
                 .delete();
         db.remove(getDocID());
+        if (User.currentUser().getMyBooks().contains(book)){
+            User.currentUser().getMyBooks().remove(book);
+        }
     }
 
     public String getDocID() { return docID; }
@@ -129,14 +134,26 @@ public class Book implements Serializable {
         b.put("author",getAuthor());
         b.put("title", getTitle());
         b.put("isbn",getIsbn());
+
+        for(Book book : Book.getAll().values()) {
+            if(this.equals(book)) setDocID(book.docID);
+        }
+
         CollectionReference collection = FirebaseFirestore.getInstance()
                 .collection("Books");
         if (docID == null || docID.equals("")) {
             // Create a new book and add it to firestore
-            collection.document().set(b);
+            setDocID(collection.document().getId());
+            collection.document(getDocID()).set(b);
+            db.put(getDocID(),this);
+            owner.getMyBooks().add(this);
         } else {
             // Update the firestore document since the book already exists
             collection.document(docID).set(b);
+            db.get(getDocID()).setTitle(getTitle());
+            db.get(getDocID()).setAuthor(getAuthor());
+            db.get(getDocID()).setIsbn(getIsbn());
+            owner.getMyBooks().set(owner.getMyBooks().indexOf(this), this);
         }
     }
 
@@ -358,5 +375,21 @@ public class Book implements Serializable {
      */
     void addRequest(Request request) {
        requests.add(request);
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if(obj == null) return false;
+        if(obj instanceof Book) {
+            Book other = (Book) obj;
+            return owner.equals(other.owner) &&
+                    isbn == other.isbn;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (isbn % Integer.MAX_VALUE);
     }
 }

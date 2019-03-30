@@ -106,9 +106,15 @@ public class User implements Serializable {
 
     static public Map<String, User> getAll() {
         loadDb();
-        if(!isSignedIn()) return null;
+        if(!isSignedIn()) {
+            Log.d(TAG,"User is not logged in");
+            return null;
+        }
         while(!task.isComplete()) Thread.yield();
-        if(!task.isSuccessful()) return null;
+        if(!task.isSuccessful()) {
+            Log.e(TAG, "Task was not successful", task.getException());
+            return null;
+        }
 
         if(db == null) {
             db = new HashMap<>();
@@ -116,7 +122,9 @@ public class User implements Serializable {
                 Log.v(TAG,snapshot.getId());
                 db.put(snapshot.getId(), fromSnapshot(snapshot));
             }
+            ready = true;
         }
+        while(!ready) Thread.yield();
 
         return db;
     }
@@ -278,6 +286,7 @@ public class User implements Serializable {
         return acceptedRequests;
     }
 
+    // Is this what we want? Shouldn't we go into the the requestors requests and add it?
     public void acceptRequest(Request request) {
         myRequests.add(request);
     }
@@ -297,7 +306,9 @@ public class User implements Serializable {
     }
 
     public void addBook(Book book) {
+        Log.d("MyBooks", "Book Added to myBooks" + book.getTitle());
         myBooks.add(book);
+
     }
 
     /**
@@ -306,7 +317,7 @@ public class User implements Serializable {
      */
     public void deleteBook(Book book) {
         if(myBooks.contains(book)) {
-            book.delete();
+            book.delete(book);
         }
     }
 

@@ -1,6 +1,8 @@
 package ca.ualberta.cs.phebert.litx;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,9 +10,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 /**
  * AddBookActivity takes the entered information and if valid, creates a new book object from them
@@ -20,12 +28,23 @@ import com.google.firebase.firestore.FirebaseFirestore;
  * @see MyBooksActivity, ViewBookActivity, Book
  */
 public class AddBookActivity extends AppCompatActivity {
+    private static final int image = 100;
+    private Uri uri;
+
     EditText titleView;
     EditText ISBNView;
     EditText authorView;
+
+    private StorageReference pathReference;
+
+    private Boolean photoExists = false;
     String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     private Button btnOkay;
+    private Button cancel;
+    private ImageView photo;
+    private TextView changeImage;
+    private int iconId;
 
     /**
      * onCreate automatically fills in the book information if it is being edited, otherwise
@@ -41,23 +60,25 @@ public class AddBookActivity extends AppCompatActivity {
         titleView=(EditText)findViewById(R.id.editTitle);
         ISBNView=(EditText)findViewById(R.id.editISBN);
         authorView=(EditText)findViewById(R.id.editAuthor);
-        String id = ""; // To determine the document id in Firestore
+        changeImage = (TextView) findViewById(R.id.changeImageTextView);
+        photo = (ImageView) findViewById(R.id.addBookImage);
+        cancel = (Button) findViewById(R.id.removePhotoButton);
 
-        // Get edittexts
-        final EditText etTitle = (EditText) findViewById(R.id.editTitle);
-        final EditText etAuthor = (EditText) findViewById(R.id.editAuthor);
-        final EditText etISBN = (EditText) findViewById(R.id.editISBN);
+        String id = ""; // To determine the document id in Firestore
+        iconId = this.getResources().getIdentifier("book_icon", "drawable", this.getPackageName());
 
         try {
             // If the book is being edited then get the document id to change in the future
             Intent intent = getIntent();
             final Book book = Book.findByDocId(intent.getExtras().getString("Book"));
+            loadImage(book);
+
             id = book.getDocID();
 
             //Fill the edit text boxes with the book information
-            etTitle.setText(book.getTitle());
-            etAuthor.setText(book.getAuthor());
-            etISBN.setText(String.valueOf(book.getIsbn()));
+            titleView.setText(book.getTitle());
+            authorView.setText(book.getAuthor());
+            ISBNView.setText(String.valueOf(book.getIsbn()));
 
         } catch (Exception e) {}
 
@@ -91,14 +112,42 @@ public class AddBookActivity extends AppCompatActivity {
                     User u = User.currentUser();
                     Book b = new Book(u, author, title, isbn);
 
+                    if (photoExists) {
+                        if (uri != null) {
+                            addImage(b);
+                        }
+                    } else {
+                        try {
+                            pathReference.delete();
+                        } catch(Exception e) {}
+                    }
+
                     b.push();
                     // Go back to MyBooksActivity after the book has been added
-                    Intent intent = new Intent(AddBookActivity.this, MyBooksActivity.class);
-                    startActivity(intent);
+                    finish();
                 }
                 catch(Exception e) {
+                    TextView invalid = (TextView) findViewById(R.id.invalidTextView);
+                    invalid.setVisibility(View.VISIBLE);
                     Log.d("LitX", "fields not set properly", e);
                 } // If fields are invalid do nothing
+            }
+        });
+
+        photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent photos = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                startActivityForResult(photos, image);
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cancel.setVisibility(View.GONE);
+                photoExists = false;
+                GlideApp.with(AddBookActivity.this).load(iconId).into(photo);
             }
         });
     }
@@ -128,6 +177,14 @@ public class AddBookActivity extends AppCompatActivity {
                 Log.w(TAG,"data is null");
             }
         }
+        if (requestCode == image && resultCode == RESULT_OK) {
+            uri = data.getData();
+            if (uri != null) {
+                cancel.setVisibility(View.VISIBLE);
+                photoExists = true;
+                Glide.with(this).load(uri).into(photo);
+            }
+        }
     }
     public void scanISBN(View v) {
         Intent intent = new Intent(this, ScanBookActivity.class);
@@ -153,5 +210,24 @@ public class AddBookActivity extends AppCompatActivity {
 
 
 
+    }
+
+    private void loadImage(Book book) {
+        // Load the image into the imageview if it exists
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        pathReference = storageReference.child(book.getOwner().getUserid() + "/" + Long.toString(book.getIsbn()));
+        pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                String imageURL = uri.toString();
+                cancel.setVisibility(View.VISIBLE);
+                photoExists = true;
+                GlideApp.with(AddBookActivity.this).load(imageURL).placeholder(iconId).into(photo);
+            }
+        });
+    }
+
+    private void addImage(Book book) {
+        pathReference.putFile(uri);
     }
 }

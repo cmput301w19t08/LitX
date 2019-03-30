@@ -7,6 +7,7 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 import ca.ualberta.cs.phebert.litx.annotations.*;
+
+import static com.loopj.android.http.AsyncHttpClient.log;
 
 public class Request {
     public static final String REQUESTS_COLLECTION = "Requests";
@@ -74,14 +77,14 @@ public class Request {
     private static Request fromSnapshot(DocumentSnapshot snapshot) {
         Request ans = new Request(
                 // need to somehow acces Book.
-                new Book(), // need book.byDocId;
+                Book.findByDocId(snapshot.getString("book")), // need book.byDocId;
                 User.findByUid(snapshot.getString("owner")),
                 User.findByUid(snapshot.getString("requester")),
                 snapshot.getString("status")
         );
         ans.docId = snapshot.getId();
-
-        ans.getBook().addRequest(ans);
+        log.d("Litx", ans.docId);
+        ans.book.addRequest(ans);
         ans.requester.addRequest(ans);
 
         return ans;
