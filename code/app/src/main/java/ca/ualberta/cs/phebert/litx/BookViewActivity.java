@@ -66,7 +66,7 @@ public class BookViewActivity extends AppCompatActivity {
         String bookId = intent.getExtras().getString("Book");
         book = Book.findByDocId(bookId);
 
-        load_image(book);
+        loadImage(book);
 
         if (book.getOwner().getUserid().equals(uid)){
             // A owner of the Book cannot request his own book
@@ -173,7 +173,7 @@ public class BookViewActivity extends AppCompatActivity {
         textView.setText(description);
     }
 
-    private void load_image(Book book) {
+    private void loadImage(Book book) {
         // Load the image into the imageview if it exists
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         int iconId = this.getResources().getIdentifier("book_icon", "drawable", this.getPackageName());
