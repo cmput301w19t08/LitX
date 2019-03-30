@@ -109,7 +109,6 @@ public class MyBooksActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MyBooksActivity.this, AddBookActivity.class);
-                finish();
                 startActivity(intent);
             }
         });

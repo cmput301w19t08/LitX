@@ -69,8 +69,6 @@ public class BookViewActivity extends AppCompatActivity {
 
         loadImage(book);
 
-        Log.d("REQUEST", Integer.toString(book.getRequests().size()));
-
         if (book.getOwner().getUserid().equals(uid)){
             // A owner of the Book cannot request his own book
             request.setVisibility(View.GONE);
