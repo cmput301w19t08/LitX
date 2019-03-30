@@ -83,7 +83,7 @@ public class Request {
                 snapshot.getString("status")
         );
         ans.docId = snapshot.getId();
-
+        log.d("Litx", ans.docId);
         ans.book.addRequest(ans);
         ans.requester.addRequest(ans);
 

@@ -93,7 +93,7 @@ public class BookViewActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //TODO: Authentication of deleting book in database
-                    book.delete();
+                    book.delete(book);
 
                     Intent intent = new Intent(BookViewActivity.this, MyBooksActivity.class);
                     startActivity(intent);
