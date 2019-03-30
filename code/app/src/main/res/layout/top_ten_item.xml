@@ -37,7 +37,6 @@
         android:paddingLeft="10dp"
         android:text="Author"
         android:textStyle="normal|italic"
-        android:textColor="@color/colorAccent"
         android:textSize="22sp" />
 
 
