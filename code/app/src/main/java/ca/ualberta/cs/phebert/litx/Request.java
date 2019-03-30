@@ -25,6 +25,8 @@ import java.util.Random;
 
 import ca.ualberta.cs.phebert.litx.annotations.*;
 
+import static com.loopj.android.http.AsyncHttpClient.log;
+
 public class Request {
     public static final String REQUESTS_COLLECTION = "Requests";
     private static Map<String, Request> db;
@@ -85,8 +87,8 @@ public class Request {
                 snapshot.getString("status")
         );
         ans.docId = snapshot.getId();
-
-        ans.getBook().addRequest(ans);
+        log.d("Litx", ans.docId);
+        ans.book.addRequest(ans);
         ans.requester.addRequest(ans);
 
         return ans;

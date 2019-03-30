@@ -286,6 +286,7 @@ public class User implements Serializable {
         return acceptedRequests;
     }
 
+    // Is this what we want? Shouldn't we go into the the requestors requests and add it?
     public void acceptRequest(Request request) {
         myRequests.add(request);
     }
@@ -305,7 +306,9 @@ public class User implements Serializable {
     }
 
     public void addBook(Book book) {
+        Log.d("MyBooks", "Book Added to myBooks" + book.getTitle());
         myBooks.add(book);
+
     }
 
     /**
@@ -314,7 +317,7 @@ public class User implements Serializable {
      */
     public void deleteBook(Book book) {
         if(myBooks.contains(book)) {
-            book.delete();
+            book.delete(book);
         }
     }
 
