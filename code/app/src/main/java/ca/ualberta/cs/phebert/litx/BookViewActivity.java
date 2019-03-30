@@ -8,6 +8,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -67,6 +68,8 @@ public class BookViewActivity extends AppCompatActivity {
         book = Book.findByDocId(bookId);
 
         loadImage(book);
+
+        Log.d("REQUEST", Integer.toString(book.getRequests().size()));
 
         if (book.getOwner().getUserid().equals(uid)){
             // A owner of the Book cannot request his own book
@@ -145,7 +148,7 @@ public class BookViewActivity extends AppCompatActivity {
                     book.addRequest();
                     Toast.makeText(BookViewActivity.this, "Your Request has been sent",
                             Toast.LENGTH_SHORT).show();
-                    request.setVisibility(View.GONE);
+                    bookRequested();
                 }
             });
         }
@@ -186,5 +189,11 @@ public class BookViewActivity extends AppCompatActivity {
                 GlideApp.with(BookViewActivity.this).load(imageURL).placeholder(iconId).into(photo);
             }
         });
+    }
+
+    private void bookRequested() {
+        request.setVisibility(View.GONE);
+        TextView requested = (TextView) findViewById(R.id.requestedTextView);
+        requested.setVisibility(View.VISIBLE);
     }
 }

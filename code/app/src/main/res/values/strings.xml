@@ -49,4 +49,5 @@
     <string name="invalid">Invalid field(s)</string>
     <string name="change_image">Click the photo to change the image!</string>
     <string name="remove_photo">Remove Photo</string>
+    <string name="requested">Request Sent!</string>
 </resources>
