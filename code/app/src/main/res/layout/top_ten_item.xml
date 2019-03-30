@@ -22,20 +22,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:gravity="right"
+        android:maxWidth="280dp"
         android:paddingLeft="10dp"
-        android:textSize="22sp"
         android:text="Title"
-        />
+        android:textSize="22sp" />
 
     <TextView
         android:id="@+id/top_ten_book_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Author"
-        android:textSize="22sp"
-        android:paddingLeft="10dp"
         android:layout_below="@+id/top_ten_book_title"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:paddingLeft="10dp"
+        android:text="Author"
+        android:textStyle="normal|italic"
+        android:textColor="@color/colorAccent"
+        android:textSize="22sp" />
 
 
 
