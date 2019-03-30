@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -144,14 +145,14 @@ public class BookViewActivity extends AppCompatActivity {
                 }
             });
         }
-        // Set descriptiption of book in the textview
-
+        
         // Set an onClickListener for the photo that launches the view photo activity
         photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(BookViewActivity.this, ViewPhotoActivity.class);
                 intent.putExtra("Book", book.getDocID());
+                finish();
                 startActivity(intent);
             }
         });
