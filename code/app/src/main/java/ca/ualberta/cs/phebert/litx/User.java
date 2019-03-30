@@ -306,7 +306,9 @@ public class User implements Serializable {
     }
 
     public void addBook(Book book) {
+        Log.d("MyBooks", "Book Added to myBooks" + book.getTitle());
         myBooks.add(book);
+
     }
 
     /**
@@ -315,7 +317,7 @@ public class User implements Serializable {
      */
     public void deleteBook(Book book) {
         if(myBooks.contains(book)) {
-            book.delete();
+            book.delete(book);
         }
     }
 

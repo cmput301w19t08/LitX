@@ -12,9 +12,10 @@ public class MainActivity extends AppCompatActivity {
     static Thread loader;
 
     void getAllData() {
-        Request.getAll(); // this should be enough if requests weren't empty
-        Book.getAll();
         User.getAll();
+        Book.getAll();
+        Request.getAll(); // this should be enough if requests weren't empty
+
     }
 
     @Override
