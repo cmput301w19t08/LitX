@@ -18,10 +18,8 @@ import static org.hamcrest.CoreMatchers.anything;
 
 public class MyBooksActivityTest {
 
-    private String stringTitle = "I am robo";
-    private String stringAuthor = "I am sentient";
-    private String stringAuthor2 = "The uprising has begun";
-    private String stringAuthor3 = "hahahahahahahahahahahaha";
+    private String stringTitle = "I am espresso";
+    private String stringAuthor = "Story of the espresso";
     private String stringISBN = "1111111111";
 
     @Rule
@@ -45,9 +43,8 @@ public class MyBooksActivityTest {
         onView(withId(R.id.btnAddNew)).perform(click());
         onView(withId(R.id.editTitle)).perform(typeText(stringTitle), closeSoftKeyboard());
         onView(withId(R.id.editAuthor)).perform(typeText(stringAuthor), closeSoftKeyboard());
-        onView(withId(R.id.editAuthor)).perform(typeText(stringAuthor2), closeSoftKeyboard());
-        onView(withId(R.id.editAuthor)).perform(typeText(stringAuthor3), closeSoftKeyboard());
         onView(withId(R.id.editISBN)).perform(typeText(stringISBN), closeSoftKeyboard());
+        onView(withId(R.id.btnISBN)).perform(click());
         Espresso.pressBack();
     }
 
