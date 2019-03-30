@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -188,6 +189,16 @@ public class Request {
         // Create an explicit intent for an Activity in your app
         // Not sure what activity should be started when the notification is clicked. Change 'User.class'
         // Error Comment out Intent was wrong
+
+
+        // Was testing to use it as a switch if notification is generated from MainActivity
+        // So it would be simple to tell if notification was generated as new request or new accept
+        if (ctx.getClass().equals(MainActivity.class)) {
+            Log.i("CTX EQUALS", "CTX EQUALS");
+        }
+        
+
+
         Intent intentForOwner = new Intent(ctx.getApplicationContext(), BookViewActivity.class);
         intentForOwner.putExtra("Book", book.getDocID());
         // Error comment out
