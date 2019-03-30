@@ -60,8 +60,7 @@ public class Book implements Serializable {
         if(task == null && FirebaseAuth.getInstance().getCurrentUser() != null) {
             task = FirebaseFirestore.getInstance()
                     .collection(BOOK_COLLECTION)
-                    .get()
-                    ;
+                    .get();
         }
     }
 
