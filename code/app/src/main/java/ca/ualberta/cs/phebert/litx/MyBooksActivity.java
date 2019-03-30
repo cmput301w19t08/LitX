@@ -40,7 +40,6 @@ public class MyBooksActivity extends AppCompatActivity {
 
     // Variables required to display books in the database
     private ArrayList<Book> filteredBooks = new ArrayList<Book>();
-    BookListAdapter adapter;
     BookListAdapter booksAdapter;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
@@ -106,17 +105,11 @@ public class MyBooksActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MyBooksActivity.this, AddBookActivity.class);
+                finish();
                 startActivity(intent);
             }
         });
     }
-
-//        //Testing purposes only, following two lines need to be removed
-//        User u = new User("John", "n", 123);
-//        /*Book book = new Book(u.getUserName(), "Author", "Title", 1234567890);
-//        myBooks.add(book);
-//        Book b = new Book(u.getUserName(), "Me", "Fuck 301", 1234567899);
-//        myBooks.add(b);*/
 
     /**
      * Query will be called after anything is selected in the spinner

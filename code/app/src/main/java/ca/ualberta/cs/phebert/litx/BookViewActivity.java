@@ -59,6 +59,7 @@ public class BookViewActivity extends AppCompatActivity {
         edit = (Button) findViewById(R.id.editButtonID);
         recyclerView = (RecyclerView) findViewById(R.id.requestsRecycleView);
         photo = (ImageView) findViewById(R.id.bookImage);
+        TextView change_image = (TextView) findViewById(R.id.changeImage);
 
         // Receive the book object the user selected
         Intent intent = getIntent();
@@ -108,6 +109,7 @@ public class BookViewActivity extends AppCompatActivity {
                     //Pass Book object into AddBookActivity and start the activity
                     Intent intent = new Intent(BookViewActivity.this, AddBookActivity.class);
                     intent.putExtra("Book", book.getDocID());
+                    finish();
                     startActivity(intent);
                 }
             });
@@ -115,6 +117,7 @@ public class BookViewActivity extends AppCompatActivity {
             // The Owner is not viewing the book he cannot delete or edit it just Request it
             edit.setVisibility(View.GONE);
             delete.setVisibility(View.GONE);
+            change_image.setText("Click the photo to view the image!");
 
             TextView ownerUsernameView = (TextView) findViewById(R.id.ownerViewID);
             String ownerUsername = book.getOwner().getUserName();
@@ -142,6 +145,7 @@ public class BookViewActivity extends AppCompatActivity {
                     book.addRequest();
                     Toast.makeText(BookViewActivity.this, "Your Request has been sent",
                             Toast.LENGTH_SHORT).show();
+                    request.setVisibility(View.GONE);
                 }
             });
         }

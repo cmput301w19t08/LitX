@@ -46,4 +46,7 @@
     <string name="clear_button">Clear</string>
     <string name="no_isbn">No ISBN</string>
     <string name="cancel_button">Cancel</string>
+    <string name="invalid">Invalid field(s)</string>
+    <string name="change_image">Click the photo to change the image!</string>
+    <string name="remove_photo">Remove Photo</string>
 </resources>
