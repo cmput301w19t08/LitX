@@ -60,7 +60,7 @@ public class BookViewActivity extends AppCompatActivity {
         edit = (Button) findViewById(R.id.editButtonID);
         recyclerView = (RecyclerView) findViewById(R.id.requestsRecycleView);
         photo = (ImageView) findViewById(R.id.bookImage);
-        TextView change_image = (TextView) findViewById(R.id.changeImage);
+        TextView changeImage = (TextView) findViewById(R.id.changeImage);
 
         // Receive the book object the user selected
         Intent intent = getIntent();
@@ -94,7 +94,6 @@ public class BookViewActivity extends AppCompatActivity {
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO: Authentication of deleting book in database
                     book.delete(book);
 
                     Intent intent = new Intent(BookViewActivity.this, MyBooksActivity.class);
@@ -118,7 +117,15 @@ public class BookViewActivity extends AppCompatActivity {
             // The Owner is not viewing the book he cannot delete or edit it just Request it
             edit.setVisibility(View.GONE);
             delete.setVisibility(View.GONE);
-            change_image.setText("Click the photo to view the image!");
+            changeImage.setText("Click the photo to view the image!");
+
+            ArrayList<Request> bookRequests = book.getRequests();
+            for (int i=0; i < bookRequests.size(); i++) {
+                Request request = bookRequests.get(i);
+                if (uid.equals(request.getRequester().getUserid())) {
+                    bookRequested();
+                }
+            }
 
             TextView ownerUsernameView = (TextView) findViewById(R.id.ownerViewID);
             String ownerUsername = book.getOwner().getUserName();
