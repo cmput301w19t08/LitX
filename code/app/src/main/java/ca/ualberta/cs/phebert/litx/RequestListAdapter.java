@@ -35,6 +35,26 @@ public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.
         holder.itemView.setTag(requests.get(position));
         Request request = requests.get(position);
         holder.requestorName.setText(request.getRequester().getUserName());
+        holder.accept.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                // TODO make the button accept the request
+                Toast.makeText(v.getContext(), "Request Accepted",
+                        Toast.LENGTH_SHORT).show();
+                request.getBook().setAcceptedRequest(request);
+
+            }
+        });
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO  make the button delete the Request
+                Toast.makeText(v.getContext(), "This button will delete the request",
+                        Toast.LENGTH_SHORT).show();
+                request.getBook().deleteRequest(request);
+                notifyDataSetChanged();
+            }
+        });
 
     }
     @Override
@@ -54,23 +74,8 @@ public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.
             requestorName = (TextView) itemView.findViewById(R.id.requests_item_owner);
             accept = (Button) itemView.findViewById(R.id.accept_requests);
             delete = (Button) itemView.findViewById(R.id.delete_request);
-            accept.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v){
-                    // TODO make the button accept the request
-                    Toast.makeText(v.getContext(), "This button will accept the request",
-                            Toast.LENGTH_SHORT).show();
 
-                }
-            });
-            delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // TODO  make the button delete the Request
-                    Toast.makeText(v.getContext(), "This button will delete the request",
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
+
         }
 
     }

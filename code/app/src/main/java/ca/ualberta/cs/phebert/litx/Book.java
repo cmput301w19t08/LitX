@@ -283,6 +283,12 @@ public class Book implements Serializable {
         return null;
     }
 
+    public void deleteRequest(Request request){
+        if (requests.contains(request)){
+            requests.remove(request);
+        }
+    }
+
     /**
      * should fail if acceptedRequest is not null.
      * @param request A request that has been accepted by owner
@@ -291,6 +297,7 @@ public class Book implements Serializable {
         if (acceptedRequest == null) {
             acceptedRequest = request;
             status = BookStatus.accepted;
+            request.accept();
         }
         if (request == null) {
             acceptedRequest = request;
