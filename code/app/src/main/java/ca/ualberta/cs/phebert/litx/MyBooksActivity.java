@@ -39,7 +39,7 @@ public class MyBooksActivity extends AppCompatActivity {
     private BookStatus filter;
 
     // Variables required to display books in the database
-    private ArrayList<Book> filteredBooks;
+    private ArrayList<Book> filteredBooks = new ArrayList<Book>();
     BookListAdapter booksAdapter;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
@@ -109,6 +109,7 @@ public class MyBooksActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MyBooksActivity.this, AddBookActivity.class);
+                finish();
                 startActivity(intent);
             }
         });

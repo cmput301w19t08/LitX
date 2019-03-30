@@ -67,7 +67,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         holder.author.setText(book.getAuthor());
         holder.isbn.setText(Long.toString(book.getIsbn()));
 
-        load_image(holder, book);
+        loadImage(holder, book);
 
         // Commented out since we cannot get request object from database at this time
         //        if (!book.isAvailable()) {
@@ -135,7 +135,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         }
     }
 
-    private void load_image(ViewHolder holder, Book book) {
+    private void loadImage(ViewHolder holder, Book book) {
         int iconId = context.getResources().getIdentifier("book_icon", "drawable", context.getPackageName());
         StorageReference storage = FirebaseStorage.getInstance().getReference();
         StorageReference path = storage.child(book.getOwner().getUserid() + "/" + Long.toString(book.getIsbn()));
