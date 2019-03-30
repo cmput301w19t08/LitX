@@ -3,16 +3,26 @@ package ca.ualberta.cs.phebert.litx;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     public static final String FilterMode = "ca.ualberta.cs.phebert.litx.FilterMode";
     static Thread loader;
 
     void getAllData() {
-        Request.getAll(); // this should be enough if requests weren't empty
+        Map<String, Request>  db =  Request.getAll(); // this should be enough if requests weren't empty
+        for (Map.Entry<String, Request> entry : db.entrySet()) {
+            Log.v("LitX.REQUEST", entry.getValue().getRequester().getUserName());
+            if (entry.getValue().getRequester().getUserName().equals(User.currentUser().getUserName())) {
+                Request request = entry.getValue();
+                request.generateNotification(this);
+            }
+        }
         Book.getAll();
         User.getAll();
     }
@@ -32,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         if (User.isSignedIn()) {
+            Log.i("LitX Thread", "thread is running loader");
             loader = new Thread(this::getAllData);
             loader.start();
         }
@@ -73,10 +84,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        for(Request request :Request.getAll().values()) {
+       /* for(Request request :Request.getAll().values()) {
             request.generateNotification(this);
             break;
-        }
+        }*/
         super.onStop();
     }
 }

@@ -203,7 +203,11 @@ public class Request {
         intentForOwner.putExtra("Book", book.getDocID());
         // Error comment out
         intentForOwner.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, intentForOwner, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Random rand = new Random();
+        int randInt = rand.nextInt(10000);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(ctx, randInt, intentForOwner, 0);
 
         String textTitle = "Request";
         String bookTitle = book.getTitle();
@@ -225,9 +229,7 @@ public class Request {
 
         // notificationId is a unique int for each notification that you must define
         // right now its a magic number
-        Random rand = new Random();
-        int notificationId = rand.nextInt(10000);
-        notificationManager.notify(notificationId, builder.build());
+        notificationManager.notify(randInt, builder.build());
     }
 
     /**
