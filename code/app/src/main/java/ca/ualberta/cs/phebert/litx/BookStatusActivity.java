@@ -56,6 +56,11 @@ public class BookStatusActivity extends AppCompatActivity {
         query();
 
     }
+    @Override
+    public void onStart(){
+        super.onStart();
+        query();
+    }
 
     public void query(){
         filteredBooks.clear();

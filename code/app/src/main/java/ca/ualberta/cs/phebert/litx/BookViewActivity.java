@@ -130,11 +130,6 @@ public class BookViewActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             });
-            // Owner can not request their own books
-            if (book.getOwner().equals(FirebaseAuth.getInstance().getCurrentUser().getDisplayName())) {
-                // Find buttons in the layout
-                request.setVisibility(View.GONE);
-            }
 
             request.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -142,6 +137,9 @@ public class BookViewActivity extends AppCompatActivity {
                     book.addRequest();
                     Toast.makeText(BookViewActivity.this, "Your Request has been sent",
                             Toast.LENGTH_SHORT).show();
+                    Request newRequest = new Request(book, book.getOwner(), User.currentUser());
+                    User.currentUser().addRequest(newRequest);
+                    book.addRequest(newRequest);
                 }
             });
         }
