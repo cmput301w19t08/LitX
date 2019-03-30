@@ -91,6 +91,8 @@ public class Request {
         ans.book.addRequest(ans);
         ans.requester.addRequest(ans);
 
+        Log.i("THIS IS BEFORE", snapshot.getString("status")+"AND ITS ID IS "+snapshot.getString("book"));
+
         return ans;
     }
 
@@ -195,26 +197,43 @@ public class Request {
 
         // Was testing to use it as a switch if notification is generated from MainActivity
         // So it would be simple to tell if notification was generated as new request or new accept
-        if (ctx.getClass().equals(MainActivity.class)) {
-            Log.i("CTX EQUALS", "CTX EQUALS");
-        }
-        
-
-
-        Intent intentForOwner = new Intent(ctx.getApplicationContext(), BookViewActivity.class);
-        intentForOwner.putExtra("Book", book.getDocID());
-        // Error comment out
-        intentForOwner.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
         Random rand = new Random();
         int randInt = rand.nextInt(10000);
+        String textTitle;
+        String bookTitle;
+        String textContent;
+        PendingIntent pendingIntent;
+        //if (ctx.getClass().equals(MainActivity.class)) {
+        Log.i("THIS IS STATUS", status.toString());
+        Log.i("THIS IS REQUESTSTATUS", RequestStatus.Accepted.toString());
+        if (!status.equals(RequestStatus.Accepted)) {
+            Log.i("CTX EQUALS", "CTX EQUALS");
+            Intent intentForOwner = new Intent(ctx.getApplicationContext(), BookViewActivity.class);
+            intentForOwner.putExtra("Book", book.getDocID());
+            // Error comment out
+            intentForOwner.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(ctx, randInt, intentForOwner, 0);
+            pendingIntent = PendingIntent.getActivity(ctx, randInt, intentForOwner, 0);
 
-        String textTitle = "Request";
-        String bookTitle = book.getTitle();
+            textTitle = "Request";
+            bookTitle = book.getTitle();
 
-        String textContent = requester.getUserName() + " wants to borrow " + bookTitle;
+            textContent = requester.getUserName() + " wants to borrow " + bookTitle;
+
+        } else {
+            Intent intentForOwner = new Intent(ctx.getApplicationContext(), BookStatusActivity.class);
+            intentForOwner.putExtra("Book", book.getDocID());
+            // Error comment out
+            intentForOwner.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+            pendingIntent = PendingIntent.getActivity(ctx, randInt, intentForOwner, 0);
+
+            textTitle = "Accepted!";
+            bookTitle = book.getTitle();
+
+            textContent = bookOwner.getUserName() + " accepted your request to borrow " + bookTitle;
+
+        }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, CHANNEL_ID)
                 // Error

@@ -17,7 +17,8 @@ public class MainActivity extends AppCompatActivity {
     void getAllData() {
         User.getAll();
         Book.getAll();
-        Request.getAll(); // this should be enough if requests weren't empty\
+        Request.getAll();
+        // this should be enough if requests weren't empty\
         Map<String, Request>  db =  Request.getAll(); // this should be enough if requests weren't empty
         for (Map.Entry<String, Request> entry : db.entrySet()) {
             Log.v("LitX.REQUEST", entry.getValue().getRequester().getUserName());
