@@ -118,6 +118,10 @@ public class Book implements Serializable {
         if (User.currentUser().getMyBooks().contains(book)){
             User.currentUser().getMyBooks().remove(book);
         }
+        while (requests.size() > 0){
+            requests.get(0).deleteRequest();
+            requests.remove(requests.get(0));
+        }
     }
 
     public String getDocID() { return docID; }
@@ -297,7 +301,10 @@ public class Book implements Serializable {
         if (acceptedRequest == null) {
             acceptedRequest = request;
             status = BookStatus.accepted;
+            requests.clear();
             request.accept();
+            push();
+
         }
         if (request == null) {
             acceptedRequest = request;
@@ -331,14 +338,14 @@ public class Book implements Serializable {
         this.photograph = photograph;
     }
 
-    /**
-     * Add a new request created by this user
-     */
-    public void addRequest() {
-        Request request = new Request(this, this.owner, User.currentUser());
-        request.selfPush();
-        addRequest(request);
-    }
+//    /**
+//     * Add a new request created by this user
+//     */
+//    public void addRequest() {
+//        Request request = new Request(this, this.owner, User.currentUser());
+//        request.selfPush();
+//        addRequest(request);
+//    }
 
     /**
      * add a requests to this book's requests
@@ -346,6 +353,7 @@ public class Book implements Serializable {
      */
     void addRequest(Request request) {
        requests.add(request);
+       request.selfPush();
     }
 
     @Override

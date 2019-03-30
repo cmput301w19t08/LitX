@@ -13,8 +13,10 @@ public class MainActivity extends AppCompatActivity {
 
     void getAllData() {
         User.getAll();
+         // this should be enough if requests weren't empty
         Book.getAll();
-        Request.getAll(); // this should be enough if requests weren't empty
+        Request.getAll();
+
 
     }
 

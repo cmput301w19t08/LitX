@@ -42,6 +42,7 @@ public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.
                 Toast.makeText(v.getContext(), "Request Accepted",
                         Toast.LENGTH_SHORT).show();
                 request.getBook().setAcceptedRequest(request);
+                notifyDataSetChanged();
 
             }
         });
@@ -49,9 +50,10 @@ public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.
             @Override
             public void onClick(View v) {
                 // TODO  make the button delete the Request
-                Toast.makeText(v.getContext(), "This button will delete the request",
+                Toast.makeText(v.getContext(), "Request Deleted",
                         Toast.LENGTH_SHORT).show();
                 request.getBook().deleteRequest(request);
+                request.deleteRequest();
                 notifyDataSetChanged();
             }
         });

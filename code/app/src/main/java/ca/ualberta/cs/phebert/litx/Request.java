@@ -69,6 +69,7 @@ public class Request {
         return db;
     }
 
+    public String getDocId(){return this.docId;}
     /**
      *
      * @param snapshot
@@ -155,6 +156,11 @@ public class Request {
                         .delete();
             }
         }
+    }
+
+    public void deleteRequest(){
+        FirebaseFirestore.getInstance().collection(REQUESTS_COLLECTION).document(docId).delete();
+        db.remove(docId);
     }
 
     public void selfPush() {
@@ -302,6 +308,11 @@ public class Request {
     @OwnerCalled
     public void accept() {
         status = status.accept(book, this);
+        selfPush();
+    }
+
+    public void setStatus(RequestStatus status){
+        this.status = status;
     }
 
     /**
