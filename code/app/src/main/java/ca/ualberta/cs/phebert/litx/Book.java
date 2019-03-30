@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -60,8 +61,7 @@ public class Book implements Serializable {
         if(task == null && FirebaseAuth.getInstance().getCurrentUser() != null) {
             task = FirebaseFirestore.getInstance()
                     .collection(BOOK_COLLECTION)
-                    .get()
-                    ;
+                    .get();
         }
     }
 
@@ -85,6 +85,7 @@ public class Book implements Serializable {
     private static Book fromSnapshot(DocumentSnapshot doc) {
         Book ans = new Book();
         ans.setDocID(doc.getId());
+
         String ownerUid = doc.getString("ownerUid");
         //Log.d(TAG, "Owner UID = " + ownerUid);
         ans.setOwner(ownerUid);
@@ -97,7 +98,7 @@ public class Book implements Serializable {
         } catch(NullPointerException e) {
             // whatever, no isbn, this book is weird
         }
-
+        log.d("LitX.Book", ans.getTitle());
         // could be moved elsewhere, if this method is called more than once for a book.
         //Log.d(TAG,ans.getOwner() == null ? "user is null" : "user is not null");
         ans.getOwner().addBook(ans);
@@ -108,12 +109,15 @@ public class Book implements Serializable {
         return getAll().get(docId);
     }
 
-    public void delete() {
+    public void delete(Book book) {
         FirebaseFirestore.getInstance()
                 .collection(BOOK_COLLECTION)
                 .document(getDocID())
                 .delete();
         db.remove(getDocID());
+        if (User.currentUser().getMyBooks().contains(book)){
+            User.currentUser().getMyBooks().remove(book);
+        }
     }
 
     public String getDocID() { return docID; }

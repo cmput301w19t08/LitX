@@ -97,7 +97,7 @@ public class BookViewActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //TODO: Authentication of deleting book in database
-                    book.delete();
+                    book.delete(book);
 
                     Intent intent = new Intent(BookViewActivity.this, MyBooksActivity.class);
                     startActivity(intent);
@@ -136,11 +136,6 @@ public class BookViewActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             });
-            // Owner can not request their own books
-            if (book.getOwner().equals(FirebaseAuth.getInstance().getCurrentUser().getDisplayName())) {
-                // Find buttons in the layout
-                request.setVisibility(View.GONE);
-            }
 
             request.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -148,7 +143,11 @@ public class BookViewActivity extends AppCompatActivity {
                     book.addRequest();
                     Toast.makeText(BookViewActivity.this, "Your Request has been sent",
                             Toast.LENGTH_SHORT).show();
+
                     bookRequested();
+                    Request newRequest = new Request(book, book.getOwner(), User.currentUser());
+                    User.currentUser().addRequest(newRequest);
+                    book.addRequest(newRequest);
                 }
             });
         }

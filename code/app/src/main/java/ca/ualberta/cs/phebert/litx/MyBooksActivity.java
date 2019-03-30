@@ -55,8 +55,14 @@ public class MyBooksActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_books);
+        Book.getAll();
         mySpinner = (Spinner) findViewById(R.id.spinner);
 
+
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(MyBooksActivity.this);
+        recyclerView.setLayoutManager(layoutManager);
         // Find the add new button
         addNew = (Button) findViewById(R.id.btnAddNew);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -86,6 +92,7 @@ public class MyBooksActivity extends AppCompatActivity {
                         break;
 
                 }
+                filteredBooks = new ArrayList<>();
                 query();
             }
             @Override
@@ -94,12 +101,9 @@ public class MyBooksActivity extends AppCompatActivity {
             }
         });
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(MyBooksActivity.this);
-        recyclerView.setLayoutManager(layoutManager);
 
-        filteredBooks = new ArrayList<>();
+
+
 
         addNew.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,11 +115,21 @@ public class MyBooksActivity extends AppCompatActivity {
         });
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        filteredBooks = new ArrayList<>();
+        query();
+    }
+
     /**
      * Query will be called after anything is selected in the spinner
      */
     public void query() {
+
         filteredBooks.clear();
+        Log.d("LitX", Integer.toString(User.currentUser().getMyBooks().size()));
         Log.d("LitX","Querying myBooks");
         if(!User.isSignedIn()) return;
         //noinspection ConstantConditions
@@ -139,7 +153,7 @@ public class MyBooksActivity extends AppCompatActivity {
                 MyBooksActivity.this, filteredBooks);
         recyclerView.setAdapter(booksAdapter);
 
-        booksAdapter.notifyDataSetChanged();
+//        booksAdapter.notifyDataSetChanged();
 
     }
 }
