@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/top_ten_number"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="1"
+        android:textSize="45sp"
+        />
+
+    <TextView
+        android:id="@+id/top_ten_book_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:gravity="right"
+        android:maxWidth="280dp"
+        android:paddingLeft="10dp"
+        android:text="Title"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/top_ten_book_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/top_ten_book_title"
+        android:layout_alignParentEnd="true"
+        android:paddingLeft="10dp"
+        android:text="Author"
+        android:textStyle="normal|italic"
+        android:textSize="22sp" />
+
+
+
+</RelativeLayout>
