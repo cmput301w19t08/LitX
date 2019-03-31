@@ -76,8 +76,8 @@ public class SearchActivity extends AppCompatActivity implements BookObserver {
     }
     */
 
-    protected void updateRecycler() {
-        adapter = new BookListAdapter(SearchActivity.this, bookresults);
+    protected void updateRecycler () {
+        adapter = new BookListAdapter(SearchActivity.this, bookresults, 0);
         recycler.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }

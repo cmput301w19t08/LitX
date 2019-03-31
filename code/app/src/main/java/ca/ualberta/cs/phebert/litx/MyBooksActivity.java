@@ -1,8 +1,8 @@
 package ca.ualberta.cs.phebert.litx;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -49,6 +49,7 @@ public class MyBooksActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_books);
         Book.getAll();
         mySpinner = (Spinner) findViewById(R.id.spinner);
+        //mySpinner.getBackground().setColorFilter(getResources().getColor(), PorterDuff.Mode.SRC_ATOP);
 
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -141,7 +142,7 @@ public class MyBooksActivity extends AppCompatActivity {
         }
 
         booksAdapter = new BookListAdapter(
-                MyBooksActivity.this, filteredBooks);
+                MyBooksActivity.this, filteredBooks, 0);
         recyclerView.setAdapter(booksAdapter);
 
 //        booksAdapter.notifyDataSetChanged();

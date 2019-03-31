@@ -41,6 +41,8 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
         emailEdit = findViewById(R.id.emailEdit);
         phoneEdit = findViewById(R.id.phoneEdit);
         setContentView(viewProfile);
+        TextView editButton = (TextView) findViewById(R.id.EditButton);
+        TextView addAccButton = (TextView) findViewById(R.id.addAccButton);
         userView = findViewById(R.id.UserView);
         emailView = findViewById(R.id.emailView);
         phoneView = findViewById(R.id.phoneView);
@@ -49,18 +51,18 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
         if (intent.hasExtra(UID_IN)) {
             currentUser = User.findByUid(intent.getStringExtra(UID_IN));
             onUpdate(currentUser);
-            TextView editButton = (TextView) findViewById(R.id.EditButton);
-            TextView addAccButton = (TextView) findViewById(R.id.addAccButton);
             // Only the owner would be able to edit or add
-            editButton.setVisibility(View.INVISIBLE);
-            addAccButton.setVisibility(View.INVISIBLE);
+            editButton.setVisibility(View.GONE);
+            addAccButton.setVisibility(View.GONE);
         } else {
             if (User.isSignedIn()) {
+                addAccButton.setVisibility(View.GONE);
                 currentUser = User.currentUser();
                 assert currentUser != null;
                 currentUser.addObserver(this);
                 onUpdate(currentUser); // might as well.
             } else {
+                editButton.setVisibility(View.GONE);
                 userView.setText("???");
                 emailView.setText("???");
                 phoneView.setText("???");

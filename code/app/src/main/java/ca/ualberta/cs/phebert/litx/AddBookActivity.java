@@ -3,6 +3,7 @@ package ca.ualberta.cs.phebert.litx;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,10 +15,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import ca.ualberta.cs.phebert.litx.Models.Book;
 import ca.ualberta.cs.phebert.litx.Models.User;
@@ -33,9 +37,9 @@ public class AddBookActivity extends AppCompatActivity {
     private static final int image = 100;
     private Uri uri;
 
-    EditText titleView;
-    EditText ISBNView;
-    EditText authorView;
+    private EditText titleView;
+    private EditText ISBNView;
+    private EditText authorView;
 
     private StorageReference pathReference;
 
@@ -45,7 +49,6 @@ public class AddBookActivity extends AppCompatActivity {
     private Button btnOkay;
     private Button cancel;
     private ImageView photo;
-    private TextView changeImage;
     private int iconId;
 
     /**
@@ -62,7 +65,6 @@ public class AddBookActivity extends AppCompatActivity {
         titleView=(EditText)findViewById(R.id.editTitle);
         ISBNView=(EditText)findViewById(R.id.editISBN);
         authorView=(EditText)findViewById(R.id.editAuthor);
-        changeImage = (TextView) findViewById(R.id.changeImageTextView);
         photo = (ImageView) findViewById(R.id.addBookImage);
         cancel = (Button) findViewById(R.id.removePhotoButton);
 
@@ -92,7 +94,6 @@ public class AddBookActivity extends AppCompatActivity {
         btnOkay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: Check input fields are valid, then create book object and pass it back
                 EditText etTitle = (EditText) findViewById(R.id.editTitle);
                 EditText etAuthor = (EditText) findViewById(R.id.editAuthor);
                 EditText etISBN = (EditText) findViewById(R.id.editISBN);
@@ -114,19 +115,16 @@ public class AddBookActivity extends AppCompatActivity {
                     User u = User.currentUser();
                     Book b = new Book(u, author, title, isbn);
 
-                    if (photoExists) {
-                        if (uri != null) {
-                            addImage(b);
-                        }
+                    b.push();
+                    if (photoExists && uri != null) {
+                        addImage(b);
                     } else {
                         try {
                             pathReference.delete();
                         } catch(Exception e) {}
+                        // Go back to MyBooksActivity after the book has been added
+                        finish();
                     }
-
-                    b.push();
-                    // Go back to MyBooksActivity after the book has been added
-                    finish();
                 }
                 catch(Exception e) {
                     TextView invalid = (TextView) findViewById(R.id.invalidTextView);
@@ -208,10 +206,6 @@ public class AddBookActivity extends AppCompatActivity {
         } catch (Exception e) {}
         */
 
-
-
-
-
     }
 
     private void loadImage(Book book) {
@@ -221,6 +215,7 @@ public class AddBookActivity extends AppCompatActivity {
         pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
+                AddBookActivity.this.uri = uri;
                 String imageURL = uri.toString();
                 cancel.setVisibility(View.VISIBLE);
                 photoExists = true;
@@ -230,6 +225,28 @@ public class AddBookActivity extends AppCompatActivity {
     }
 
     private void addImage(Book book) {
-        pathReference.putFile(uri);
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        pathReference = storageReference.child(book.getOwner().getUserid() + "/" + Long.toString(book.getIsbn()));
+        UploadTask upload = pathReference.putFile(uri);
+
+        titleView.setVisibility(View.GONE);
+        authorView.setVisibility(View.GONE);
+        ISBNView.setVisibility(View.GONE);
+        btnOkay.setVisibility(View.GONE);
+        cancel.setVisibility(View.GONE);
+        findViewById(R.id.btnISBN).setVisibility(View.GONE);
+        photo.setVisibility(View.GONE);
+        findViewById(R.id.changeImageTextView).setVisibility(View.GONE);
+
+        findViewById(R.id.createBookProgress).setVisibility(View.VISIBLE);
+        findViewById(R.id.creatingBookTextView).setVisibility(View.VISIBLE);
+
+
+        upload.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                finish();
+            }
+        });
     }
 }

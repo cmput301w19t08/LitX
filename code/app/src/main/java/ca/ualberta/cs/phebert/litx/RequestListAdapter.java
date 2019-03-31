@@ -51,7 +51,8 @@ public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.
                 Toast.makeText(v.getContext(), "Request Deleted",
                         Toast.LENGTH_SHORT).show();
                 request.getBook().deleteRequest(request);
-                request.deleteRequest();
+                request.delete();
+                Request.push();
                 notifyDataSetChanged();
             }
         });

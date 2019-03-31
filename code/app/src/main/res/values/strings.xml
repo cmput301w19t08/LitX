@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">LitX</string>
-    <string name="user_name">User Name</string>
+    <string name="user_name">Username</string>
     <string name="phone_number">Phone Number</string>
     <string name="email">Email</string>
     <string name="edit">✎</string>
@@ -16,19 +16,6 @@
     <string name="borrowing_button">Borrowed</string>
     <string name="top10">Top 10 Recommended Books on LitX</string>
     <string name="find">🔍</string>
-    <!-- For Mybooks Spinner -->
-    <string-array name="spinnner_array">
-        <item>All</item>
-        <item>Available</item>
-        <item>Requested</item>
-        <item>Accepted</item>
-        <item>Borrowed</item>
-    </string-array>
-
-
-    <!-- notification stuff -->
-    <string name="channel_name">LitX</string>
-    <string name="channel_description">A wild request has appeared.</string>
     <string name="add_new">Add New</string>
     <string name="okay">Okay</string>
     <string name="add_button">Add</string>
@@ -50,6 +37,22 @@
     <string name="change_image">Click the photo to change the image!</string>
     <string name="remove_photo">Remove Photo</string>
     <string name="requested">Request Sent!</string>
+    <string name="accept_request_button">Accept</string>
+    <string name="decline_request_button">Decline</string>
+    <string name="updating">Updating...</string>
+    <!-- For Mybooks Spinner -->
+    <string-array name="spinnner_array">
+        <item>All</item>
+        <item>Available</item>
+        <item>Requested</item>
+        <item>Accepted</item>
+        <item>Borrowed</item>
+    </string-array>
+
+
+    <!-- notification stuff -->
+    <string name="channel_name">LitX</string>
+    <string name="channel_description">A wild request has appeared.</string>
     <string name="Borrowed_Books">Borrowed Books</string>
     <string name="AcceptedRequests">Accepted Requests</string>
     <string name="pending_requests">Pending Requests</string>
