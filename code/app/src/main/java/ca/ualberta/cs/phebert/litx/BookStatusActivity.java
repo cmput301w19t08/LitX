@@ -31,22 +31,12 @@ public class BookStatusActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_status);
         Intent intent = getIntent();
-        int filter = intent.getIntExtra(FilterMode, 0);
-        if (filter == 0){
-            // TODO Show the requested that arent accepted
-        } else if (filter == 1) {
-            //TODO Show the Books that have been accpeted
-        } else{
-            // TODO Show the books the user is borrowing
-        }
 
         recyclerView = (RecyclerView) findViewById(R.id.status_recycler_view);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(BookStatusActivity.this);
         recyclerView.setLayoutManager(layoutManager);
 
-
-        Intent intent = getIntent();
         int filter = intent.getIntExtra(MainActivity.FilterMode, 0);
         message = (TextView) findViewById(R.id.statusMessage);
         if (filter == 0){
