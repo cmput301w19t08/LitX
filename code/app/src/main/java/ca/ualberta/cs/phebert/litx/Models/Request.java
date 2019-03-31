@@ -9,6 +9,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -56,7 +57,18 @@ public class Request {
                         }
                         if(snapshot == null) return;
                         for(DocumentSnapshot doc : snapshot.getDocuments()) {
-
+                            Request oldVal = findByDocId(doc.getId());
+                            if(oldVal == null) {
+                                Request newVal = fromSnapshot(doc);
+                                db.put(doc.getId(), newVal);
+                                newVal.book.addRequest(newVal);
+                                newVal.requester.addRequest(newVal);
+                            }
+                        }
+                        for(DocumentChange change : snapshot.getDocumentChanges()) {
+                            if(change.getNewIndex() == -1) {
+                                db.remove(change.getDocument().getId());
+                            }
                         }
                     });
         }
@@ -77,7 +89,10 @@ public class Request {
             List<DocumentSnapshot> docs = task.getResult().getDocuments();
             for (DocumentSnapshot doc : docs) {
                 Log.v("LitX.Request", doc.getId());
-                db.put(doc.getId(), fromSnapshot(doc));
+                Request nr = fromSnapshot(doc);
+                db.put(doc.getId(), nr);
+                nr.book.addRequest(nr);
+                nr.requester.addRequest(nr);
             }
         }
 
@@ -100,8 +115,6 @@ public class Request {
         );
         ans.docId = snapshot.getId();
         log.d(TAG, ans.docId);
-        ans.book.addRequest(ans);
-        ans.requester.addRequest(ans);
 
         return ans;
     }
