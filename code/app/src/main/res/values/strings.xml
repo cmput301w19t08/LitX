@@ -40,6 +40,7 @@
     <string name="accept_request_button">Accept</string>
     <string name="decline_request_button">Decline</string>
     <string name="updating">Updating...</string>
+    <string name="finding">Finding...</string>
     <!-- For Mybooks Spinner -->
     <string-array name="spinnner_array">
         <item>All</item>
