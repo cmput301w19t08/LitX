@@ -12,8 +12,9 @@ import android.widget.EditText;
 import java.util.ArrayList;
 
 import ca.ualberta.cs.phebert.litx.Models.Book;
+import ca.ualberta.cs.phebert.litx.Observers.BookObserver;
 
-public class SearchActivity extends AppCompatActivity  {
+public class SearchActivity extends AppCompatActivity implements BookObserver {
 
     private ArrayList<Book> bookresults;
     String keywords;
@@ -26,7 +27,7 @@ public class SearchActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         Intent intent = getIntent();
-        if (intent.getStringExtra("BOOK_NAME") != null){
+        if (intent.getStringExtra("BOOK_NAME") != null) {
             EditText editText = findViewById(R.id.input_search);
             editText.setText(intent.getStringExtra("BOOK_NAME"));
         }
@@ -40,17 +41,19 @@ public class SearchActivity extends AppCompatActivity  {
 
     /**
      * Finds list of Books who match all keywords (separated by " ") to the search input
+     *
      * @param keywords List of words that the query must match
      * @return The list of selected book that match all keywords
      */
     ArrayList<Book> findBook(String... keywords) {
         ArrayList<Book> Original = new ArrayList<>(Book.getAll().values());
         boolean[] found = new boolean[Original.size()];
-        outside: for(int i = 0; i < Original.size(); i++) {
+        outside:
+        for (int i = 0; i < Original.size(); i++) {
             Book book = Original.get(i);
             for (String keyword : keywords) {
-                for(String word: book.getTitle().split(" ")) {
-                    if(word.toLowerCase().equals(keyword.toLowerCase()) && book.isAvailable()) {
+                for (String word : book.getTitle().split(" ")) {
+                    if (word.toLowerCase().equals(keyword.toLowerCase()) && book.isAvailable()) {
                         found[i] = true;
                         continue outside;
                     }
@@ -59,7 +62,7 @@ public class SearchActivity extends AppCompatActivity  {
         }
         ArrayList<Book> ans = new ArrayList<>();
         for (int i = 0; i < Original.size(); i++) {
-            if(found[i]) {
+            if (found[i]) {
                 ans.add(Original.get(i));
             }
         }
@@ -73,7 +76,7 @@ public class SearchActivity extends AppCompatActivity  {
     }
     */
 
-    protected void updateRecycler () {
+    protected void updateRecycler() {
         adapter = new BookListAdapter(SearchActivity.this, bookresults);
         recycler.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -88,22 +91,31 @@ public class SearchActivity extends AppCompatActivity  {
      * Get all the books on database
      * Get filtered list
      * Update the view
+     *
      * @param v
      */
-    public void searchPress (View v) {
-        keywords = ((EditText)findViewById(R.id.input_search)).getText().toString();
+    public void searchPress(View v) {
+        keywords = ((EditText) findViewById(R.id.input_search)).getText().toString();
         bookresults.clear();
-        if(keywords.isEmpty()) {
+        if (keywords.isEmpty()) {
             Log.d("LitX", "search was empty, showing all books");
 
             for (Book book : (Book.getAll().values())) {
-                if (book.isAvailable()){
+                if (book.isAvailable()) {
                     bookresults.add(book);
                 }
             }
         } else {
             Log.d("LitX", "searching for keywords");
             bookresults = findBook(keywords.split(" "));
+        }
+        updateRecycler();
+    }
+
+    @Override
+    public void onUpdate(Book book) {
+        if (!bookresults.contains(book)) {
+            bookresults.add(book);
         }
         updateRecycler();
     }
