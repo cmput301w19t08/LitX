@@ -13,6 +13,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.Map;
 import java.util.ArrayList;
 
+import static com.google.common.primitives.UnsignedInts.min;
+
 public class MainActivity extends AppCompatActivity {
     public static final String FilterMode = "ca.ualberta.cs.phebert.litx.FilterMode";
     private RecyclerView recyclerView;
@@ -57,40 +59,34 @@ public class MainActivity extends AppCompatActivity {
         if (!User.isSignedIn()) {
             goToProfileView(null);
         } else {
-            recyclerView = findViewById(R.id.top10list_home);
-            manager = new LinearLayoutManager(MainActivity.this);
-            recyclerView.setHasFixedSize(true);
-            books = new ArrayList<>();
-            booksToShow = new ArrayList<>(3);
-            books.addAll(Book.getAll().values());
+            top10Generate();
+        }
+    }
 
-            Log.i("ARRAYLIST SIZE bookstoShow", Integer.toString(booksToShow.size()));
-
-            Log.i("ARRAYLIST SIZE books", Integer.toString(books.size()));
-
-            int index, i;
-            Book comparisonBook;
-            for (int j = 0; j < 10; j++) {
-                comparisonBook = books.get(0);
-                index = 0;
-                for (i = 0; i < books.size(); i++) {
-                    if (comparisonBook.getBorrows() <= books.get(i).getBorrows()) {
-                        Log.i("ARRABook author is ", books.get(i).getAuthor());
-                        if (doesNotAlreadyContain(booksToShow, books.get(i)) == 1) {
-                            comparisonBook = books.get(i);
-                            index = i;
-                        }
+    public void top10Generate() {
+        recyclerView = findViewById(R.id.top10list_home);
+        manager = new LinearLayoutManager(MainActivity.this);
+        recyclerView.setHasFixedSize(true);
+        books = new ArrayList<>();
+        booksToShow = new ArrayList<>(3);
+        books.addAll(Book.getAll().values());
+        int i, topNumber;
+        Book comparisonBook;
+        topNumber = min(10, books.size());
+        for (int j = 0; j < topNumber; j++) {
+            comparisonBook = books.get(0);
+            for (i = 0; i < books.size(); i++) {
+                if (comparisonBook.getBorrows() <= books.get(i).getBorrows()) {
+                    if (doesNotAlreadyContain(booksToShow, books.get(i)) == 1) {
+                        comparisonBook = books.get(i);
                     }
                 }
-                booksToShow.add(comparisonBook);
-                Log.i("ARRAYLIST SIZE bookstoShow", Integer.toString(booksToShow.size()));
-
-
             }
-            adapter = new TopTenAdapter(this, booksToShow);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(manager);
+            booksToShow.add(comparisonBook);
         }
+        adapter = new TopTenAdapter(this, booksToShow);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(manager);
     }
 
     public int doesNotAlreadyContain(ArrayList<Book> bookList, Book currentBook) {
