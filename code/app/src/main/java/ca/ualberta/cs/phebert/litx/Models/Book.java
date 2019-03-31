@@ -93,9 +93,7 @@ public class Book implements Serializable {
                             oldVal.borrows = newVal.borrows;
                             oldVal.views = newVal.views;
                             oldVal.status = newVal.status;
-                            for(BookObserver observer:oldVal.observers) {
-                                observer.onUpdate(oldVal);
-                            }
+                            oldVal.publish();
                         }
                     });
         }
@@ -439,5 +437,11 @@ public class Book implements Serializable {
     @Override
     public int hashCode() {
         return (int) (isbn % Integer.MAX_VALUE);
+    }
+
+    public void publish() {
+        for(BookObserver observer : observers) {
+            observer.onUpdate(this);
+        }
     }
 }

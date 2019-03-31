@@ -89,9 +89,7 @@ public class User implements Serializable {
                             oldVal.email = newVal.email;
                             oldVal.userName = newVal.userName;
                             oldVal.phoneNumber = newVal.phoneNumber;
-                            for(UserObserver observer:oldVal.observers) {
-                                observer.onUpdate(oldVal);
-                            }
+                            oldVal.publish();
                         }
                     });
         }
@@ -352,5 +350,11 @@ public class User implements Serializable {
         return (email.hashCode() % (Integer.MAX_VALUE / 3)) +
                 (userName.hashCode() % (Integer.MAX_VALUE / 3)) +
                 (phoneNumber.hashCode() % (Integer.MAX_VALUE / 3));
+    }
+
+    public void publish() {
+        for(UserObserver observer : observers) {
+            observer.onUpdate(this);
+        }
     }
 }
