@@ -72,6 +72,32 @@ public class Book implements Serializable {
             task = FirebaseFirestore.getInstance()
                     .collection(BOOK_COLLECTION)
                     .get();
+
+            FirebaseFirestore.getInstance()
+                    .collection(BOOK_COLLECTION)
+                    .addSnapshotListener((result, e) -> {
+                        if(e != null) {
+                            Log.e(TAG,"firebase error", e);
+                            return;
+                        }
+                        if (result == null) return;
+                        for (DocumentSnapshot doc: result.getDocuments()) {
+                            Book oldVal = findByDocId(doc.getId());
+                            Book newVal = fromSnapshot(doc);
+                            if(oldVal == null || newVal == null) continue;
+                            if(oldVal.equals(newVal)) continue;
+                            // not using setters because they write to firebase, infinite loop
+                            oldVal.title = newVal.title;
+                            oldVal.author = newVal.author;
+                            oldVal.isbn = newVal.isbn;
+                            oldVal.borrows = newVal.borrows;
+                            oldVal.views = newVal.views;
+                            oldVal.status = newVal.status;
+                            for(BookObserver observer:oldVal.observers) {
+                                observer.onUpdate(oldVal);
+                            }
+                        }
+                    });
         }
     }
 
