@@ -40,6 +40,9 @@ public class Request {
     private User bookOwner;
     private Book book;
 
+
+    private Boolean requestSeen;
+
     private RequestStatus status;
     private String docId;
 
@@ -80,12 +83,18 @@ public class Request {
      */
     private static Request fromSnapshot(DocumentSnapshot snapshot) {
         Request ans = new Request(
-                // need to somehow acces Book.
+                // need to somehow access Book.
                 Book.findByDocId(snapshot.getString("book")), // need book.byDocId;
                 User.findByUid(snapshot.getString("owner")),
                 User.findByUid(snapshot.getString("requester")),
                 snapshot.getString("status")
         );
+
+        try {
+            ans.requestSeen = snapshot.getBoolean("seen");
+        } catch (RuntimeException e) {
+            //ans.requestSeen = false;
+        }
         ans.docId = snapshot.getId();
         log.d("Litx", ans.docId);
         ans.book.addRequest(ans);
@@ -288,6 +297,7 @@ public class Request {
         this.bookOwner = owner;
         this.requester = requester;
         status = RequestStatus.Pending;
+        this.requestSeen = false;
     }
 
     /**
@@ -361,6 +371,23 @@ public class Request {
     }
 
     /**
+     * returns true if notification has been generated or false if it has not
+     * @return
+     */
+    public Boolean getRequestSeen() {
+        return requestSeen;
+    }
+
+    /**
+     * Sets the notification
+     * @param requestSeen
+     */
+    public void setRequestSeen(Boolean requestSeen) {
+        this.requestSeen = requestSeen;
+    }
+
+
+    /**
      * turns this Request into a Map, so that it can be pushed.
      * @return a map version of this request.
      */
@@ -370,7 +397,8 @@ public class Request {
         ans.put("requester",requester.getUserid());
         ans.put("owner", bookOwner.getUserid());
         ans.put("book", book.getDocID());
-        ans.put("status", status.name());
+        ans.put("status", status.toString());
+        ans.put("seen", requestSeen);
         return ans;
     }
 }

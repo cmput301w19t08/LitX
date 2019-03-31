@@ -18,13 +18,21 @@ public class MainActivity extends AppCompatActivity {
         User.getAll();
         Book.getAll();
         Request.getAll();
+        Intent serviceIntent = new Intent(this, NotificationIntentService.class);
+        serviceIntent.putExtra("NOTIFICATION_INTENT_SERVICE", "MainActivity");
+        startService(serviceIntent);
         // this should be enough if requests weren't empty\
         Map<String, Request>  db =  Request.getAll(); // this should be enough if requests weren't empty
         for (Map.Entry<String, Request> entry : db.entrySet()) {
             Log.v("LitX.REQUEST", entry.getValue().getRequester().getUserName());
             if (entry.getValue().getRequester().getUserName().equals(User.currentUser().getUserName())) {
-                Request request = entry.getValue();
-                request.generateNotification(this);
+                if (entry.getValue().getRequestSeen() == Boolean.FALSE) {
+                    Request request = entry.getValue();
+                    request.generateNotification(this);
+                    request.setRequestSeen(Boolean.TRUE);
+                    request.toMap();
+                    request.selfPush();
+                }
             }
         }
 
