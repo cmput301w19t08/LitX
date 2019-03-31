@@ -37,17 +37,16 @@ public class BookStatusActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(BookStatusActivity.this);
         recyclerView.setLayoutManager(layoutManager);
 
-        int filter = intent.getIntExtra(MainActivity.FilterMode, 0);
+        filter = intent.getIntExtra(MainActivity.FilterMode, 0);
         message = (TextView) findViewById(R.id.statusMessage);
         if (filter == 0){
-            message.setText("Pending Requests");
-            this.filter = filter;
+            message.setText(getString(R.string.pending_requests));
+
         } else if (filter == 1){
-            message.setText("Accepted Requests");
-            this.filter = filter;
+            message.setText(getString(R.string.AcceptedRequests));
+
         }else {
-            message.setText("Borrowed Books");
-            this.filter = filter;
+            message.setText(getString(R.string.Borrowed_Books));
         }
 
 
