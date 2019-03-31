@@ -15,6 +15,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 
@@ -30,15 +32,26 @@ public class MapObject extends AppCompatActivity implements OnMapReadyCallback{
     private Request request;
     private LatLng location;
     private Boolean Moveable;
+    private GoogleMap myGoogleMap;
     private Marker marker;
-    TextView myTextView;
+    EditText myLatEditText;
+    EditText myLongEditText;
+    Button moveMarkerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Retrieve the content view that renders the map.
         setContentView(R.layout.activity_map);
-        myTextView=(TextView)findViewById(R.id.LatField);
+        moveMarkerButton= (Button)findViewById(R.id.moveButton);
+        myLatEditText=(EditText)findViewById(R.id.LatField);
+        myLongEditText=(EditText)findViewById(R.id.LongField);
+        if (Moveable==Boolean.FALSE){
+            moveMarkerButton.setVisibility(View.GONE);
+            myLatEditText.setVisibility(View.GONE);
+            myLongEditText.setVisibility(View.GONE);
+
+        }
         try {
             // Uses the intent to find the Latitude and Longitude of our Point and then assigns the LatLng variable a value
             //corresponding to the points in the intent
@@ -46,6 +59,7 @@ public class MapObject extends AppCompatActivity implements OnMapReadyCallback{
             double Latitude = intent.getDoubleExtra("LAT",0);
             double Longitude = intent.getDoubleExtra("LONG",0);
             Moveable= intent.getBooleanExtra("MOVABLE",Boolean.FALSE);
+
             if (Moveable==Boolean.TRUE){
                 location = new LatLng(53.5304672,-113.5306609);
 
@@ -54,6 +68,11 @@ public class MapObject extends AppCompatActivity implements OnMapReadyCallback{
 
             }
             else {
+                moveMarkerButton.setVisibility(View.GONE);
+                myLatEditText.setVisibility(View.GONE);
+                myLongEditText.setVisibility(View.GONE);
+
+
                 location = new LatLng(Latitude,Longitude);
 
             }
@@ -72,18 +91,57 @@ public class MapObject extends AppCompatActivity implements OnMapReadyCallback{
     public void onMapReady(GoogleMap googleMap) {
         // Add a marker in Sydney, Australia,
         // and move the map's camera to the same location.
+        myGoogleMap = googleMap;
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(location));
         if (Moveable==Boolean.TRUE){
             googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
                 public void onMapClick(LatLng latLng) {
                     googleMap.clear();
+                    String newLat=Double.toString(latLng.latitude);
+                    String newLong=Double.toString(latLng.longitude);
+                    myLatEditText.setText(newLat, TextView.BufferType.EDITABLE);
+                    myLongEditText.setText(newLong, TextView.BufferType.EDITABLE);
                     marker = googleMap.addMarker(new MarkerOptions().position(latLng)
                             .title("Marker")
                             .draggable(Moveable));
 
                 }
+
+                public void onMarkerDragEnd(Marker marker){
+                    String newLat=Double.toString(marker.getPosition().latitude);
+                    String newLong=Double.toString(marker.getPosition().longitude);
+                    myLatEditText.setText(newLat, TextView.BufferType.EDITABLE);
+                    myLongEditText.setText(newLong, TextView.BufferType.EDITABLE);
+
+
+
+                }
+
+
             });
+            googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                @Override
+                public void onMarkerDragStart(Marker marker) {
+
+                }
+
+                @Override
+                public void onMarkerDrag(Marker marker) {
+
+                }
+
+                @Override
+                public void onMarkerDragEnd(Marker marker) {
+                    String newLat=Double.toString(marker.getPosition().latitude);
+                    String newLong=Double.toString(marker.getPosition().longitude);
+                    myLatEditText.setText(newLat, TextView.BufferType.EDITABLE);
+                    myLongEditText.setText(newLong, TextView.BufferType.EDITABLE);
+
+                }
+            });
+
+
 
         }
         else {
@@ -91,6 +149,8 @@ public class MapObject extends AppCompatActivity implements OnMapReadyCallback{
                     .title("Marker")
                     .draggable(Boolean.FALSE));
         }
+
+
 
     }
 
@@ -100,9 +160,25 @@ public class MapObject extends AppCompatActivity implements OnMapReadyCallback{
         double specifiedLatitude = marker.getPosition().latitude;
         double specifiedLongitude = marker.getPosition().longitude;
         LatLng specifiedLocation = new LatLng(specifiedLatitude,specifiedLongitude);
-        myTextView.setText(Double.toString(specifiedLocation.latitude));
+        //myLatEditText.setText(Double.toString(specifiedLocation.latitude));
 
     }
+    public void moveMarker(View v) {
+        try {
+            double Latitude = Double.parseDouble(myLatEditText.getText().toString());
+            double Longitude = Double.parseDouble(myLongEditText.getText().toString());
+            LatLng newPosition = new LatLng(Latitude, Longitude);
+            myGoogleMap.clear();
+            marker = myGoogleMap.addMarker(new MarkerOptions().position(newPosition)
+                    .title("Marker")
+                    .draggable(Moveable));
+            myGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(newPosition));
+        } catch (Exception e){}
+
+    }
+
+
+
 
 
 }
