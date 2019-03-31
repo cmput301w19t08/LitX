@@ -76,7 +76,7 @@ public class ViewPhotoActivity extends AppCompatActivity {
 
         pathReference = storageRef.child(book.getOwner().getUserid() + "/" + Long.toString(book.getIsbn()));
         iconId = this.getResources().getIdentifier("book_icon", "drawable", this.getPackageName());
-        load_image();
+        loadImage();
 
         if (!book.getOwner().getUserid().equals(uid)) {
             // Don't allow adding/deleting if the user accessing the photo doesn't own the book
@@ -141,7 +141,7 @@ public class ViewPhotoActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         Log.d("Upload", "Completed");
-                        show_buttons();
+                        showButtons();
                     }
                 }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -152,8 +152,8 @@ public class ViewPhotoActivity extends AppCompatActivity {
                             tvProgress.setText("Uploading... " + Long.toString(progress) + "% done");
                         } else {
                             upload.cancel();
-                            show_buttons();
-                            load_image();
+                            showButtons();
+                            loadImage();
                             cancel = false;
                         }
                     }
@@ -164,7 +164,7 @@ public class ViewPhotoActivity extends AppCompatActivity {
         }
     }
 
-    private void load_image() {
+    private void loadImage() {
         // Load the image into the imageview if it exists
         pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -175,7 +175,7 @@ public class ViewPhotoActivity extends AppCompatActivity {
         });
     }
 
-    private void show_buttons() {
+    private void showButtons() {
         btn_add.setVisibility(View.VISIBLE);
         btn_delete.setVisibility(View.VISIBLE);
         btn_done.setVisibility(View.VISIBLE);

@@ -2,27 +2,18 @@ package ca.ualberta.cs.phebert.litx;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
 import java.util.ArrayList;
 
-/** Based
- *  Source: http://www.sanktips.com/2017/11/15/android-recyclerview-with-custom-adapter-example/
- * @version 1
- * @author plontke
- * @see MyBooksActivity, Book
+/**
+ * Adapter for the top ten Books
+ * @Author plontke
  */
-public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHolder> {
+public class TopTenAdapter extends RecyclerView.Adapter<TopTenAdapter.ViewHolder>{
 
     private Context context;
     private ArrayList<Book> books;
@@ -33,7 +24,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
      * @param context Context
      * @param books ArrayList<Book>
      */
-    public BookListAdapter(Context context, ArrayList<Book> books){
+    public TopTenAdapter(Context context, ArrayList<Book> books){
         this.context = context;
         this.books = books;
     }
@@ -46,7 +37,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
      */
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.book_list_item, parent,
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.top_ten_item, parent,
                 false);
         ViewHolder viewHolder = new ViewHolder(v);
         return viewHolder;
@@ -62,20 +53,15 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.itemView.setTag(books.get(position));
         final Book book = books.get(position);
-
+        int top = position + 1;
         holder.title.setText(book.getTitle());
         holder.author.setText(book.getAuthor());
-        holder.isbn.setText(Long.toString(book.getIsbn()));
-
-        loadImage(holder, book);
-
+        holder.number.setText(Integer.toString(top));
         // Commented out since we cannot get request object from database at this time
         //        if (!book.isAvailable()) {
         //            holder.borrower.setText(book.getAcceptedRequest().getRequester().getUserName());
         //        } else {
-        holder.borrower.setText(null);
 
-        holder.status.setText(book.getStatus().toString());
         /**
          * Sets the onclick listener for each book to go to the view
          * Books activity  while displaying the book passed
@@ -84,8 +70,8 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), BookViewActivity.class);
-                intent.putExtra("Book", book.getDocID());
+                Intent intent = new Intent(v.getContext(), SearchActivity.class);
+                intent.putExtra("BOOK_NAME", book.getTitle());
                 context.startActivity(intent);
             }
         });
@@ -111,11 +97,9 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
      */
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView title;
-        public TextView status;
         public TextView author;
-        public TextView isbn;
-        public ImageView photo;
-        public TextView borrower;
+        public TextView number;
+
 
         /**
          * Constructor for the ViewHolder object
@@ -125,26 +109,10 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
             super(itemView);
             context = itemView.getContext();
 
-            title = (TextView) itemView.findViewById(R.id.book_title);
-            status = (TextView) itemView.findViewById(R.id.book_status);
-            author = (TextView) itemView.findViewById(R.id.book_author);
-            isbn = (TextView) itemView.findViewById(R.id.book_isbn);
-            photo = (ImageView) itemView.findViewById(R.id.book_photo);
-            borrower = (TextView) itemView.findViewById(R.id.book_borrower);
+            title = (TextView) itemView.findViewById(R.id.top_ten_book_title);
+            author = (TextView) itemView.findViewById(R.id.top_ten_book_author);
+            number = (TextView) itemView.findViewById(R.id.top_ten_number);
 
         }
-    }
-
-    private void loadImage(ViewHolder holder, Book book) {
-        int iconId = context.getResources().getIdentifier("book_icon", "drawable", context.getPackageName());
-        StorageReference storage = FirebaseStorage.getInstance().getReference();
-        StorageReference path = storage.child(book.getOwner().getUserid() + "/" + Long.toString(book.getIsbn()));
-        path.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                String imageURL = uri.toString();
-                GlideApp.with(context).load(imageURL).placeholder(iconId).into(holder.photo);
-            }
-        });
     }
 }

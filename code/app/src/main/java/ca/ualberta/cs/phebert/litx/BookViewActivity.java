@@ -8,6 +8,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -59,13 +60,14 @@ public class BookViewActivity extends AppCompatActivity {
         edit = (Button) findViewById(R.id.editButtonID);
         recyclerView = (RecyclerView) findViewById(R.id.requestsRecycleView);
         photo = (ImageView) findViewById(R.id.bookImage);
+        TextView changeImage = (TextView) findViewById(R.id.changeImage);
 
         // Receive the book object the user selected
         Intent intent = getIntent();
         String bookId = intent.getExtras().getString("Book");
         book = Book.findByDocId(bookId);
 
-        load_image(book);
+        loadImage(book);
 
         if (book.getOwner().equals(User.currentUser())){
             // A owner of the Book cannot request his own book
@@ -92,7 +94,6 @@ public class BookViewActivity extends AppCompatActivity {
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //TODO: Authentication of deleting book in database
                     book.delete(book);
 
                     Intent intent = new Intent(BookViewActivity.this, MyBooksActivity.class);
@@ -108,6 +109,7 @@ public class BookViewActivity extends AppCompatActivity {
                     //Pass Book object into AddBookActivity and start the activity
                     Intent intent = new Intent(BookViewActivity.this, AddBookActivity.class);
                     intent.putExtra("Book", book.getDocID());
+                    finish();
                     startActivity(intent);
                 }
             });
@@ -115,6 +117,15 @@ public class BookViewActivity extends AppCompatActivity {
             // The Owner is not viewing the book he cannot delete or edit it just Request it
             edit.setVisibility(View.GONE);
             delete.setVisibility(View.GONE);
+            changeImage.setText("Click the photo to view the image!");
+
+            ArrayList<Request> bookRequests = book.getRequests();
+            for (int i=0; i < bookRequests.size(); i++) {
+                Request request = bookRequests.get(i);
+                if (uid.equals(request.getRequester().getUserid())) {
+                    bookRequested();
+                }
+            }
 
             TextView ownerUsernameView = (TextView) findViewById(R.id.ownerViewID);
             String ownerUsername = book.getOwner().getUserName();
@@ -136,6 +147,8 @@ public class BookViewActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Toast.makeText(BookViewActivity.this, "Your Request has been sent",
                             Toast.LENGTH_SHORT).show();
+
+                    bookRequested();
                     Request newRequest = new Request(book, book.getOwner(), User.currentUser());
                     User.currentUser().addRequest(newRequest);
                     book.addRequest(newRequest);
@@ -166,7 +179,7 @@ public class BookViewActivity extends AppCompatActivity {
         textView.setText(description);
     }
 
-    private void load_image(Book book) {
+    private void loadImage(Book book) {
         // Load the image into the imageview if it exists
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         int iconId = this.getResources().getIdentifier("book_icon", "drawable", this.getPackageName());
@@ -179,5 +192,11 @@ public class BookViewActivity extends AppCompatActivity {
                 GlideApp.with(BookViewActivity.this).load(imageURL).placeholder(iconId).into(photo);
             }
         });
+    }
+
+    private void bookRequested() {
+        request.setVisibility(View.GONE);
+        TextView requested = (TextView) findViewById(R.id.requestedTextView);
+        requested.setVisibility(View.VISIBLE);
     }
 }
