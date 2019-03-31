@@ -34,6 +34,8 @@ public class Book implements Serializable {
     private ArrayList<Request> requests;
     private Request acceptedRequest;
     private ImageView photograph;
+    private double latitude;
+    private double longitude;
 
     private int views;
     private int borrows;
@@ -44,6 +46,7 @@ public class Book implements Serializable {
         this.title = title;
         this.isbn = isbn;
         this.status = BookStatus.available;
+        this.latitude = 200;
     }
 
     public Book(String owner, String author, String title, long isbn) {
@@ -315,6 +318,21 @@ public class Book implements Serializable {
     }
 
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 
     public User getBorrower() {
         if (acceptedRequest != null) {

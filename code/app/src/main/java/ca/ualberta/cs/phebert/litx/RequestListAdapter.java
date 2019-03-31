@@ -1,6 +1,7 @@
 package ca.ualberta.cs.phebert.litx;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.ViewHolder> {
     private Context context;
     private ArrayList<Request> requests;
+    private double defaultLong = 53.5213;
+    private double defaultLat = -113.5213;
 
     public RequestListAdapter(Context context, ArrayList<Request> requests){
         this.context = context;
@@ -42,6 +45,10 @@ public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.
                         Toast.LENGTH_SHORT).show();
                 request.getBook().setAcceptedRequest(request);
                 notifyDataSetChanged();
+                Intent intent = new Intent(v.getContext(), MapActivity.class);
+                intent.putExtra("BOOK", request.getBook().getDocID());
+                intent.putExtra("MOVABLE", true);
+                context.startActivity(intent);
 
             }
         });

@@ -1,5 +1,5 @@
 /*
- * Classname: MapObject.java
+ * Classname: MapActivity.java
  * Version: 1.0
  * Date: 2019-03-24
  * https://developers.google.com/maps/documentation/android-sdk/map-with-marker (guide on setting up maps and markers for maps)
@@ -28,8 +28,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapObject extends AppCompatActivity implements OnMapReadyCallback{
-    private Request request;
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback{
     private LatLng location;
     private Boolean Moveable;
     private GoogleMap myGoogleMap;
@@ -37,6 +36,7 @@ public class MapObject extends AppCompatActivity implements OnMapReadyCallback{
     EditText myLatEditText;
     EditText myLongEditText;
     Button moveMarkerButton;
+    private Book book;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +56,13 @@ public class MapObject extends AppCompatActivity implements OnMapReadyCallback{
             // Uses the intent to find the Latitude and Longitude of our Point and then assigns the LatLng variable a value
             //corresponding to the points in the intent
             Intent intent = getIntent();
-            double Latitude = intent.getDoubleExtra("LAT",0);
-            double Longitude = intent.getDoubleExtra("LONG",0);
+            Book book = Book.findByDocId(intent.getStringExtra("BOOK"));
+            double Latitude = book.getLatitude();
+            double Longitude = book.getLongitude();
+
+
             Moveable= intent.getBooleanExtra("MOVABLE",Boolean.FALSE);
+
 
             if (Moveable==Boolean.TRUE){
                 location = new LatLng(53.5304672,-113.5306609);
@@ -71,6 +75,7 @@ public class MapObject extends AppCompatActivity implements OnMapReadyCallback{
                 moveMarkerButton.setVisibility(View.GONE);
                 myLatEditText.setVisibility(View.GONE);
                 myLongEditText.setVisibility(View.GONE);
+
 
 
                 location = new LatLng(Latitude,Longitude);
@@ -159,7 +164,13 @@ public class MapObject extends AppCompatActivity implements OnMapReadyCallback{
     public void getLocation(View v) {
         double specifiedLatitude = marker.getPosition().latitude;
         double specifiedLongitude = marker.getPosition().longitude;
-        LatLng specifiedLocation = new LatLng(specifiedLatitude,specifiedLongitude);
+        if (Moveable) {
+            book.setLatitude(specifiedLatitude);
+            book.setLongitude(specifiedLongitude);
+            book.push();
+        }
+        finish();
+
         //myLatEditText.setText(Double.toString(specifiedLocation.latitude));
 
     }
