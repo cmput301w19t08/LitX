@@ -90,7 +90,7 @@ public class User implements Serializable {
                             oldVal.userName = newVal.userName;
                             oldVal.phoneNumber = newVal.phoneNumber;
                             for(UserObserver observer:oldVal.observers) {
-                                observer.onUserUpdated(oldVal);
+                                observer.onUpdate(oldVal);
                             }
                         }
                     });

@@ -48,7 +48,7 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
         Intent intent = getIntent();
         if (intent.hasExtra(UID_IN)) {
             currentUser = User.findByUid(intent.getStringExtra(UID_IN));
-            onUserUpdated(currentUser);
+            onUpdate(currentUser);
             TextView editButton = (TextView) findViewById(R.id.EditButton);
             TextView addAccButton = (TextView) findViewById(R.id.addAccButton);
             // Only the owner would be able to edit or add
@@ -59,7 +59,7 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
                 currentUser = User.currentUser();
                 assert currentUser != null;
                 currentUser.addObserver(this);
-                onUserUpdated(currentUser); // might as well.
+                onUpdate(currentUser); // might as well.
             } else {
                 userView.setText("???");
                 emailView.setText("???");
@@ -122,7 +122,7 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
 
 
     @Override
-    public void onUserUpdated(User user) {
+    public void onUpdate(User user) {
         if(user == currentUser) {
             userEdit.setText(currentUser.getUserName());
             userView.setText(currentUser.getUserName());
