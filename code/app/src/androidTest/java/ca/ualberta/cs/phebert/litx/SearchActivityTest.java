@@ -34,15 +34,9 @@ public class SearchActivityTest {
     }
 
     @Test
-    public void mainActivityTopTenScrollTest() {
-        onView(withId(R.id.search_results)).perform(RecyclerViewActions.actionOnItemAtPosition(8, scrollTo()));
-    }
-
-    @Test
     public void clickBook() {
         onView(withId(R.id.search_results))
               .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
-        Espresso.pressBack();
     }
 
     @Test
