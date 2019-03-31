@@ -95,22 +95,22 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         if (visibilty == 0) {
             holder.cancel.setVisibility(View.GONE);
         }else {
-            holder.cancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    for (Request request : book.getRequests()){
-                        if (request.getRequester() == User.currentUser()) {
-                            request.delete();
-                            Toast.makeText(v.getContext(), "Request Has Been Cancelled",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    Request.push();
-                    book.push();
-                    notifyDataSetChanged();
-                }
-            });
+//            holder.cancel.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    for (Request request : book.getRequests()){
+//                        if (request.getRequester() == User.currentUser()) {
+//                            request.delete();
+//                            Toast.makeText(v.getContext(), "Request Has Been Cancelled",
+//                                    Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//
+//                    Request.push();
+//                    book.push();
+//                    notifyDataSetChanged();
+//                }
+//            });
         }
     }
 
