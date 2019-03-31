@@ -140,7 +140,6 @@ public class ViewPhotoActivity extends AppCompatActivity {
                 upload.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        Log.d("Upload", "Completed");
                         showButtons();
                     }
                 }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
