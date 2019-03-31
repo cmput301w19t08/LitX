@@ -95,11 +95,11 @@ public class MainActivity extends AppCompatActivity {
     public void filter(View v) {
         Intent intent = new Intent(this, BookStatusActivity.class);
         if(v.getId() == R.id.requests_home) {
-            intent.putExtra(FilterMode,0);
+            intent.putExtra(FilterMode,BookStatus.requested.toString());
         } else if(v.getId() == R.id.accept_home) {
-            intent.putExtra(FilterMode,1);
+            intent.putExtra(FilterMode,BookStatus.available.toString());
         } else { // borrowed
-            intent.putExtra(FilterMode,2);
+            intent.putExtra(FilterMode,BookStatus.borrowed.toString());
         }
         startActivity(intent);
     }

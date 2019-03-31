@@ -23,7 +23,7 @@ public class BookStatusActivity extends AppCompatActivity {
     private BookListAdapter booksAdapter;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private int filter;
+    private BookStatus filter;
     private TextView message;
 
     @Override
@@ -37,14 +37,17 @@ public class BookStatusActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(BookStatusActivity.this);
         recyclerView.setLayoutManager(layoutManager);
 
-        filter = intent.getIntExtra(MainActivity.FilterMode, 0);
+        try {
+            filter = BookStatus.valueOf(intent.getStringExtra(MainActivity.FilterMode));
+        } catch(IllegalArgumentException e) {
+            Log.e("Litx","bad intent",e);
+            filter = BookStatus.available;
+        }
         message = (TextView) findViewById(R.id.statusMessage);
-        if (filter == 0){
+        if (filter == BookStatus.requested){
             message.setText(getString(R.string.pending_requests));
-
-        } else if (filter == 1){
+        } else if (filter == BookStatus.accepted){
             message.setText(getString(R.string.AcceptedRequests));
-
         }else {
             message.setText(getString(R.string.Borrowed_Books));
         }
@@ -65,28 +68,12 @@ public class BookStatusActivity extends AppCompatActivity {
         Log.d("LitX","Querying myRequests");
         if(!User.isSignedIn()) return;
         //noinspection ConstantConditions
-        if (this.filter == 0 ) {
-            for (Request request : User.currentUser().getRequests()){
-                if (request.getStatus() == RequestStatus.Pending) {
-                    filteredBooks.add(request.getBook());
-                }
+        for (Book book : Book.getAll().values()){
+            if (book.getStatus() == filter) {
+                filteredBooks.add(book);
             }
-
-        }else if (this.filter == 1 ){
-            for (Request request : User.currentUser().getRequests()){
-                if (request.getStatus() == RequestStatus.Accepted && (request.getBook().getStatus()
-                        != BookStatus.borrowed)){
-                    filteredBooks.add(request.getBook());
-                }
-            }
-        }else {
-            for (Request request : User.currentUser().getRequests()){
-                if (request.getBook().getStatus() == BookStatus.borrowed){
-                    filteredBooks.add(request.getBook());
-                }
-            }
-
         }
+
         booksAdapter = new BookListAdapter(
                 BookStatusActivity.this, filteredBooks);
         recyclerView.setAdapter(booksAdapter);
