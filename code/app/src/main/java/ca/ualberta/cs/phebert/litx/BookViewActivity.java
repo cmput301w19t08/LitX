@@ -70,7 +70,7 @@ public class BookViewActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        
+
         adapter = new RequestListAdapter(this, book.getRequests());
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
@@ -119,9 +119,8 @@ public class BookViewActivity extends AppCompatActivity {
             changeImage.setText("Click the photo to view the image!");
 
             ArrayList<Request> bookRequests = book.getRequests();
-            for (int i=0; i < bookRequests.size(); i++) {
-                Request request = bookRequests.get(i);
-                if (uid.equals(request.getRequester().getUserid())) {
+            for (Request iterRequest : book.getRequests()) {
+                if (uid.equals(iterRequest.getRequester().getUserid())) {
                     bookRequested();
                 }
             }
@@ -151,6 +150,7 @@ public class BookViewActivity extends AppCompatActivity {
                     Request newRequest = new Request(book, book.getOwner(), User.currentUser());
                     User.currentUser().addRequest(newRequest);
                     book.addRequest(newRequest);
+                    adapter.notifyDataSetChanged();
                 }
             });
         }

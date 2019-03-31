@@ -34,6 +34,17 @@ public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.itemView.setTag(requests.get(position));
         Request request = requests.get(position);
+
+        String uid = User.currentUser().getUserid();
+        if (!uid.equals(request.getBookOwner().getUserid())) {
+            holder.accept.setVisibility(View.GONE);
+            if (!uid.equals(request.getRequester().getUserid())) {
+                holder.delete.setVisibility(View.GONE);
+            } else {
+                holder.delete.setText("Cancel");
+            }
+        }
+
         holder.requestorName.setText(request.getRequester().getUserName());
         holder.accept.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -75,8 +86,6 @@ public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.
             requestorName = (TextView) itemView.findViewById(R.id.requests_item_owner);
             accept = (Button) itemView.findViewById(R.id.accept_requests);
             delete = (Button) itemView.findViewById(R.id.delete_request);
-
-
         }
 
     }
