@@ -14,9 +14,10 @@ import java.util.ArrayList;
 import ca.ualberta.cs.phebert.litx.Models.Book;
 import ca.ualberta.cs.phebert.litx.Models.Request;
 import ca.ualberta.cs.phebert.litx.Models.User;
+import ca.ualberta.cs.phebert.litx.Observers.BookObserver;
 
 
-public class BookStatusActivity extends AppCompatActivity {
+public class BookStatusActivity extends AppCompatActivity implements BookObserver {
     public static final String FilterMode = "ca.ualberta.cs.phebert.litx.FilterMode";
     private ArrayList<Book> filteredBooks = new ArrayList<Book>();
 
@@ -48,7 +49,7 @@ public class BookStatusActivity extends AppCompatActivity {
             message.setText(getString(R.string.pending_requests));
         } else if (filter == BookStatus.accepted){
             message.setText(getString(R.string.AcceptedRequests));
-        }else {
+        }else if( filter != BookStatus.available){
             message.setText(getString(R.string.Borrowed_Books));
         }
 
@@ -78,6 +79,16 @@ public class BookStatusActivity extends AppCompatActivity {
                 BookStatusActivity.this, filteredBooks);
         recyclerView.setAdapter(booksAdapter);
 
+        booksAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onUpdate(Book book) {
+        if(book.getStatus() == filter) {
+            if(!filteredBooks.contains(book)) {
+                filteredBooks.add(book);
+            }
+        }
         booksAdapter.notifyDataSetChanged();
     }
 }

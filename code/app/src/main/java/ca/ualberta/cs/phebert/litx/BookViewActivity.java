@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import ca.ualberta.cs.phebert.litx.Models.Book;
 import ca.ualberta.cs.phebert.litx.Models.Request;
 import ca.ualberta.cs.phebert.litx.Models.User;
+import ca.ualberta.cs.phebert.litx.Observers.BookObserver;
 
 /**
  * Displays the description of a book after a user selected the book to view in the previous
@@ -33,7 +34,7 @@ import ca.ualberta.cs.phebert.litx.Models.User;
  * @version 1.0
  * @see MyBooksActivity, AddBookActivity, Book
  */
-public class BookViewActivity extends AppCompatActivity {
+public class BookViewActivity extends AppCompatActivity implements BookObserver {
 
     private Button delete;
     private Button edit;
@@ -150,9 +151,7 @@ public class BookViewActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
 
                     bookRequested();
-                    Request newRequest = new Request(book, book.getOwner(), User.currentUser());
-                    User.currentUser().addRequest(newRequest);
-                    book.addRequest(newRequest);
+                    book.addRequest();
                 }
             });
         }
@@ -199,5 +198,15 @@ public class BookViewActivity extends AppCompatActivity {
         request.setVisibility(View.GONE);
         TextView requested = (TextView) findViewById(R.id.requestedTextView);
         requested.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onUpdate(Book book) {
+        if(this.book.equals(book)) {
+            TextView textView = (TextView) findViewById(R.id.descriptionIDView);
+            String description = "Title: " + this.book.getTitle() + "\n" + "Author: " +
+                    this.book.getAuthor() + "\n" + "ISBN: " + String.valueOf(book.getIsbn());
+            textView.setText(description);
+        }
     }
 }

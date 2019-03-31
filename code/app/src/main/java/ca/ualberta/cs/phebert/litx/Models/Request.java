@@ -63,6 +63,9 @@ public class Request {
                                 db.put(doc.getId(), newVal);
                                 newVal.book.addRequest(newVal);
                                 newVal.requester.addRequest(newVal);
+                                if(newVal.status == RequestStatus.Accepted) {
+                                    newVal.book.setAcceptedRequest(newVal);
+                                }
                             }
                         }
                         for(DocumentChange change : snapshot.getDocumentChanges()) {
@@ -93,6 +96,9 @@ public class Request {
                 db.put(doc.getId(), nr);
                 nr.book.addRequest(nr);
                 nr.requester.addRequest(nr);
+                if(nr.status == RequestStatus.Accepted) {
+                    nr.book.setAcceptedRequest(nr);
+                }
             }
         }
 

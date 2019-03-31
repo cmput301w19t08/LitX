@@ -49,7 +49,6 @@ public class Book implements Serializable {
         this.author = author;
         this.title = title;
         this.isbn = isbn;
-        this.status = BookStatus.available;
     }
 
     public Book(String owner, String author, String title, long isbn) {
@@ -63,6 +62,7 @@ public class Book implements Serializable {
     public Book() {
         observers = new ArrayList<>();
         requests = new ArrayList<>();
+        status = BookStatus.available;
     } // For firestore
 
 
@@ -378,7 +378,9 @@ public class Book implements Serializable {
     public void setAcceptedRequest(Request request) {
         if (acceptedRequest == null) {
             acceptedRequest = request;
-            status = BookStatus.accepted;
+            if(status != BookStatus.borrowed) {
+                status = BookStatus.accepted;
+            }
             requests.clear();
             request.accept();
             push();
@@ -416,14 +418,15 @@ public class Book implements Serializable {
         this.photograph = photograph;
     }
 
-//    /**
-//     * Add a new request created by this user
-//     */
-//    public void addRequest() {
-//        Request request = new Request(this, this.owner, User.currentUser());
-//        request.selfPush();
-//        addRequest(request);
-//    }
+    /**
+     * Add a new request created by this user
+     */
+    public void addRequest() {
+        Request request = new Request(this, this.owner, User.currentUser());
+        request.selfPush();
+        User.currentUser().addRequest(request);
+        addRequest(request);
+    }
 
     /**
      * add a requests to this book's requests
@@ -431,7 +434,9 @@ public class Book implements Serializable {
      */
     public void addRequest(Request request) {
        requests.add(request);
-       request.selfPush();
+       if(request.getRequester() == User.currentUser()) {
+           status = BookStatus.requested;
+       }
     }
 
     @Override

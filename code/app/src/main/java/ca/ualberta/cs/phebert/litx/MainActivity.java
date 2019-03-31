@@ -37,42 +37,41 @@ public class MainActivity extends AppCompatActivity {
 
         if(!User.isSignedIn()) {
             goToProfileView(null);
-        }
-        recyclerView = findViewById(R.id.top10list_home);
-        manager = new LinearLayoutManager(MainActivity.this);
-        recyclerView.setHasFixedSize(true);
-        books = new ArrayList<>();
-        booksToShow = new ArrayList<>(3);
-        books.addAll(Book.getAll().values());
+        } else {
+            recyclerView = findViewById(R.id.top10list_home);
+            manager = new LinearLayoutManager(MainActivity.this);
+            recyclerView.setHasFixedSize(true);
+            books = new ArrayList<>();
+            booksToShow = new ArrayList<>(3);
+            books.addAll(Book.getAll().values());
 
-        Log.i("ARRAYLIST SIZE bookstoShow", Integer.toString(booksToShow.size()));
-
-        Log.i("ARRAYLIST SIZE books", Integer.toString(books.size()));
-
-        int index,i;
-        Book comparisonBook;
-        for (int j = 0; j < 10; j++) {
-            comparisonBook = books.get(0);
-            index = 0;
-            for (i = 0; i < books.size(); i++) {
-                if (comparisonBook.getBorrows() <= books.get(i).getBorrows()) {
-                    Log.i("ARRABook author is ", books.get(i).getAuthor());
-                    if (doesNotAlreadyContain(booksToShow, books.get(i))==1) {
-                        comparisonBook = books.get(i);
-                        index = i;
-                    }
-                }
-            }
-            booksToShow.add(comparisonBook);
             Log.i("ARRAYLIST SIZE bookstoShow", Integer.toString(booksToShow.size()));
 
+            Log.i("ARRAYLIST SIZE books", Integer.toString(books.size()));
+
+            int index, i;
+            Book comparisonBook;
+            for (int j = 0; j < 10; j++) {
+                comparisonBook = books.get(0);
+                index = 0;
+                for (i = 0; i < books.size(); i++) {
+                    if (comparisonBook.getBorrows() <= books.get(i).getBorrows()) {
+                        Log.i("ARRABook author is ", books.get(i).getAuthor());
+                        if (doesNotAlreadyContain(booksToShow, books.get(i)) == 1) {
+                            comparisonBook = books.get(i);
+                            index = i;
+                        }
+                    }
+                }
+                booksToShow.add(comparisonBook);
+                Log.i("ARRAYLIST SIZE bookstoShow", Integer.toString(booksToShow.size()));
 
 
-
+            }
+            adapter = new TopTenAdapter(this, booksToShow);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(manager);
         }
-        adapter = new TopTenAdapter(this, booksToShow);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(manager);
     }
 
     public int doesNotAlreadyContain(ArrayList<Book> bookList, Book currentBook) {
@@ -98,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         if(v.getId() == R.id.requests_home) {
             intent.putExtra(FilterMode,BookStatus.requested.toString());
         } else if(v.getId() == R.id.accept_home) {
-            intent.putExtra(FilterMode,BookStatus.available.toString());
+            intent.putExtra(FilterMode,BookStatus.accepted.toString());
         } else { // borrowed
             intent.putExtra(FilterMode,BookStatus.borrowed.toString());
         }
