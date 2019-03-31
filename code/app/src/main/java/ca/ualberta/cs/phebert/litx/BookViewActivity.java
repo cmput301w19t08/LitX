@@ -69,7 +69,7 @@ public class BookViewActivity extends AppCompatActivity {
 
         loadImage(book);
 
-        if (book.getOwner().getUserid().equals(uid)){
+        if (book.getOwner().equals(User.currentUser())){
             // A owner of the Book cannot request his own book
             request.setVisibility(View.GONE);
             // Find buttons in the layout
@@ -80,7 +80,7 @@ public class BookViewActivity extends AppCompatActivity {
             recyclerView.setLayoutManager(layoutManager);
 
             ArrayList<Request> requests = new ArrayList<>();
-            adapter = new RequestListAdapter(this, requests);
+            adapter = new RequestListAdapter(this, book.getRequests());
 
             DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
                     recyclerView.getContext(),1);
@@ -145,7 +145,6 @@ public class BookViewActivity extends AppCompatActivity {
             request.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    book.addRequest();
                     Toast.makeText(BookViewActivity.this, "Your Request has been sent",
                             Toast.LENGTH_SHORT).show();
 

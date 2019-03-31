@@ -94,7 +94,12 @@ public class SearchActivity extends AppCompatActivity  {
         bookresults.clear();
         if(keywords.isEmpty()) {
             Log.d("LitX", "search was empty, showing all books");
-            bookresults.addAll(Book.getAll().values());
+
+            for (Book book : (Book.getAll().values())) {
+                if (book.isAvailable()){
+                    bookresults.add(book);
+                }
+            }
         } else {
             Log.d("LitX", "searching for keywords");
             bookresults = findBook(keywords.split(" "));
