@@ -46,7 +46,9 @@ public class Book implements Serializable {
         this.title = title;
         this.isbn = isbn;
         this.status = BookStatus.available;
-        this.latitude = 200;
+        this.latitude = 0;
+        this.longitude = 0;
+        this.requests = new ArrayList<>();
     }
 
     public Book(String owner, String author, String title, long isbn) {
