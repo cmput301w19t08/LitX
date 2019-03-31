@@ -29,7 +29,6 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
     private Context context;
     private ArrayList<Book> books;
     private int visibilty;
-
     /**
      * Constructor for the BookList adapter
      * will populate a book_list_item with the list provided  in the constructor
@@ -92,26 +91,17 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
                 context.startActivity(intent);
             }
         });
-        if (visibilty == 0) {
-            holder.cancel.setVisibility(View.GONE);
-        }else {
-//            holder.cancel.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    for (Request request : book.getRequests()){
-//                        if (request.getRequester() == User.currentUser()) {
-//                            request.delete();
-//                            Toast.makeText(v.getContext(), "Request Has Been Cancelled",
-//                                    Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//
-//                    Request.push();
-//                    book.push();
-//                    notifyDataSetChanged();
-//                }
-//            });
+        if (visibilty == 0){
+            holder.mapMarker.setVisibility(View.GONE);
+        } else {
+            holder.mapMarker.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
         }
+
     }
 
     /**
@@ -139,7 +129,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         public TextView isbn;
         public ImageView photo;
         public TextView borrower;
-        public Button cancel;
+        public ImageView mapMarker;
 
         /**
          * Constructor for the ViewHolder object
@@ -153,9 +143,9 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
             status = (TextView) itemView.findViewById(R.id.book_status);
             author = (TextView) itemView.findViewById(R.id.book_author);
             isbn = (TextView) itemView.findViewById(R.id.book_isbn);
-            photo = (ImageView) itemView.findViewById(R.id.book_photo);
+            photo = (ImageView) itemView.findViewById(  R.id.book_photo);
             borrower = (TextView) itemView.findViewById(R.id.book_borrower);
-            cancel = (Button) itemView.findViewById(R.id.cancel_button);
+            mapMarker = (ImageView) itemView.findViewById(R.id.map_marker);
 
         }
     }

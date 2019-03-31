@@ -149,12 +149,17 @@ public class MyBooksActivity extends AppCompatActivity {
         if(filteredBooks.size() > 0) {
             Log.d("LitX", filteredBooks.get(0).getTitle());
         }
+        if (filter.equals(BookStatus.borrowed) || filter.equals(BookStatus.accepted)){
+            booksAdapter = new BookListAdapter(
+                    MyBooksActivity.this, filteredBooks, 0);
+        } else {
+            booksAdapter = new BookListAdapter(MyBooksActivity.this, filteredBooks,
+                    1);
+        }
 
-        booksAdapter = new BookListAdapter(
-                MyBooksActivity.this, filteredBooks, 0);
         recyclerView.setAdapter(booksAdapter);
 
-//        booksAdapter.notifyDataSetChanged();
+        booksAdapter.notifyDataSetChanged();
 
     }
 }

@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(!User.isSignedIn()) {
+        if (!User.isSignedIn()) {
             goToProfileView(null);
         }
         recyclerView = findViewById(R.id.top10list_home);
@@ -65,9 +65,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i("ARRAYLIST SIZE bookstoShow", Integer.toString(booksToShow.size()));
 
 
-
-
-        }
+    }
         adapter = new TopTenAdapter(this, booksToShow);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(manager);
