@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -81,7 +82,14 @@ public class Book implements Serializable {
                             return;
                         }
                         if (result == null) return;
-                        for (DocumentSnapshot doc: result.getDocuments()) {
+                        for (DocumentChange change: result.getDocumentChanges()) {
+
+                            DocumentSnapshot doc = change.getDocument();
+                            if(change.getNewIndex() == -1) {
+                                db.remove(doc.getId());
+                                continue;
+                            }
+
                             Book oldVal = findByDocId(doc.getId());
                             Book newVal = fromSnapshot(doc);
                             if(newVal == null) continue;
