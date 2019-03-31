@@ -38,7 +38,6 @@ public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.
         holder.accept.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                // TODO make the button accept the request
                 Toast.makeText(v.getContext(), "Request Accepted",
                         Toast.LENGTH_SHORT).show();
                 request.getBook().setAcceptedRequest(request);
@@ -49,7 +48,6 @@ public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO  make the button delete the Request
                 Toast.makeText(v.getContext(), "Request Deleted",
                         Toast.LENGTH_SHORT).show();
                 request.getBook().deleteRequest(request);
