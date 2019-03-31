@@ -121,10 +121,10 @@ public class Book implements Serializable {
         if (User.currentUser().getMyBooks().contains(book)){
             User.currentUser().getMyBooks().remove(book);
         }
-        while (requests.size() > 0){
-            requests.get(0).deleteRequest();
-            requests.remove(requests.get(0));
+        for (Request request : requests){
+            request.delete();
         }
+        Request.push();
     }
 
     public String getDocID() { return docID; }
@@ -337,9 +337,12 @@ public class Book implements Serializable {
         if (acceptedRequest == null) {
             acceptedRequest = request;
             status = BookStatus.accepted;
-            requests.clear();
+            for (Request deletedRequest : getRequests()){
+                deletedRequest.delete();
+            }
             request.accept();
-            push();
+            Request.push();
+            request.selfPush();
 
         }
         if (request == null) {

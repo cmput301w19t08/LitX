@@ -73,7 +73,7 @@ public class SearchActivity extends AppCompatActivity  {
     */
 
     protected void updateRecycler () {
-        adapter = new BookListAdapter(SearchActivity.this, bookresults);
+        adapter = new BookListAdapter(SearchActivity.this, bookresults, 0);
         recycler.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }

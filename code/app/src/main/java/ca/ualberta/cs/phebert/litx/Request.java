@@ -158,10 +158,6 @@ public class Request {
         }
     }
 
-    public void deleteRequest(){
-        FirebaseFirestore.getInstance().collection(REQUESTS_COLLECTION).document(docId).delete();
-        db.remove(docId);
-    }
 
     public void selfPush() {
         Log.v("LitX.Request","pushing");
@@ -330,6 +326,9 @@ public class Request {
     @OwnerCalled
     public void delete() {
         status = status.refuse(book, this);
+        requester.getRequests().remove(this);
+        book.getRequests().remove(this);
+
     }
 
     /**

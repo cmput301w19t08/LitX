@@ -88,7 +88,7 @@ public class BookStatusActivity extends AppCompatActivity {
 
         }
         booksAdapter = new BookListAdapter(
-                BookStatusActivity.this, filteredBooks);
+                BookStatusActivity.this, filteredBooks, 1);
         recyclerView.setAdapter(booksAdapter);
 
         booksAdapter.notifyDataSetChanged();
