@@ -76,6 +76,7 @@ public class Request {
         return db;
     }
 
+    public String getDocId(){return this.docId;}
     /**
      *
      * @param snapshot
@@ -171,6 +172,7 @@ public class Request {
             }
         }
     }
+
 
     public void selfPush() {
         Log.v("LitX.Request","pushing");
@@ -351,6 +353,11 @@ public class Request {
     @OwnerCalled
     public void accept() {
         status = status.accept(book, this);
+        selfPush();
+    }
+
+    public void setStatus(RequestStatus status){
+        this.status = status;
     }
 
     /**
@@ -368,6 +375,9 @@ public class Request {
     @OwnerCalled
     public void delete() {
         status = status.refuse(book, this);
+        requester.getRequests().remove(this);
+        book.getRequests().remove(this);
+
     }
 
     /**

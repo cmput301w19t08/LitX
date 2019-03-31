@@ -1,5 +1,6 @@
 package ca.ualberta.cs.phebert.litx;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,7 +24,11 @@ public class SearchActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
+        Intent intent = getIntent();
+        if (intent.getStringExtra("BOOK_NAME") != null){
+            EditText editText = findViewById(R.id.input_search);
+            editText.setText(intent.getStringExtra("BOOK_NAME"));
+        }
         bookresults = new ArrayList<>();
         recycler = (RecyclerView) findViewById(R.id.search_results);
         recycler.setHasFixedSize(true);
@@ -68,7 +73,7 @@ public class SearchActivity extends AppCompatActivity  {
     */
 
     protected void updateRecycler () {
-        adapter = new BookListAdapter(SearchActivity.this, bookresults);
+        adapter = new BookListAdapter(SearchActivity.this, bookresults, 0);
         recycler.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
@@ -89,7 +94,12 @@ public class SearchActivity extends AppCompatActivity  {
         bookresults.clear();
         if(keywords.isEmpty()) {
             Log.d("LitX", "search was empty, showing all books");
-            bookresults.addAll(Book.getAll().values());
+
+            for (Book book : (Book.getAll().values())) {
+                if (book.isAvailable()){
+                    bookresults.add(book);
+                }
+            }
         } else {
             Log.d("LitX", "searching for keywords");
             bookresults = findBook(keywords.split(" "));

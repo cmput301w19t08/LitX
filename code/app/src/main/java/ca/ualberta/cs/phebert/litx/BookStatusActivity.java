@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +17,7 @@ import ca.ualberta.cs.phebert.litx.R;
 
 
 public class BookStatusActivity extends AppCompatActivity {
+    public static final String FilterMode = "ca.ualberta.cs.phebert.litx.FilterMode";
     private ArrayList<Book> filteredBooks = new ArrayList<Book>();
 
     private BookListAdapter booksAdapter;
@@ -24,31 +26,27 @@ public class BookStatusActivity extends AppCompatActivity {
     private int filter;
     private TextView message;
 
-
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_status);
+        Intent intent = getIntent();
 
         recyclerView = (RecyclerView) findViewById(R.id.status_recycler_view);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(BookStatusActivity.this);
         recyclerView.setLayoutManager(layoutManager);
 
-
-        Intent intent = getIntent();
-        int filter = intent.getIntExtra(MainActivity.FilterMode, 0);
+        filter = intent.getIntExtra(MainActivity.FilterMode, 0);
         message = (TextView) findViewById(R.id.statusMessage);
         if (filter == 0){
-            message.setText("Pending Requests");
-            this.filter = filter;
+            message.setText(getString(R.string.pending_requests));
+
         } else if (filter == 1){
-            message.setText("Accepted Requests");
-            this.filter = filter;
+            message.setText(getString(R.string.AcceptedRequests));
+
         }else {
-            message.setText("Borrowed Books");
-            this.filter = filter;
+            message.setText(getString(R.string.Borrowed_Books));
         }
 
 
@@ -90,7 +88,7 @@ public class BookStatusActivity extends AppCompatActivity {
 
         }
         booksAdapter = new BookListAdapter(
-                BookStatusActivity.this, filteredBooks);
+                BookStatusActivity.this, filteredBooks, 1);
         recyclerView.setAdapter(booksAdapter);
 
         booksAdapter.notifyDataSetChanged();

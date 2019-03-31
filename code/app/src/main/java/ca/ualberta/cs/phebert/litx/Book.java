@@ -35,6 +35,9 @@ public class Book implements Serializable {
     private Request acceptedRequest;
     private ImageView photograph;
 
+    private int views;
+    private int borrows;
+
     public Book(User owner, String author, String title, long isbn) {
         this.owner = owner;
         this.author = author;
@@ -118,6 +121,10 @@ public class Book implements Serializable {
         if (User.currentUser().getMyBooks().contains(book)){
             User.currentUser().getMyBooks().remove(book);
         }
+        for (Request request : requests){
+            request.delete();
+        }
+        Request.push();
     }
 
     public String getDocID() { return docID; }
@@ -275,12 +282,51 @@ public class Book implements Serializable {
         return requests;
     }
 
+    /**
+     *
+     * @param views
+     */
+    public void setViews(int views) {
+        this.views = views;
+    }
+
+    /**
+     *
+     * @param borrows
+     */
+    public void setBorrows(int borrows) {
+        this.borrows = borrows;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getViews() {
+        return views;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getBorrows() {
+        return borrows;
+    }
+
+
 
     public User getBorrower() {
         if (acceptedRequest != null) {
             return acceptedRequest.getRequester();
         }
         return null;
+    }
+
+    public void deleteRequest(Request request){
+        if (requests.contains(request)){
+            requests.remove(request);
+        }
     }
 
     /**
@@ -291,6 +337,13 @@ public class Book implements Serializable {
         if (acceptedRequest == null) {
             acceptedRequest = request;
             status = BookStatus.accepted;
+            for (Request deletedRequest : getRequests()){
+                deletedRequest.delete();
+            }
+            request.accept();
+            Request.push();
+            request.selfPush();
+
         }
         if (request == null) {
             acceptedRequest = request;
@@ -324,14 +377,14 @@ public class Book implements Serializable {
         this.photograph = photograph;
     }
 
-    /**
-     * Add a new request created by this user
-     */
-    public void addRequest() {
-        Request request = new Request(this, this.owner, User.currentUser());
-        request.selfPush();
-        addRequest(request);
-    }
+//    /**
+//     * Add a new request created by this user
+//     */
+//    public void addRequest() {
+//        Request request = new Request(this, this.owner, User.currentUser());
+//        request.selfPush();
+//        addRequest(request);
+//    }
 
     /**
      * add a requests to this book's requests
@@ -339,6 +392,7 @@ public class Book implements Serializable {
      */
     void addRequest(Request request) {
        requests.add(request);
+       request.selfPush();
     }
 
     @Override

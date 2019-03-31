@@ -7,8 +7,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -26,6 +28,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
 
     private Context context;
     private ArrayList<Book> books;
+    private int visibilty;
 
     /**
      * Constructor for the BookList adapter
@@ -33,9 +36,10 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
      * @param context Context
      * @param books ArrayList<Book>
      */
-    public BookListAdapter(Context context, ArrayList<Book> books){
+    public BookListAdapter(Context context, ArrayList<Book> books, int visibility){
         this.context = context;
         this.books = books;
+        this.visibilty = visibility;
     }
 
     /**
@@ -74,7 +78,6 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         //            holder.borrower.setText(book.getAcceptedRequest().getRequester().getUserName());
         //        } else {
         holder.borrower.setText(null);
-
         holder.status.setText(book.getStatus().toString());
         /**
          * Sets the onclick listener for each book to go to the view
@@ -89,6 +92,26 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
                 context.startActivity(intent);
             }
         });
+        if (visibilty == 0) {
+            holder.cancel.setVisibility(View.GONE);
+        }else {
+            holder.cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    for (Request request : book.getRequests()){
+                        if (request.getRequester() == User.currentUser()) {
+                            request.delete();
+                            Toast.makeText(v.getContext(), "Request Has Been Cancelled",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    Request.push();
+                    book.push();
+                    notifyDataSetChanged();
+                }
+            });
+        }
     }
 
     /**
@@ -116,6 +139,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         public TextView isbn;
         public ImageView photo;
         public TextView borrower;
+        public Button cancel;
 
         /**
          * Constructor for the ViewHolder object
@@ -131,6 +155,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
             isbn = (TextView) itemView.findViewById(R.id.book_isbn);
             photo = (ImageView) itemView.findViewById(R.id.book_photo);
             borrower = (TextView) itemView.findViewById(R.id.book_borrower);
+            cancel = (Button) itemView.findViewById(R.id.cancel_button);
 
         }
     }
