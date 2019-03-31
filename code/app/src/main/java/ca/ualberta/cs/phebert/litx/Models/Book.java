@@ -14,9 +14,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import ca.ualberta.cs.phebert.litx.BookStatus;
+import ca.ualberta.cs.phebert.litx.Observers.BookObserver;
 
 import static com.loopj.android.http.AsyncHttpClient.log;
 
@@ -25,6 +27,7 @@ public class Book implements Serializable {
     private static final String BOOK_COLLECTION = "Books";
     private static Map<String, Book> db;
     private static Task<QuerySnapshot> task;
+    private List<BookObserver> observers;
 
     private String author;
     private String title;
@@ -40,6 +43,7 @@ public class Book implements Serializable {
     private int borrows;
 
     public Book(User owner, String author, String title, long isbn) {
+        this();
         this.owner = owner;
         this.author = author;
         this.title = title;
@@ -48,6 +52,7 @@ public class Book implements Serializable {
     }
 
     public Book(String owner, String author, String title, long isbn) {
+        this();
         setOwner(owner);
         this.author = author;
         this.title = title;
@@ -55,6 +60,7 @@ public class Book implements Serializable {
     }
 
     public Book() {
+        observers = new ArrayList<>();
         requests = new ArrayList<>();
     } // For firestore
 

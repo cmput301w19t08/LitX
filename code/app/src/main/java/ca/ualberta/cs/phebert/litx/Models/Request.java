@@ -13,10 +13,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ca.ualberta.cs.phebert.litx.Observers.RequestObserver;
 import ca.ualberta.cs.phebert.litx.R;
 import ca.ualberta.cs.phebert.litx.RequestStatus;
 import ca.ualberta.cs.phebert.litx.annotations.*;
@@ -31,6 +33,7 @@ public class Request {
      */
     private static Task<QuerySnapshot> task;
     private static final String CHANNEL_ID = "ca.ualberta.cs.phebert.litx.notifs";
+    private ArrayList<RequestObserver> observers;
 
     private User requester;
     private User bookOwner;
@@ -251,6 +254,7 @@ public class Request {
      */
     @BorrowerCalled
     public Request(Book book, User owner, User requester) {
+        observers = new ArrayList<>();
         this.book = book;
         this.bookOwner = owner;
         this.requester = requester;
