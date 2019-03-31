@@ -84,16 +84,19 @@ public class Book implements Serializable {
                         for (DocumentSnapshot doc: result.getDocuments()) {
                             Book oldVal = findByDocId(doc.getId());
                             Book newVal = fromSnapshot(doc);
-                            if(oldVal == null || newVal == null) continue;
-                            if(oldVal.equals(newVal)) continue;
-                            // not using setters because they write to firebase, infinite loop
-                            oldVal.title = newVal.title;
-                            oldVal.author = newVal.author;
-                            oldVal.isbn = newVal.isbn;
-                            oldVal.borrows = newVal.borrows;
-                            oldVal.views = newVal.views;
-                            oldVal.status = newVal.status;
-                            oldVal.publish();
+                            if(newVal == null) continue;
+                            if(oldVal == null) {
+                                db.put(doc.getId(), newVal);
+                            } else {
+                                // not using setters because they write to firebase, infinite loop
+                                oldVal.title = newVal.title;
+                                oldVal.author = newVal.author;
+                                oldVal.isbn = newVal.isbn;
+                                oldVal.borrows = newVal.borrows;
+                                oldVal.views = newVal.views;
+                                oldVal.status = newVal.status;
+                                oldVal.publish();
+                            }
                         }
                     });
         }
