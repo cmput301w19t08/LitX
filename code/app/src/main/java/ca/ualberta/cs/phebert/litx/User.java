@@ -18,6 +18,7 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import ca.ualberta.cs.phebert.litx.Observers.UserObserver;
 import ca.ualberta.cs.phebert.litx.annotations.BorrowerCalled;
 
 @SuppressWarnings("WeakerAccess")

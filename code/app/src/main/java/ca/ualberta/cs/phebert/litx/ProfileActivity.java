@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import ca.ualberta.cs.phebert.litx.Observers.UserObserver;
+
 public class ProfileActivity extends AppCompatActivity implements UserObserver {
     private static final String LOG_TAG = "litX.ProfileActivity";
     public static final String UID_IN = "UserUID";
