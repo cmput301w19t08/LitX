@@ -67,6 +67,17 @@ public class BookViewActivity extends AppCompatActivity {
         String bookId = intent.getExtras().getString("Book");
         book = Book.findByDocId(bookId);
 
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        
+        adapter = new RequestListAdapter(this, book.getRequests());
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
+                recyclerView.getContext(),1);
+        recyclerView.addItemDecoration(dividerItemDecoration);
+        recyclerView.setAdapter(adapter);
+
         loadImage(book);
 
         if (book.getOwner().equals(User.currentUser())){
@@ -75,18 +86,6 @@ public class BookViewActivity extends AppCompatActivity {
             // Find buttons in the layout
             delete = (Button) findViewById(R.id.deleteButton);
             edit = (Button) findViewById(R.id.editButtonID);
-            recyclerView.setHasFixedSize(true);
-            layoutManager = new LinearLayoutManager(this);
-            recyclerView.setLayoutManager(layoutManager);
-
-            ArrayList<Request> requests = new ArrayList<>();
-            adapter = new RequestListAdapter(this, book.getRequests());
-
-            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
-                    recyclerView.getContext(),1);
-            recyclerView.addItemDecoration(dividerItemDecoration);
-            recyclerView.setAdapter(adapter);
-
 
         /* When delete button is clicked remove the book from the database, then go back to MyBooks
         screen
