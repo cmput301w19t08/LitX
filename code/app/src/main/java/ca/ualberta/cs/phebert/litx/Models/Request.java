@@ -27,6 +27,7 @@ import static com.loopj.android.http.AsyncHttpClient.log;
 
 public class Request {
     public static final String REQUESTS_COLLECTION = "Requests";
+    public static final String TAG = "Litx.Request";
     private static Map<String, Request> db;
     /**
      * The task for fetching db from firestore.
@@ -47,6 +48,17 @@ public class Request {
         if(task == null && User.isSignedIn()) {
             task = FirebaseFirestore.getInstance().collection(REQUESTS_COLLECTION)
                     .get();
+            FirebaseFirestore.getInstance().collection(REQUESTS_COLLECTION)
+                    .addSnapshotListener((snapshot,error) -> {
+                        if(error != null) {
+                            Log.e(TAG,"Firebase error", error);
+                            return;
+                        }
+                        if(snapshot == null) return;
+                        for(DocumentSnapshot doc : snapshot.getDocuments()) {
+
+                        }
+                    });
         }
     }
 
@@ -87,7 +99,7 @@ public class Request {
                 snapshot.getString("status")
         );
         ans.docId = snapshot.getId();
-        log.d("Litx", ans.docId);
+        log.d(TAG, ans.docId);
         ans.book.addRequest(ans);
         ans.requester.addRequest(ans);
 
