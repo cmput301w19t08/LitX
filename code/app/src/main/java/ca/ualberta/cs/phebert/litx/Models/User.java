@@ -83,13 +83,17 @@ public class User implements Serializable {
                         for (DocumentSnapshot doc: result.getDocuments()) {
                             User oldVal = findByUid(doc.getId());
                             User newVal = fromSnapshot(doc);
-                            if(oldVal == null || newVal == null) continue;
-                            if(oldVal.equals(newVal)) continue;
-                            // not using setters because they write to firebase, infinite loop
-                            oldVal.email = newVal.email;
-                            oldVal.userName = newVal.userName;
-                            oldVal.phoneNumber = newVal.phoneNumber;
-                            oldVal.publish();
+                            if(newVal == null) continue;
+                            if(oldVal == null) {
+                                db.put(doc.getId(), newVal);
+                            } else {
+                                if (oldVal.equals(newVal)) continue;
+                                // not using setters because they write to firebase, infinite loop
+                                oldVal.email = newVal.email;
+                                oldVal.userName = newVal.userName;
+                                oldVal.phoneNumber = newVal.phoneNumber;
+                                oldVal.publish();
+                            }
                         }
                     });
         }
