@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         Request.getAll(); // this should be enough if requests weren't empty
         User.getAll();
         Book.getAll();
-        Request.getAll();
+        //Request.getAll();
         Intent serviceIntent = new Intent(this, NotificationIntentService.class);
         serviceIntent.putExtra("NOTIFICATION_INTENT_SERVICE", "MainActivity");
         startService(serviceIntent);

@@ -19,7 +19,13 @@ public class NotificationIntentService extends IntentService {
         for (Map.Entry<String, Request> entry : db.entrySet()) {
             Log.v("LitX.REQUEST", entry.getValue().getRequester().getUserName());
 
-
+            Log.i("LitX IF DUNGEONNNNNNNN", entry.getValue().getBook().getStatus().toString());
+            if (entry.getValue().getRequestSeen() == null) {
+                Log.i("LitX IF Dundegoneq", "yea it null");
+            }
+            Log.i("LitX IF DUNGEON3", entry.getValue().getBookOwner().getUserName());
+            Log.i("LitX IF DUNGEON4", entry.getValue().getRequester().getUserName());
+            Log.i("LitX IF DUNGEON5", User.currentUser().getUserName());
             if (entry.getValue().getBookOwner().getUserName().equals(User.currentUser().getUserName())) {
                 Log.i("LitX IF DUNGEONNNNNNNN", entry.getValue().getBook().getStatus().toString());
                 if (entry.getValue().getRequestSeen() == null) {
