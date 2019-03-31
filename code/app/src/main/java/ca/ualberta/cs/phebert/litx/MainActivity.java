@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         Request.getAll(); // this should be enough if requests weren't empty
         User.getAll();
         Book.getAll();
+
     }
 
     @Override

@@ -53,4 +53,7 @@
     <!-- notification stuff -->
     <string name="channel_name">LitX</string>
     <string name="channel_description">A wild request has appeared.</string>
+    <string name="Borrowed_Books">Borrowed Books</string>
+    <string name="AcceptedRequests">Accepted Requests</string>
+    <string name="pending_requests">Pending Requests</string>
 </resources>

@@ -73,7 +73,7 @@ public class SearchActivity extends AppCompatActivity  {
     */
 
     protected void updateRecycler () {
-        adapter = new BookListAdapter(SearchActivity.this, bookresults);
+        adapter = new BookListAdapter(SearchActivity.this, bookresults, 0);
         recycler.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
@@ -94,7 +94,12 @@ public class SearchActivity extends AppCompatActivity  {
         bookresults.clear();
         if(keywords.isEmpty()) {
             Log.d("LitX", "search was empty, showing all books");
-            bookresults.addAll(Book.getAll().values());
+
+            for (Book book : (Book.getAll().values())) {
+                if (book.isAvailable()){
+                    bookresults.add(book);
+                }
+            }
         } else {
             Log.d("LitX", "searching for keywords");
             bookresults = findBook(keywords.split(" "));

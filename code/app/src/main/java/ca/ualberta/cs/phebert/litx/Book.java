@@ -121,6 +121,10 @@ public class Book implements Serializable {
         if (User.currentUser().getMyBooks().contains(book)){
             User.currentUser().getMyBooks().remove(book);
         }
+        for (Request request : requests){
+            request.delete();
+        }
+        Request.push();
     }
 
     public String getDocID() { return docID; }
@@ -319,6 +323,12 @@ public class Book implements Serializable {
         return null;
     }
 
+    public void deleteRequest(Request request){
+        if (requests.contains(request)){
+            requests.remove(request);
+        }
+    }
+
     /**
      * should fail if acceptedRequest is not null.
      * @param request A request that has been accepted by owner
@@ -327,6 +337,13 @@ public class Book implements Serializable {
         if (acceptedRequest == null) {
             acceptedRequest = request;
             status = BookStatus.accepted;
+            for (Request deletedRequest : getRequests()){
+                deletedRequest.delete();
+            }
+            request.accept();
+            Request.push();
+            request.selfPush();
+
         }
         if (request == null) {
             acceptedRequest = request;
@@ -360,14 +377,14 @@ public class Book implements Serializable {
         this.photograph = photograph;
     }
 
-    /**
-     * Add a new request created by this user
-     */
-    public void addRequest() {
-        Request request = new Request(this, this.owner, User.currentUser());
-        request.selfPush();
-        addRequest(request);
-    }
+//    /**
+//     * Add a new request created by this user
+//     */
+//    public void addRequest() {
+//        Request request = new Request(this, this.owner, User.currentUser());
+//        request.selfPush();
+//        addRequest(request);
+//    }
 
     /**
      * add a requests to this book's requests
@@ -375,6 +392,7 @@ public class Book implements Serializable {
      */
     void addRequest(Request request) {
        requests.add(request);
+       request.selfPush();
     }
 
     @Override
