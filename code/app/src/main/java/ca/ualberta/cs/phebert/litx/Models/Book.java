@@ -1,4 +1,4 @@
-package ca.ualberta.cs.phebert.litx;
+package ca.ualberta.cs.phebert.litx.Models;
 
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -7,7 +7,6 @@ import android.widget.ImageView;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -16,6 +15,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import ca.ualberta.cs.phebert.litx.BookStatus;
 
 import static com.loopj.android.http.AsyncHttpClient.log;
 
@@ -387,7 +388,7 @@ public class Book implements Serializable {
      * add a requests to this book's requests
      * @param request
      */
-    void addRequest(Request request) {
+    public void addRequest(Request request) {
        requests.add(request);
        request.selfPush();
     }

@@ -1,4 +1,4 @@
-package ca.ualberta.cs.phebert.litx;
+package ca.ualberta.cs.phebert.litx.Models;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
@@ -18,6 +18,7 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import ca.ualberta.cs.phebert.litx.Coordinate;
 import ca.ualberta.cs.phebert.litx.Observers.UserObserver;
 import ca.ualberta.cs.phebert.litx.annotations.BorrowerCalled;
 
@@ -145,7 +146,7 @@ public class User implements Serializable {
         return current;
     }
 
-    void addObserver(UserObserver observer) {
+    public void addObserver(UserObserver observer) {
         observers.add(observer);
     }
 

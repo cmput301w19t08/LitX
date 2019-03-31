@@ -10,7 +10,8 @@ import android.view.View;
 import android.widget.EditText;
 
 import java.util.ArrayList;
-import java.util.Collection;
+
+import ca.ualberta.cs.phebert.litx.Models.Book;
 
 public class SearchActivity extends AppCompatActivity  {
 

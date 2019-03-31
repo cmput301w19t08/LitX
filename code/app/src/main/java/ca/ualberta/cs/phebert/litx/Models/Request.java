@@ -1,4 +1,4 @@
-package ca.ualberta.cs.phebert.litx;
+package ca.ualberta.cs.phebert.litx.Models;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -7,10 +7,8 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -19,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ca.ualberta.cs.phebert.litx.R;
+import ca.ualberta.cs.phebert.litx.RequestStatus;
 import ca.ualberta.cs.phebert.litx.annotations.*;
 
 import static com.loopj.android.http.AsyncHttpClient.log;

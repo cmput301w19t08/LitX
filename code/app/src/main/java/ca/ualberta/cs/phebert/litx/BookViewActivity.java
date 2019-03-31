@@ -7,8 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -24,6 +21,10 @@ import static ca.ualberta.cs.phebert.litx.ProfileActivity.UID_IN;
 
 
 import java.util.ArrayList;
+
+import ca.ualberta.cs.phebert.litx.Models.Book;
+import ca.ualberta.cs.phebert.litx.Models.Request;
+import ca.ualberta.cs.phebert.litx.Models.User;
 
 /**
  * Displays the description of a book after a user selected the book to view in the previous

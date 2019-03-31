@@ -16,9 +16,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import ca.ualberta.cs.phebert.litx.Models.Book;
+import ca.ualberta.cs.phebert.litx.Models.User;
 
 /**
  * AddBookActivity takes the entered information and if valid, creates a new book object from them

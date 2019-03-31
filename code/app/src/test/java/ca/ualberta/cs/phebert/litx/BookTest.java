@@ -2,6 +2,10 @@ package ca.ualberta.cs.phebert.litx;
 
 import org.junit.Test;
 
+import ca.ualberta.cs.phebert.litx.Models.Book;
+import ca.ualberta.cs.phebert.litx.Models.Request;
+import ca.ualberta.cs.phebert.litx.Models.User;
+
 import static org.junit.Assert.*;
 
 public class BookTest {

@@ -1,6 +1,11 @@
 package ca.ualberta.cs.phebert.litx;
 
 import org.junit.Test;
+
+import ca.ualberta.cs.phebert.litx.Models.Book;
+import ca.ualberta.cs.phebert.litx.Models.Request;
+import ca.ualberta.cs.phebert.litx.Models.User;
+
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;

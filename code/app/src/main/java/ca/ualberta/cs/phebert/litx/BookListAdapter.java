@@ -16,6 +16,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
+import ca.ualberta.cs.phebert.litx.Models.Book;
+
 /** Based
  *  Source: http://www.sanktips.com/2017/11/15/android-recyclerview-with-custom-adapter-example/
  * @version 1

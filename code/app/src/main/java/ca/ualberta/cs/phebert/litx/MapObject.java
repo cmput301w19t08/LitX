@@ -26,6 +26,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import ca.ualberta.cs.phebert.litx.Models.Request;
+
 public class MapObject extends AppCompatActivity implements OnMapReadyCallback{
     private Request request;
     private LatLng location;

@@ -2,7 +2,8 @@ package ca.ualberta.cs.phebert.litx;
 
 import android.util.Log;
 
-import java.util.Hashtable;
+import ca.ualberta.cs.phebert.litx.Models.Book;
+import ca.ualberta.cs.phebert.litx.Models.Request;
 
 //static import Request.TAG;
 

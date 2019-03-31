@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import java.util.ArrayList;
 
+import ca.ualberta.cs.phebert.litx.Models.Book;
+
 /**
  * Adapter for the top ten Books
  * @Author plontke

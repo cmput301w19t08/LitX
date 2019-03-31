@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import ca.ualberta.cs.phebert.litx.Models.User;
 import ca.ualberta.cs.phebert.litx.Observers.UserObserver;
 
 public class ProfileActivity extends AppCompatActivity implements UserObserver {
