@@ -418,14 +418,15 @@ public class Book implements Serializable {
         this.photograph = photograph;
     }
 
-//    /**
-//     * Add a new request created by this user
-//     */
-//    public void addRequest() {
-//        Request request = new Request(this, this.owner, User.currentUser());
-//        request.selfPush();
-//        addRequest(request);
-//    }
+    /**
+     * Add a new request created by this user
+     */
+    public void addRequest() {
+        Request request = new Request(this, this.owner, User.currentUser());
+        request.selfPush();
+        User.currentUser().addRequest(request);
+        addRequest(request);
+    }
 
     /**
      * add a requests to this book's requests
@@ -433,7 +434,6 @@ public class Book implements Serializable {
      */
     void addRequest(Request request) {
        requests.add(request);
-       request.selfPush();
     }
 
     @Override
