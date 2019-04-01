@@ -11,6 +11,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.jetbrains.annotations.TestOnly;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -109,25 +111,25 @@ public class User implements Serializable {
      */
     private ArrayList<Book> myBooks;
     /**
-     *
+     * Used to reduce the amount of writes to firestore.
+     * @see #scheduleSync()
+     * @see #sync()
      */
-    private FirebaseUser certificate;
     private boolean syncScheduled;
 
 
-    /*
-     * Check if username is unique
-     * Used for creation of new user
+    /**
+     * Create a user that is not on the database.
      */
+    @TestOnly
     public User(String username, String email, String phone) {
-        observers = new ArrayList<>();
-        acceptedRequests = new ArrayList<>();
-        myRequests = new ArrayList<>();
-        myBooks = new ArrayList<>();
-        certificate = null;
+        this();
         editProfile(username, email, phone);
     }
 
+    /**
+     * Create a default user, whose fields are set afterwards.
+     */
     public User() {
         observers = new ArrayList<>();
         acceptedRequests = new ArrayList<>();
@@ -212,7 +214,6 @@ public class User implements Serializable {
         if(current == null) {
             if(isSignedIn()) {
                 current = findByUid(FirebaseAuth.getInstance().getUid());
-                current.certificate = FirebaseAuth.getInstance().getCurrentUser();
             } else return null;
         }
         return current;
@@ -234,7 +235,7 @@ public class User implements Serializable {
             user.put("phoneNumber", phoneNumber);
             FirebaseFirestore.getInstance()
                     .collection(USER_COLLECTION)
-                    .document(certificate.getUid())
+                    .document(getUserid())
                     .set(user)
                     .addOnSuccessListener(ign -> {
 
@@ -306,9 +307,7 @@ public class User implements Serializable {
      * Check if username is unique
      */
     public void setUserName(String username) {
-        if(certificate != null) {
-            scheduleSync();
-        }
+        scheduleSync();
         this.userName = username;
     }
 
@@ -318,8 +317,8 @@ public class User implements Serializable {
 
     public void setEmail(@NonNull String newEmail) {
         email = newEmail;
-        if(certificate != null) {
-            certificate.updateEmail(newEmail);
+        if(this == currentUser() && isSignedIn()) {
+            FirebaseAuth.getInstance().getCurrentUser().updateEmail(newEmail);
             scheduleSync();
         }
     }
@@ -335,9 +334,7 @@ public class User implements Serializable {
     public void setPhoneNumber (String newPhoneNumber) {
         // TODO validate phone Number
         phoneNumber = newPhoneNumber;
-        if(certificate != null) {
-            scheduleSync();
-        }
+        scheduleSync();
     }
 
     /**
