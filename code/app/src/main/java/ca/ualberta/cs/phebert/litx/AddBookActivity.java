@@ -186,27 +186,7 @@ public class AddBookActivity extends AppCompatActivity {
      */
     public void scanISBN(View v) {
         Intent intent = new Intent(this, ScanBookActivity.class);
-        startActivityForResult(intent,155);
-
-    /**
-     * When the scan button is pressed we need to go to the scan activity
-     * @param v View used for the button
-     */
-    public void scanISBN(View v) {
-        //This is how the Map Object is to be used!
-        try {
-            Intent intent = new Intent(this, MapObject.class);
-            double RichardISBN=50;
-            intent.putExtra("LONG",-97.432404);
-            intent.putExtra("LAT",RichardISBN);
-            intent.putExtra("MOVABLE",Boolean.TRUE);
-            startActivity(intent);
-
-
-
-        } catch (Exception e) {}
-
-
+        startActivityForResult(intent, 155);
     }
 
     /**
