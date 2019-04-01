@@ -31,6 +31,12 @@ public class User implements Serializable {
     private String uid;
     private String userName;
     private String email;
+    /**
+     * The phone number of the user, used to contact him.
+     * Could be blank.
+     * @see #setPhoneNumber(String)
+     * @see #getPhoneNumber()
+     */
     private String phoneNumber;
     private ArrayList<UserObserver> observers;
     private ArrayList<Request> acceptedRequests;
@@ -249,6 +255,10 @@ public class User implements Serializable {
         return email;
     }
 
+    /**
+     *
+     * @param newPhoneNumber the new value to set {@link #phoneNumber to}
+     */
     public void setPhoneNumber (String newPhoneNumber) {
         // TODO validate phone Number
         phoneNumber = newPhoneNumber;
@@ -257,13 +267,21 @@ public class User implements Serializable {
         }
     }
 
+    /**
+     * gets the {@link #phoneNumber} from this user.
+     * @return {@link #phoneNumber}
+     */
     public String getPhoneNumber () {
-        if(phoneNumber == null && certificate != null) {
-            // TODO getPhoneNumber from FireStore
-        }
         return phoneNumber;
     }
 
+    /**
+     * set the three main fields of the user. uses the setters, so a sync must be called for it
+     * to be reflected on {@link FirebaseFirestore}.
+     * @param username the {@link #userName} of the user .
+     * @param email the {@link #email} of the user.
+     * @param phone the {@link #phoneNumber} of the user.
+     */
     public void editProfile(String username, @NonNull String email, String phone) {
         setUserName(username);
         setEmail(email);
@@ -276,22 +294,33 @@ public class User implements Serializable {
         return myRequests;
     }
 
+    /**
+     * adds the passed request into the user's list of personal requests
+     *
+     * @param request
+     */
     @BorrowerCalled
     public void addRequest(Request request) {
         myRequests.add(request);
     }
 
+    /**
+     * @return the ArrayList of accepted requests of the user.
+     */
     public ArrayList<Request> getAcceptedRequests() {
         return acceptedRequests;
     }
 
-    // Is this what we want? Shouldn't we go into the the requestors requests and add it?
-    public void acceptRequest(Request request) {
-        myRequests.add(request);
-    }
 
+    /**
+     * removes a request from the user's list of requests.
+     * @param request the request to remove
+     * @see Request#delete()
+     */
     public void removeRequest (Request request) {
-        request.delete();
+        if(myRequests.contains(request)) {
+            myRequests.remove(request);
+        }
     }
 
     /////////////////////////////////////// books //////////////////////////////////////////////////
@@ -304,6 +333,10 @@ public class User implements Serializable {
         return myBooks;
     }
 
+    /**
+     * Adds a books to this user's {@link #myBooks}
+     * @param book
+     */
     public void addBook(Book book) {
         Log.d("MyBooks", "Book Added to myBooks" + book.getTitle());
         myBooks.add(book);
@@ -311,15 +344,22 @@ public class User implements Serializable {
     }
 
     /**
-     * Should delete the book and then remove it form myBooks
+     * Should delete the book and then remove it form {@link #myBooks}
      * @param book the book to delete
      */
     public void deleteBook(Book book) {
         if(myBooks.contains(book)) {
             book.delete(book);
+            myBooks.remove(book);
         }
     }
 
+    /**
+     * Verifies if one user is the same as the other.
+     * Used to tell if a user was updated
+     * @param obj If
+     * @return true if and only if the users have the same email, user, and phone number
+     */
     @Override
     public boolean equals(@Nullable Object obj) {
         if(obj instanceof User) {
@@ -330,7 +370,10 @@ public class User implements Serializable {
         } else return false;
     }
 
-    // guarantee if(a.equals(b)) a.hashCode() == b.hashCode()
+    /**
+     * makes a hashcode for this user, only implemented because equals was implemented.
+     * it is guaranteed that if(a.equals(b)) a.hashCode() == b.hashCode()
+     */
     @Override
     public int hashCode() {
         return (email.hashCode() % (Integer.MAX_VALUE / 3)) +
