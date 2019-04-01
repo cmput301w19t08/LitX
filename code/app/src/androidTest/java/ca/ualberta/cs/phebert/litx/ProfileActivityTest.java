@@ -27,7 +27,7 @@ public class ProfileActivityTest {
 
     @Test
     public void changeText_sameActivity() {
-        onView(withId(R.id.addAccButton)).perform(click());
+        onView(withId(R.id.EditButton)).perform(click());
         onView(withId(R.id.emailEdit)).perform(typeText(stringToBeTyped), closeSoftKeyboard());
         onView(withId(R.id.phoneEdit)).perform(typeText(stringToBeTyped), closeSoftKeyboard());
         onView(withId(R.id.UserEdit)).perform(typeText(stringToBeTyped), closeSoftKeyboard());
