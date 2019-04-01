@@ -7,5 +7,6 @@ public enum BookStatus {
     available,
     requested,
     accepted,
-    borrowed
+    borrowed,
+    returned
 }

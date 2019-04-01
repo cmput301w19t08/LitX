@@ -45,8 +45,6 @@ public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.
                         Toast.LENGTH_SHORT).show();
                 request.getBook().setAcceptedRequest(request);
                 notifyDataSetChanged();
-                request.getBook().setLongitude(-113.5306609);
-                request.getBook().setLatitude(53.5304672);
                 Intent intent = new Intent(v.getContext(), MapActivity.class);
                 intent.putExtra("BOOK", request.getBook().getDocID());
                 intent.putExtra("MOVABLE", true);

@@ -209,6 +209,10 @@ public class Book implements Serializable {
     public void setStatus(String status) {
         try {
             this.status = BookStatus.valueOf(status.toLowerCase());
+            if (status.equals("borrowed")) {
+                borrows += 1;
+
+            }
         } catch(IllegalArgumentException e) {
             log.e("LitX.Book","status does not exist", e);
         }
@@ -372,6 +376,7 @@ public class Book implements Serializable {
     public void setAcceptedRequest(Request request) {
         if (acceptedRequest == null) {
             acceptedRequest = request;
+            request.accept();
             status = BookStatus.accepted;
             for (Request deletedRequest : getRequests()){
                 deletedRequest.delete();

@@ -56,7 +56,7 @@ public class ScanBookActivity extends AppCompatActivity {
 
     /**
      * Sets up our camera for reading in barcodes
-     * @param int, String[], int[]
+     * @param requestCode, permissions, int[]
      * @throws: IOException
      * @see BookClient
      */
@@ -93,7 +93,7 @@ public class ScanBookActivity extends AppCompatActivity {
 
     /**
      * Executes when we first create scan with a bundle parameter
-     * @param Bundle
+     * @param savedInstanceState Bundle
      * @throws: IOException
      * */
     @Override
@@ -230,7 +230,7 @@ public class ScanBookActivity extends AppCompatActivity {
                         else {
                             title = "";
                         }
-                            //Not Done Yet! For part 5
+
                         if (response.has("authors")) {
                             final JSONArray authors = response.getJSONArray("authors");
                             authorKey = authors.getString(0);
@@ -339,80 +339,6 @@ public class ScanBookActivity extends AppCompatActivity {
             }
         });
 
-
-
-        /*
-        try {
-            Intent intent = new Intent();
-            intent.putExtra("Author",author);
-            intent.putExtra("Title",title);
-            intent.putExtra("ISBN",ISBN);
-            setResult(RESULT_OK,intent);
-            finish();
-            textView.setText(author);
-
-
-        }catch (Exception e){
-            Intent intent = new Intent();
-            intent.putExtra("ISBN",ISBN);
-            setResult(RESULT_OK,intent);
-            finish();
-
-        }
-        */
-
-
-
-
-        /*
-        AuthorClient authorClient = new AuthorClient();
-
-        authorClient.getAuthor(authorKey, new JsonHttpResponseHandler(){
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-
-                if (response!=null){
-
-
-                    try {
-
-                        if (response.has("name")){
-                            author = response.getString("name");
-                            textView.setText(author);
-
-                            //textView.setText(authorKey);
-
-                            //Intent intent = new Intent();
-                            //intent.putExtra("Title",title);
-                            //intent.putExtra("ISBN",ISBN);
-                            //setResult(RESULT_OK,intent);
-                            //finish();
-
-                        }
-
-
-
-
-
-                    }catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-
-
-                }
-                else {
-                    ReadISBN = Boolean.TRUE;
-                    textView.setText(NoISBN);
-
-
-                }
-
-
-            }
-
-
-        });
-        */
 
 
     }

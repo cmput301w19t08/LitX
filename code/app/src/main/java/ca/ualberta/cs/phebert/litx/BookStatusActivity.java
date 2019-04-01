@@ -70,6 +70,8 @@ public class BookStatusActivity extends AppCompatActivity {
                 if (request.getStatus() == RequestStatus.Pending) {
                     filteredBooks.add(request.getBook());
                 }
+                booksAdapter = new BookListAdapter(
+                        BookStatusActivity.this, filteredBooks, 0);
             }
 
         }else if (this.filter == 1 ){
@@ -78,19 +80,21 @@ public class BookStatusActivity extends AppCompatActivity {
                         != BookStatus.borrowed)){
                     filteredBooks.add(request.getBook());
                 }
+                booksAdapter = new BookListAdapter(
+                        BookStatusActivity.this, filteredBooks, 1);
             }
         }else {
             for (Request request : User.currentUser().getRequests()){
                 if (request.getBook().getStatus() == BookStatus.borrowed){
                     filteredBooks.add(request.getBook());
                 }
+                booksAdapter = new BookListAdapter(
+                        BookStatusActivity.this, filteredBooks, 1);
             }
 
         }
-        booksAdapter = new BookListAdapter(
-                BookStatusActivity.this, filteredBooks, 1);
-        recyclerView.setAdapter(booksAdapter);
 
+        recyclerView.setAdapter(booksAdapter);
         booksAdapter.notifyDataSetChanged();
     }
 }

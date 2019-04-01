@@ -152,6 +152,7 @@ public class BookViewActivity extends AppCompatActivity {
                     Request newRequest = new Request(book, book.getOwner(), User.currentUser());
                     User.currentUser().addRequest(newRequest);
                     book.addRequest(newRequest);
+                    newRequest.selfPush();
                 }
             });
         }
