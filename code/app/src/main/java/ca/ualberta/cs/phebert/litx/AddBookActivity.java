@@ -132,21 +132,15 @@ public class AddBookActivity extends AppCompatActivity {
             }
         });
 
-        photo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent photos = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-                startActivityForResult(photos, image);
-            }
+        photo.setOnClickListener(v -> {
+            Intent photos = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+            startActivityForResult(photos, image);
         });
 
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancel.setVisibility(View.GONE);
-                photoExists = false;
-                GlideApp.with(AddBookActivity.this).load(iconId).into(photo);
-            }
+        cancel.setOnClickListener(v -> {
+            cancel.setVisibility(View.GONE);
+            photoExists = false;
+            GlideApp.with(AddBookActivity.this).load(iconId).into(photo);
         });
     }
 
