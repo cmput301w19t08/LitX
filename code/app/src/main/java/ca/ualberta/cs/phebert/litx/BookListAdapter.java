@@ -38,6 +38,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
      * will populate a book_list_item with the list provided  in the constructor
      * @param context Context
      * @param books ArrayList<Book>
+     * @param visibility 0 for location hidden, 1 for location shown
      */
     public BookListAdapter(Context context, ArrayList<Book> books, int visibility){
         this.context = context;
