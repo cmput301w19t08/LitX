@@ -150,6 +150,10 @@ public class AddBookActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Gets the result from children activities,
+     * namely {@link ScanBookActivity} and an image activity.
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -184,6 +188,12 @@ public class AddBookActivity extends AppCompatActivity {
             }
         }
     }
+
+    /**
+     * the onClick listener for the scan button,
+     * Starts a scanning activity so that the ISBN of a book mey be scanned.
+     * @param v the scan button
+     */
     public void scanISBN(View v) {
         Intent intent = new Intent(this, ScanBookActivity.class);
         startActivityForResult(intent,155);
@@ -206,6 +216,12 @@ public class AddBookActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Loads the image of the book from {@link FirebaseStorage Firebase Storage}, puts the image into {@link #photo}
+     *
+     * FIXME: also found in BookView Activity
+     * @param book
+     */
     private void loadImage(Book book) {
         // Load the image into the imageview if it exists
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
@@ -222,6 +238,10 @@ public class AddBookActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * sets up the UI to add an image.
+     * @param book the book to which the image should be added.
+     */
     private void addImage(Book book) {
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         pathReference = storageReference.child(book.getOwner().getUserid() + "/" + Long.toString(book.getIsbn()));
