@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -274,6 +275,10 @@ public class User implements Serializable {
             user.put("userName", userName);
             user.put("email", email);
             user.put("phoneNumber", phoneNumber);
+            while(uid == null) {
+                uid = FirebaseAuth.getInstance().getUid();
+                Thread.yield();
+            }
             FirebaseFirestore.getInstance()
                     .collection(USER_COLLECTION)
                     .document(getUserid())
@@ -282,7 +287,6 @@ public class User implements Serializable {
 
                     })
                     .addOnFailureListener(e -> Log.wtf("LitX.User", e));
-
         }
         syncScheduled = false;
     }
@@ -304,30 +308,32 @@ public class User implements Serializable {
                              final String email,
                              final String phoneNumber,
                              @Nullable final Activity act) {
-        FirebaseAuth.getInstance()
-                .signInWithEmailAndPassword(email,"a23b45").addOnSuccessListener(res -> {
-            Log.v(TAG,"signed in");
-            if(act != null) act.finish();
-        }).addOnFailureListener(e -> {
-            e.printStackTrace();
-            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,"a23b45")
-                    .addOnSuccessListener(res ->{
-                        HashMap<String, Object> user = new HashMap<>();
-                        user.put("userName", userName);
-                        user.put("email",  email);
-                        user.put("phoneNumber", phoneNumber);
-                        FirebaseFirestore.getInstance()
-                                .collection(User.USER_COLLECTION)
-                                .document(res.getUser().getUid())
-                                .set(user)
-                                .addOnSuccessListener(ign -> {
+        Task<AuthResult> task2 = FirebaseAuth.getInstance()
+                .signInWithEmailAndPassword(email, "a23b45").addOnSuccessListener(res -> {
+                    Log.v(TAG, "signed in");
+                    if (act != null) act.finish();
+                    loadDb();
+                }).addOnFailureListener(e -> {
+                    e.printStackTrace();
+                    FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, "a23b45")
+                            .addOnSuccessListener(res -> {
+                                HashMap<String, Object> user = new HashMap<>();
+                                user.put("userName", userName);
+                                user.put("email", email);
+                                user.put("phoneNumber", phoneNumber);
+                                FirebaseFirestore.getInstance()
+                                        .collection(User.USER_COLLECTION)
+                                        .document(res.getUser().getUid())
+                                        .set(user)
+                                        .addOnSuccessListener(ign -> {
 
-                                })
-                                .addOnFailureListener(e2 -> Log.wtf("LitX.User", e));
-                        Log.d(TAG,"signed up");
-                        if(act != null) act.finish();
-                    }).addOnFailureListener(e2 -> Log.e(TAG, "could not sign up", e2));
-        });
+                                        })
+                                        .addOnFailureListener(e2 -> Log.wtf("LitX.User", e));
+                                Log.d(TAG, "signed up");
+                                if (act != null) act.finish();
+                                loadDb();
+                            }).addOnFailureListener(e2 -> Log.e(TAG, "could not sign up", e2));
+                });
     }
 
     /**
