@@ -66,7 +66,8 @@ public class BookViewActivity extends AppCompatActivity {
 
         // Receive the book object the user selected
         Intent intent = getIntent();
-        String bookId = intent.getExtras().getString("Book");
+        String bookId = intent.getStringExtra("Book");
+        Log.i("bookID", bookId);
         book = Book.findByDocId(bookId);
 
         recyclerView.setHasFixedSize(true);
