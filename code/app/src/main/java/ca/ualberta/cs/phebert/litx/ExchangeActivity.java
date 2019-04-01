@@ -24,11 +24,11 @@ public class ExchangeActivity extends AppCompatActivity {
     private Button owner;
     private Button borrower;
     private Button handOver;
-    private Button recieve;
+    private Button receive;
     int HAND_OVER_OWNER = 2;
     int HAND_OVER_BORROWER = 3;
-    int RECIEVE_BORROWER = 0;
-    int RECIEVE_OWNER = 1;
+    int RECEIVE_BORROWER = 0;
+    int RECEIVE_OWNER = 1;
     String isbn;
     Boolean isOwner;
 
@@ -41,7 +41,7 @@ public class ExchangeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exchange);
         handOver = (Button) findViewById(R.id.hand_over_book);
-        recieve = (Button) findViewById(R.id.recieve_book);
+        receive = (Button) findViewById(R.id.recieve_book);
         borrower = (Button) findViewById(R.id.pick_borrower);
         owner = (Button) findViewById(R.id.pick_owner);
         borrower.setVisibility(View.GONE);
@@ -49,7 +49,7 @@ public class ExchangeActivity extends AppCompatActivity {
 
 
         handOver.setVisibility(View.GONE);
-        recieve.setVisibility(View.GONE);
+        receive.setVisibility(View.GONE);
         borrower.setVisibility(View.VISIBLE);
         owner.setVisibility(View.VISIBLE);
         Toast.makeText(ExchangeActivity.this,
@@ -82,7 +82,7 @@ public class ExchangeActivity extends AppCompatActivity {
     public void pickType(){
         Intent intent = new Intent(ExchangeActivity.this, ScanBookActivity.class);
         handOver.setVisibility(View.VISIBLE);
-        recieve.setVisibility(View.VISIBLE);
+        receive.setVisibility(View.VISIBLE);
         borrower.setVisibility(View.GONE);
         owner.setVisibility(View.GONE);
         Toast.makeText(ExchangeActivity.this,
@@ -99,13 +99,13 @@ public class ExchangeActivity extends AppCompatActivity {
             }
         });
 
-        recieve.setOnClickListener(new View.OnClickListener() {
+        receive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isOwner) {
-                    startActivityForResult(intent, RECIEVE_OWNER);
+                    startActivityForResult(intent, RECEIVE_OWNER);
                 } else {
-                    startActivityForResult(intent, RECIEVE_BORROWER);
+                    startActivityForResult(intent, RECEIVE_BORROWER);
                 }
             }
         });
@@ -125,9 +125,9 @@ public class ExchangeActivity extends AppCompatActivity {
         owner.setVisibility(View.VISIBLE);
         borrower.setVisibility(View.VISIBLE);
         handOver.setVisibility(View.GONE);
-        recieve.setVisibility(View.GONE);
+        receive.setVisibility(View.GONE);
         Log.d("LitxExchange", Integer.toString(requestCode));
-        if (requestCode == RECIEVE_OWNER && resultCode == RESULT_OK){
+        if (requestCode == RECEIVE_OWNER && resultCode == RESULT_OK){
             isbn = data.getStringExtra("ISBN");
             for(Book book : User.currentUser().getMyBooks()) {
                 Log.d("LitxExchange", book.getStatus().toString());
@@ -189,7 +189,7 @@ public class ExchangeActivity extends AppCompatActivity {
                         .show();
             }
 
-        } else if (requestCode == RECIEVE_BORROWER && resultCode == RESULT_OK){
+        } else if (requestCode == RECEIVE_BORROWER && resultCode == RESULT_OK){
             isbn = data.getStringExtra("ISBN");
             for (Request request : User.currentUser().getRequests()){
                 if (Long.toString(request.getBook().getIsbn()).equals(isbn) &&

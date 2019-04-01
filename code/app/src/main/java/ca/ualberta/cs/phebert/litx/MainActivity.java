@@ -12,6 +12,7 @@ import android.view.View;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.Map;
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
      * Loads all data from the database
      */
     void getAllData() {
+        FirebaseFirestore.getInstance().enableNetwork();
         Request.getAll(); // this should be enough if requests weren't empty
         User.getAll();
         Book.getAll();
@@ -62,8 +64,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FirebaseFirestore.getInstance().setFirestoreSettings(
-                new FirebaseFirestoreSettings.Builder().setPersistenceEnabled(false).build());
         Request.createNotificationChannel(this);
 
         if (!User.isSignedIn()) {

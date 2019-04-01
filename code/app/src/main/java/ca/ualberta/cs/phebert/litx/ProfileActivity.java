@@ -129,9 +129,9 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
                     emailView.getText().toString(),
                     phoneView.getText().toString(),
                     this);
+        } else {
+            currentUser.sync();
         }
-
-        currentUser.sync();
     }
 
     /**

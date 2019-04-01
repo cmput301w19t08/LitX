@@ -105,8 +105,7 @@ public class BookViewActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     book.delete(book);
 
-                    Intent intent = new Intent(BookViewActivity.this, MyBooksActivity.class);
-                    startActivity(intent);
+                    finish();
                 }
             });
 
