@@ -129,6 +129,7 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
         }
 
         currentUser.sync();
+     //   setResult(123);
     }
 
     /**
