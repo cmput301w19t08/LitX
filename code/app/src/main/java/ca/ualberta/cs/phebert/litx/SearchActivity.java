@@ -47,13 +47,28 @@ public class SearchActivity extends AppCompatActivity  {
         boolean[] found = new boolean[Original.size()];
         outside: for(int i = 0; i < Original.size(); i++) {
             Book book = Original.get(i);
+            int count = 0; // How many keywords does the book contain?
+            int wordCount = 0;
             for (String keyword : keywords) {
+                wordCount += 1;
                 for(String word: book.getTitle().split(" ")) {
                     if(word.toLowerCase().equals(keyword.toLowerCase()) && book.isAvailable()) {
-                        found[i] = true;
-                        continue outside;
+                        count += 1;
                     }
                 }
+                for (String word: book.getAuthor().split(" ")) {
+                    if(word.toLowerCase().equals(keyword.toLowerCase()) && book.isAvailable()) {
+                        count += 1;
+                    }
+                }
+                for (String word: Long.toString(book.getIsbn()).split(" ")) {
+                    if(word.toLowerCase().equals(keyword.toLowerCase()) && book.isAvailable()) {
+                        count += 1;
+                    }
+                }
+            }
+            if (count >= wordCount) {
+                found[i] = true;
             }
         }
         ArrayList<Book> ans = new ArrayList<>();
