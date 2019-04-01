@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import java.util.Map;
 import java.util.ArrayList;
@@ -53,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        FirebaseFirestore.getInstance().setFirestoreSettings(
+                new FirebaseFirestoreSettings.Builder().setPersistenceEnabled(false).build());
         Request.createNotificationChannel(this);
 
         if (!User.isSignedIn()) {
