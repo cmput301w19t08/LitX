@@ -21,7 +21,6 @@ import java.net.URLEncoder;
  * This is our BookClient class this is used by scan to find search results from our ISBN
  * @author rcdavids
  * @version 1.0
- * @see BookClient
  */
 
 public class BookClient {
@@ -32,7 +31,6 @@ public class BookClient {
 
     /**
      * Constructor for a BookClient object. Sets it client to be a new AsyncHttpClient
-     * @returns BookClient
      */
     public BookClient() {
         this.client = new AsyncHttpClient();

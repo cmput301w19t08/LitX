@@ -425,8 +425,8 @@ public class Book implements Serializable {
     }
 
     /**
-     * 
-     * @param longitude
+     * Get the longitude for meetup location
+     * @param longitude longitude value for meetup
      */
     public void setLongitude(double longitude) {
         this.longitude = longitude;

@@ -32,7 +32,13 @@ import java.util.ArrayList;
  * screen
  * @author sdupasqu, plontke
  * @version 1.0
- * @see MyBooksActivity, AddBookActivity, Book
+ * @see MyBooksActivity
+ * @see AddBookActivity
+ * @see Book
+ * @see ViewPhotoActivity
+ * @see BookStatusActivity
+ * @see Request
+ * @see RequestListAdapter
  */
 public class BookViewActivity extends AppCompatActivity {
 

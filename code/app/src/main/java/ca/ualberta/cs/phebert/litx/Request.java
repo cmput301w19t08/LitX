@@ -31,7 +31,9 @@ import static com.loopj.android.http.AsyncHttpClient.log;
  * Request object for a book, contains the book, book owner and user that is requesting the book
  * @author phebert
  * @version 1.0
- * @see BookStatusActivity, BookViewActivity, ExchangeActivity
+ * @see BookStatusActivity
+ * @see BookViewActivity
+ * @see ExchangeActivity
  */
 public class Request {
     public static final String REQUESTS_COLLECTION = "Requests";

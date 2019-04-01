@@ -22,7 +22,9 @@ import java.util.ArrayList;
  *  Source: http://www.sanktips.com/2017/11/15/android-recyclerview-with-custom-adapter-example/
  * @version 1
  * @author plontke
- * @see MyBooksActivity, Book
+ * @see MyBooksActivity
+ * @see Book
+ * @see BookStatusActivity
  */
 public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHolder> {
 

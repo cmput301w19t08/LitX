@@ -10,7 +10,8 @@ import java.util.Map;
  * Background thread for notifications
  * @author zkist
  * @version 1.0
- * @see Request, MainActivity
+ * @see Request
+ * @see MainActivity
  */
 public class NotificationIntentService extends IntentService {
 

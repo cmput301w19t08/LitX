@@ -17,7 +17,9 @@ import java.util.Collection;
  * or a combination of them
  * @author phebert, sdupasqu, thryniw
  * @version 1.0
- * @see MainActivity, ViewBookActivity, BookListAdapter
+ * @see MainActivity
+ * @see BookViewActivity
+ * @see BookListAdapter
  */
 public class SearchActivity extends AppCompatActivity  {
 

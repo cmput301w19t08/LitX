@@ -18,9 +18,9 @@ import java.util.ArrayList;
 /**
  * An array adapter for the request object
  * @author plontke
+ * @version 1.0
  * @see MyBooksActivity
  * @see MapActivity
- * @version 1.0
  */
 public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.ViewHolder> {
     private Context context;

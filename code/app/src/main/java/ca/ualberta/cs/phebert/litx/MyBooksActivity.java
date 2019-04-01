@@ -31,7 +31,12 @@ import java.util.Map;
  * or add a new book
  * @author sdupasqu, plontke
  * @version 1.0
- * @see MainActivity, AddBookActivity, BookViewActivity, Book, BookListAdapter
+ * @see MainActivity
+ * @see AddBookActivity
+ * @see BookViewActivity
+ * @see Book
+ * @see User
+ * @see BookListAdapter
  */
 public class MyBooksActivity extends AppCompatActivity {
 

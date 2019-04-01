@@ -13,6 +13,8 @@ import java.util.ArrayList;
  * Adapter for the top ten Books
  * @author plontke
  * @version 1.0
+ * @see MainActivity
+ * @see Book
  */
 public class TopTenAdapter extends RecyclerView.Adapter<TopTenAdapter.ViewHolder>{
 

@@ -31,6 +31,8 @@ import com.google.firebase.storage.UploadTask;
  * @author sdupasqu
  * @version 1.0
  * @see BookViewActivity
+ * @see Book
+ * @see User
  */
 public class ViewPhotoActivity extends AppCompatActivity {
 

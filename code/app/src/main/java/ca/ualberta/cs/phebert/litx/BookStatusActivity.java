@@ -19,7 +19,10 @@ import ca.ualberta.cs.phebert.litx.R;
  * Displays all books the user has of the status they selected (Requested, Accepted, Borrowed)
  * @author plontke
  * @version 1.0
- * @see MainActivity, Map, BookViewActivity
+ * @see MainActivity
+ * @see MapActivity
+ * @see BookViewActivity
+ * @see Book
  */
 public class BookStatusActivity extends AppCompatActivity {
     public static final String FilterMode = "ca.ualberta.cs.phebert.litx.FilterMode";

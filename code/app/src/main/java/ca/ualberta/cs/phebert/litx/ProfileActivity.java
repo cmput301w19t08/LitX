@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
  * @author phebert
  * @version 1.0
  * @see MainActivity
+ * @see User
  */
 public class ProfileActivity extends AppCompatActivity implements UserObserver {
     private static final String LOG_TAG = "litX.ProfileActivity";

@@ -22,8 +22,14 @@ import static com.google.common.primitives.UnsignedInts.min;
  * Main screen of the app, lots of navigation done from here, displays the top 10 books
  * @author sdupasqu, plontke, zkist, phebert
  * @version 1.0
- * @see ProfileActivity, MyBooksActivity, BookStatusActivity, SearchActivity, ExchangeActivity
- * @see Book, User, TopTenAdapter
+ * @see ProfileActivity
+ * @see MyBooksActivity
+ * @see BookStatusActivity
+ * @see SearchActivity
+ * @see ExchangeActivity
+ * @see Book
+ * @see User
+ * @see TopTenAdapter
  */
 public class MainActivity extends AppCompatActivity {
     public static final String FilterMode = "ca.ualberta.cs.phebert.litx.FilterMode";

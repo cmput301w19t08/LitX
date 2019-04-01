@@ -39,7 +39,9 @@ import java.io.IOException;
  * This is our ScanBookActivity class
  * @author rcdavids
  * @version 1.0
- * @see AppCompatActivity, AddBookActivity, StatusActivity
+ * @see AppCompatActivity
+ * @see AddBookActivity
+ * @see BookStatusActivity
  */
 public class ScanBookActivity extends AppCompatActivity {
 

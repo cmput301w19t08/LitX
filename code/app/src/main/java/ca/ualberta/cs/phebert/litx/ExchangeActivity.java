@@ -12,7 +12,11 @@ import android.widget.Toast;
  * Screen where users can exchange their books
  * @author plontke
  * @version 1
- * @see MainActivity, ScanActivity, Book, Requests
+ * @see MainActivity
+ * @see ScanBookActivity
+ * @see MapActivity
+ * @see Book
+ * @see Request
  */
 public class ExchangeActivity extends AppCompatActivity {
 

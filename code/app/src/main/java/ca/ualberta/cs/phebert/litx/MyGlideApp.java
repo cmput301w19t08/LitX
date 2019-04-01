@@ -17,6 +17,7 @@ import java.io.InputStream;
  * @author sdupasqu
  * @version 1.0
  * @see ViewPhotoActivity
+ * @see AddBookActivity
  */
 @GlideModule
 public class MyGlideApp extends AppGlideModule {
