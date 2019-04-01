@@ -28,24 +28,9 @@ public class MainActivity extends AppCompatActivity {
         Request.getAll(); // this should be enough if requests weren't empty
         User.getAll();
         Book.getAll();
-        //Request.getAll();
         Intent serviceIntent = new Intent(this, NotificationIntentService.class);
         serviceIntent.putExtra("NOTIFICATION_INTENT_SERVICE", "MainActivity");
         startService(serviceIntent);
-        // this should be enough if requests weren't empty\
-        /*Map<String, Request>  db =  Request.getAll(); // this should be enough if requests weren't empty
-        for (Map.Entry<String, Request> entry : db.entrySet()) {
-            Log.v("LitX.REQUEST", entry.getValue().getRequester().getUserName());
-            if (entry.getValue().getBookOwner().getUserName().equals(User.currentUser().getUserName())) {
-                if (entry.getValue().getRequestSeen() == Boolean.FALSE) {
-                    Request request = entry.getValue();
-                    request.generateNotification(this);
-                    request.setRequestSeen(Boolean.TRUE);
-                    request.toMap();
-                    request.selfPush();
-                }
-            }
-        }*/
 
     }
 
@@ -63,21 +48,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Populates the top10 Adapter
+     */
     public void top10Generate() {
+        int i, topNumber;
+        Book comparisonBook;
         recyclerView = findViewById(R.id.top10list_home);
         manager = new LinearLayoutManager(MainActivity.this);
         recyclerView.setHasFixedSize(true);
         books = new ArrayList<>();
         booksToShow = new ArrayList<>(3);
         books.addAll(Book.getAll().values());
-        int i, topNumber;
-        Book comparisonBook;
         topNumber = min(10, books.size());
+
         for (int j = 0; j < topNumber; j++) {
             comparisonBook = books.get(0);
             for (i = 0; i < books.size(); i++) {
                 if (comparisonBook.getBorrows() <= books.get(i).getBorrows()) {
-                    if (doesNotAlreadyContain(booksToShow, books.get(i)) == 1) {
+                    if (doesNotAlreadyContain(booksToShow, books.get(i)) == Boolean.FALSE) {
                         comparisonBook = books.get(i);
                     }
                 }
@@ -89,13 +78,19 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(manager);
     }
 
-    public int doesNotAlreadyContain(ArrayList<Book> bookList, Book currentBook) {
+    /**
+     * Ensures the bookList does not already contain the currentBook
+     * @param bookList
+     * @param currentBook
+     * @return Boolean
+     */
+    public Boolean doesNotAlreadyContain(ArrayList<Book> bookList, Book currentBook) {
         for (int r = 0; r < bookList.size(); r++) {
             if (bookList.get(r).getAuthor().equals(currentBook.getAuthor())) {
-                return 0;
+                return Boolean.TRUE;
             }
         }
-        return 1;
+        return Boolean.FALSE;
     }
 
     @Override
@@ -140,14 +135,5 @@ public class MainActivity extends AppCompatActivity {
     public void searchForBooks(View v) {
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
-    }
-
-    @Override
-    protected void onStop() {
-       /* for(Request request :Request.getAll().values()) {
-            request.generateNotification(this);
-            break;
-        }*/
-        super.onStop();
     }
 }

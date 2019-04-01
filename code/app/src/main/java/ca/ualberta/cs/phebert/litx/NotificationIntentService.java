@@ -8,13 +8,15 @@ import java.util.Map;
 
 public class NotificationIntentService extends IntentService {
 
+    /**
+     * Constructor
+     */
     public NotificationIntentService() {
         super("NOTIFICATION_INTENT_SERVICE");
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.i("LitX onHandleIntent", intent.getStringExtra("NOTIFICATION_INTENT_SERVICE"));
         Map<String, Request>  db =  Request.getAll();
         for (Map.Entry<String, Request> entry : db.entrySet()) {
             if (entry.getValue().getBookOwner().getUserName().equals(User.currentUser().getUserName())) {

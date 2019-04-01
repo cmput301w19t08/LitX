@@ -90,12 +90,9 @@ public class Request {
                 User.findByUid(snapshot.getString("requester")),
                 snapshot.getString("status")
         );
-
         try {
             ans.requestSeen = snapshot.getBoolean("seen");
-        } catch (RuntimeException e) {
-            //ans.requestSeen = false;
-        }
+        } catch (RuntimeException e) {}
         ans.docId = snapshot.getId();
         log.d("Litx", ans.docId);
         ans.book.addRequest(ans);
@@ -129,15 +126,11 @@ public class Request {
         HashMap<String, Request> onlineRequests = new HashMap<>();
         HashMap<String, Request> offlineRequests = new HashMap<>();
 
-
-        // TODO get stored Requests
-
         while(!task.isComplete()) {
             if(task.isCanceled()) return;
         }
         if(task.isSuccessful()) {
-            Request request; // will be set in a foreach loop
-            // TODO compare stored requests with online requests
+            Request request;
             if(false) {
                 request.generateNotification(ctx);
             }
@@ -199,42 +192,26 @@ public class Request {
      * @param ctx
      */
     public void generateNotification(Context ctx) {
-        // TODO
-
-        // Create an explicit intent for an Activity in your app
-        // Not sure what activity should be started when the notification is clicked. Change 'User.class'
-        // Error Comment out Intent was wrong
-
-
-        // Was testing to use it as a switch if notification is generated from MainActivity
-        // So it would be simple to tell if notification was generated as new request or new accept
         Random rand = new Random();
+        // 10000 is just a magic number for unique number for notifications
         int randInt = rand.nextInt(10000);
         String textTitle;
         String bookTitle;
         String textContent;
         PendingIntent pendingIntent;
-        //if (ctx.getClass().equals(MainActivity.class)) {
-        Log.i("THIS IS STATUS", status.toString());
-        Log.i("THIS IS REQUESTSTATUS", RequestStatus.Accepted.toString());
         if (!status.equals(RequestStatus.Accepted)) {
-            Log.i("CTX EQUALS", "CTX EQUALS");
             Intent intentForOwner = new Intent(ctx.getApplicationContext(), BookViewActivity.class);
             intentForOwner.putExtra("Book", book.getDocID());
-            // Error comment out
             intentForOwner.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
             pendingIntent = PendingIntent.getActivity(ctx, randInt, intentForOwner, 0);
-
             textTitle = "Request";
             bookTitle = book.getTitle();
-
             textContent = requester.getUserName() + " wants to borrow " + bookTitle;
 
         } else {
             Intent intentForOwner = new Intent(ctx.getApplicationContext(), BookStatusActivity.class);
             intentForOwner.putExtra("Book", book.getDocID());
-            // Error comment out
             intentForOwner.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
             pendingIntent = PendingIntent.getActivity(ctx, randInt, intentForOwner, 0);
@@ -247,20 +224,14 @@ public class Request {
         }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, CHANNEL_ID)
-                // Error
                 .setSmallIcon(R.drawable.book_icon2)
                 .setContentTitle(textTitle)
                 .setContentText(textContent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                //error
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
-        //error
-        // shows the Notification
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(ctx);
 
-        // notificationId is a unique int for each notification that you must define
-        // right now its a magic number
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(ctx);
         notificationManager.notify(randInt, builder.build());
     }
 
@@ -281,8 +252,6 @@ public class Request {
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
             NotificationManager notificationManager = ctx.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
@@ -356,6 +325,10 @@ public class Request {
         selfPush();
     }
 
+    /**
+     * Sets the status of the request
+     * @param status
+     */
     public void setStatus(RequestStatus status){
         this.status = status;
     }
