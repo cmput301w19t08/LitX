@@ -57,4 +57,8 @@
     <string name="Borrowed_Books">Borrowed Books</string>
     <string name="AcceptedRequests">Accepted Requests</string>
     <string name="pending_requests">Pending Requests</string>
+    <string name="receive">Receive</string>
+    <string name="hand_over">Hand Over</string>
+    <string name="borrower">Borrower</string>
+    <string name="owner">Owner</string>
 </resources>
