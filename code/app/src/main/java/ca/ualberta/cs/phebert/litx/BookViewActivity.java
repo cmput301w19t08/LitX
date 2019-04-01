@@ -157,9 +157,8 @@ public class BookViewActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
 
                     bookRequested();
-                    Request newRequest = new Request(book, book.getOwner(), User.currentUser());
-                    User.currentUser().addRequest(newRequest);
-                    book.addRequest(newRequest);
+                    book.addRequest();
+
                     adapter.notifyDataSetChanged();
                 }
             });

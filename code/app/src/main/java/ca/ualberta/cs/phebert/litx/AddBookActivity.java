@@ -132,21 +132,15 @@ public class AddBookActivity extends AppCompatActivity {
             }
         });
 
-        photo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent photos = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-                startActivityForResult(photos, image);
-            }
+        photo.setOnClickListener(v -> {
+            Intent photos = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+            startActivityForResult(photos, image);
         });
 
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancel.setVisibility(View.GONE);
-                photoExists = false;
-                GlideApp.with(AddBookActivity.this).load(iconId).into(photo);
-            }
+        cancel.setOnClickListener(v -> {
+            cancel.setVisibility(View.GONE);
+            photoExists = false;
+            GlideApp.with(AddBookActivity.this).load(iconId).into(photo);
         });
     }
 
@@ -186,12 +180,20 @@ public class AddBookActivity extends AppCompatActivity {
     }
 
     /**
+     * the onClick listener for the scan button,
+     * Starts a scanning activity so that the ISBN of a book mey be scanned.
+     * @param v the scan button
+     */
+    public void scanISBN(View v) {
+        Intent intent = new Intent(this, ScanBookActivity.class);
+        startActivityForResult(intent,155);
+
+    /**
      * When the scan button is pressed we need to go to the scan activity
      * @param v View used for the button
      */
     public void scanISBN(View v) {
         //This is how the Map Object is to be used!
-
         try {
             Intent intent = new Intent(this, MapObject.class);
             double RichardISBN=50;
@@ -229,8 +231,8 @@ public class AddBookActivity extends AppCompatActivity {
     }
 
     /**
-     * Adds the image attached to the database
-     * @param book the book that is getting added to the database
+     * sets up the UI to add an image.
+     * @param book the book to which the image should be added.
      */
     private void addImage(Book book) {
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();

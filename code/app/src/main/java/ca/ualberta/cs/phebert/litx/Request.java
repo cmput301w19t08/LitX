@@ -340,6 +340,7 @@ public class Request {
     @OwnerCalled
     public void resolve() {
         status = status.resolve(book, this);
+        push();
     }
 
     /**
