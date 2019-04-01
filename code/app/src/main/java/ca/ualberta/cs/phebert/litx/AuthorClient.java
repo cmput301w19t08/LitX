@@ -17,13 +17,23 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+/**
+ * Searches an <a href="http://openlibrary.org">online database</a>
+ * for the author of a book
+ * @author rcdavids
+ * @version 1.0
+ */
 public class AuthorClient {
     private static final String API_BASE_URL = "http://openlibrary.org";
     private static final String API_END_URL = ".json";
-
+    /**
+     * The HttpClient for the database request.
+     */
     private AsyncHttpClient client;
-    //private String booksISBN;
 
+    /**
+     * Set the client
+     */
     public AuthorClient() {
         this.client = new AsyncHttpClient();
         //this.booksISBN = ISBN;

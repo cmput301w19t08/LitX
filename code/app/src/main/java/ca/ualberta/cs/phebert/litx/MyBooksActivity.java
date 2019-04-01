@@ -58,9 +58,8 @@ public class MyBooksActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_books);
         Book.getAll();
         mySpinner = (Spinner) findViewById(R.id.spinner);
-        //mySpinner.getBackground().setColorFilter(getResources().getColor(), PorterDuff.Mode.SRC_ATOP);
 
-
+        // Set the adapter to the recycler view
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(MyBooksActivity.this);
@@ -103,10 +102,7 @@ public class MyBooksActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
+        // When the add new button is clicked, start the add new activity
         addNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,7 +112,9 @@ public class MyBooksActivity extends AppCompatActivity {
         });
     }
 
-
+    /**
+     * onStart gets the books to display in the adapter
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -125,7 +123,8 @@ public class MyBooksActivity extends AppCompatActivity {
     }
 
     /**
-     * Query will be called after anything is selected in the spinner
+     * Query will be called after anything is selected in the spinner, it finds all books with the
+     * selected status
      */
     public void query() {
 

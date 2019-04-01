@@ -94,6 +94,14 @@ public class Book implements Serializable {
         Book ans = new Book();
         ans.setDocID(doc.getId());
 
+        if (doc.getString("views") == null) {
+            Log.d("FIELD", "DOESN'T EXIST");
+            ans.setViews(0);
+        } else {
+            Log.d("FIELD", "EXISTS");
+            ans.setViews(Integer.valueOf(doc.getString("views")));
+        }
+
         String ownerUid = doc.getString("ownerUid");
         //Log.d(TAG, "Owner UID = " + ownerUid);
         ans.setOwner(ownerUid);
@@ -110,9 +118,6 @@ public class Book implements Serializable {
         }else {
             ans.setLatitude(doc.getDouble("latitude"));
         }
-
-
-        // TODO (Scott): set/get photograph, might want to change this to a filename
         try {
             ans.setIsbn(doc.getLong("isbn"));
         } catch(NullPointerException e) {
@@ -184,7 +189,7 @@ public class Book implements Serializable {
         }
     }
 
-    ////////////////////////////////// settters and getters ////////////////////////////////////////
+    ////////////////////////////////// setters and getters ////////////////////////////////////////
 
     /**
      * Returns if the book is available
@@ -219,14 +224,6 @@ public class Book implements Serializable {
             log.e("LitX.Book","status does not exist", e);
         }
     }
-
-    /**
-     * Sets this book's status
-     * @param status the status to set the book to.
-     */
-    //private void setStatus(BookStatus status) {
-    //    this.status = status;
-    //}
 
     /**
      * Getter for owner
@@ -310,38 +307,37 @@ public class Book implements Serializable {
     }
 
     /**
-     *
-     * @param views
+     * Setter for amount of views
+     * @param views amount of views the book has
      */
     public void setViews(int views) {
         this.views = views;
     }
 
     /**
-     *
-     * @param borrows
+     * Setter for amount of borrows
+     * @param borrows amount of borrows the book has
      */
     public void setBorrows(int borrows) {
         this.borrows = borrows;
     }
 
     /**
-     *
-     * @return
+     * Getter for views
+     * @return amount of views the book currently has
      */
     public int getViews() {
         return views;
     }
 
     /**
-     *
-     * @return
+     * Getter for borrows
+     * @return amount of borrows the book currently has
      */
     public int getBorrows() {
         return borrows;
     }
-
-
+  
     public double getLatitude() {
         return latitude;
     }
@@ -357,7 +353,10 @@ public class Book implements Serializable {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
-
+    /**
+     * Getter for borrower
+     * @return the user borrowing the book
+     */
     public User getBorrower() {
         if (acceptedRequest != null) {
             return acceptedRequest.getRequester();
@@ -365,6 +364,10 @@ public class Book implements Serializable {
         return null;
     }
 
+    /**
+     * Deletes a request
+     * @param request Request to be deleted from the book
+     */
     public void deleteRequest(Request request){
         if (requests.contains(request)){
             requests.remove(request);
@@ -403,31 +406,14 @@ public class Book implements Serializable {
     }
 
     /**
-     * getter for the photograph
-     *
-     * @return an ImageView of the photograph
+     * Add a new request created by this user
      */
-    public ImageView getPhotograph() {
-        return photograph;
+    public void addRequest() {
+        Request request = new Request(this, this.owner, User.currentUser());
+        request.selfPush();
+        User.currentUser().addRequest(request);
+        addRequest(request);
     }
-
-    /**
-     * setter for photograph
-     *
-     * @param photograph ImageView
-     */
-    public void setPhotograph(ImageView photograph) {
-        this.photograph = photograph;
-    }
-
-//    /**
-//     * Add a new request created by this user
-//     */
-//    public void addRequest() {
-//        Request request = new Request(this, this.owner, User.currentUser());
-//        request.selfPush();
-//        addRequest(request);
-//    }
 
     /**
      * add a requests to this book's requests
@@ -439,6 +425,12 @@ public class Book implements Serializable {
        request.selfPush();
     }
 
+    /**
+     * Determines if the object and book are equal, for this to happen the books just need to have
+     * the same isbn and owner
+     * @param obj object to check if equal to
+     * @return obj equals book
+     */
     @Override
     public boolean equals(@Nullable Object obj) {
         if(obj == null) return false;
@@ -450,6 +442,10 @@ public class Book implements Serializable {
         return false;
     }
 
+    /**
+     * Makes a hashcode
+     * @return hashcode
+     */
     @Override
     public int hashCode() {
         return (int) (isbn % Integer.MAX_VALUE);

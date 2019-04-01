@@ -12,6 +12,13 @@ import android.widget.EditText;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * Allows users to search all books for the book they want, they can search by title, author, isbn
+ * or a combination of them
+ * @author phebert, sdupasqu, thryniw
+ * @version 1.0
+ * @see MainActivity, ViewBookActivity, BookListAdapter
+ */
 public class SearchActivity extends AppCompatActivity  {
 
     private ArrayList<Book> bookresults;
@@ -20,6 +27,11 @@ public class SearchActivity extends AppCompatActivity  {
     RecyclerView recycler;
     RecyclerView.LayoutManager layoutManager;
 
+    /**
+     * Initializes the search, default is nothing searched however if the user clicked a book from
+     * main activity the search auto fills that
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,22 +92,14 @@ public class SearchActivity extends AppCompatActivity  {
         return ans;
     }
 
-    /* // if we want to search for users
-    ArrayList<User> findUsers () {
-        FindUser fuser = new FindUser();
-        return fuser.findUserByName(keywords);
-    }
-    */
-
+    /**
+     * Updates the adapter to match the search
+     */
     protected void updateRecycler () {
         adapter = new BookListAdapter(SearchActivity.this, bookresults, 0);
         recycler.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
-
-    /*
-     * Takes Search string and handles results
-     */
 
     /**
      * Actions on the press of the Search Button

@@ -51,6 +51,11 @@ public class ViewPhotoActivity extends AppCompatActivity {
     private StorageReference storageRef;
     private StorageReference pathReference;
 
+    /**
+     * Sets onClickListeners for the buttons, loads the corresponding image to the ImageView if the
+     * photo exists
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +63,7 @@ public class ViewPhotoActivity extends AppCompatActivity {
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         cancel = false;
 
+        // Find items on the activity
         btn_add = (Button) findViewById(R.id.addPhotoButton);
         btn_delete = (Button) findViewById(R.id.deletePhotoButton);
         btn_done = (Button) findViewById(R.id.donePhotoButton);
@@ -69,11 +75,13 @@ public class ViewPhotoActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if(intent.getExtras() == null) {
+            // Book didn't pass, finish activity
             finish();
             return;
         }
         final Book book = Book.findByDocId(intent.getExtras().getString("Book"));
 
+        // Find the images to load and load them
         pathReference = storageRef.child(book.getOwner().getUserid() + "/" + Long.toString(book.getIsbn()));
         iconId = this.getResources().getIdentifier("book_icon", "drawable", this.getPackageName());
         loadImage();
@@ -84,6 +92,7 @@ public class ViewPhotoActivity extends AppCompatActivity {
             btn_add.setVisibility(View.GONE);
         }
 
+        // Start the gallery on the users phone to select an image
         btn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,6 +101,7 @@ public class ViewPhotoActivity extends AppCompatActivity {
             }
         });
 
+        // Remove the file if it exists in the database
         btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,6 +116,7 @@ public class ViewPhotoActivity extends AppCompatActivity {
             }
         });
 
+        // Return to BookViewActivity since the user is done with adding photos
         btn_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,6 +127,7 @@ public class ViewPhotoActivity extends AppCompatActivity {
             }
         });
 
+        // Set the cancel boolean to true to indicate the user wants to cancel the photo upload
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,11 +136,18 @@ public class ViewPhotoActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * When the activity of finding the photo finishes, try to upload it to storage
+     * @param request request code to ensure it was the photo finding activity
+     * @param result result code to determine if it was successful
+     * @param intent intent we get the data from
+     */
     protected void onActivityResult(int request, int result, Intent intent) {
         super.onActivityResult(request, result, intent);
         if (result == RESULT_OK && request == image) {
             uri = intent.getData();
             if (uri != null) {
+                // While the photo uploads we change the layout to show the upload progress
                 UploadTask upload = pathReference.putFile(uri);
                 btn_add.setVisibility(View.GONE);
                 btn_done.setVisibility(View.GONE);
@@ -137,12 +156,14 @@ public class ViewPhotoActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
                 tvProgress.setVisibility(View.VISIBLE);
 
+                // When the upload is done revert to the normal activity
                 upload.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         showButtons();
                     }
                 }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    // Update the progress bar while the upload is ongoing
                     @Override
                     public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                         if (!cancel) {
@@ -150,6 +171,7 @@ public class ViewPhotoActivity extends AppCompatActivity {
                             progressBar.setProgress((int) progress);
                             tvProgress.setText("Uploading... " + Long.toString(progress) + "% done");
                         } else {
+                            // User cancelled the upload
                             upload.cancel();
                             showButtons();
                             loadImage();
@@ -163,6 +185,9 @@ public class ViewPhotoActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * If the image exists in storage then load it
+     */
     private void loadImage() {
         // Load the image into the imageview if it exists
         pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -174,6 +199,10 @@ public class ViewPhotoActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Change the activity layout to the normal way of looking, ie no more progress bar and buttons
+     * shown again
+     */
     private void showButtons() {
         btn_add.setVisibility(View.VISIBLE);
         btn_delete.setVisibility(View.VISIBLE);

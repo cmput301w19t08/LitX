@@ -37,9 +37,9 @@ import java.io.IOException;
 
 /**
  * This is our ScanBookActivity class
- * @author 150 1248
+ * @author rcdavids
  * @version 1.0
- * @see AppCompatActivity
+ * @see AppCompatActivity, AddBookActivity, StatusActivity
  */
 public class ScanBookActivity extends AppCompatActivity {
 
@@ -56,8 +56,10 @@ public class ScanBookActivity extends AppCompatActivity {
 
     /**
      * Sets up our camera for reading in barcodes
-     * @param requestCode, permissions, int[]
-     * @throws: IOException
+     * @param requestCode request to use the camera
+     * @param permissions permissions for camera
+     * @param grantResults results of user allowing/denying camera use
+     * @throws IOException on error
      * @see BookClient
      */
     @Override
@@ -71,15 +73,10 @@ public class ScanBookActivity extends AppCompatActivity {
                 {
                     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
                         return;
-
-
-
                     }
                     try {
                         cameraSource.start(cameraView.getHolder());
                     } catch (IOException e){
-
-
                         e.printStackTrace();
                     }
 
@@ -94,7 +91,7 @@ public class ScanBookActivity extends AppCompatActivity {
     /**
      * Executes when we first create scan with a bundle parameter
      * @param savedInstanceState Bundle
-     * @throws: IOException
+     * @throws IOException error occurred
      * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,10 +140,7 @@ public class ScanBookActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-
-                }
+                public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {}
 
                 @Override
                 public void surfaceDestroyed(SurfaceHolder holder) {
@@ -196,7 +190,7 @@ public class ScanBookActivity extends AppCompatActivity {
 
     /**
      * Clears ISBN and allows us to read in a new ISBN
-     * @param View
+     * @param v on button click
      */
     public void clearISBN(View v) {
         ReadISBN = Boolean.TRUE;
@@ -205,9 +199,8 @@ public class ScanBookActivity extends AppCompatActivity {
 
     /**
      * Confirms ISBN creates an Intent with the title and ISBN and passes it to AddBookActivity
-     * @param View
-     * @throws: JSONException
-     * @see AddBookActivity
+     * @param v on button click
+     * @throws JSONException error occurred
      */
     public void confirmISBN(View v) {
         findViewById(R.id.confirm_btn).setVisibility(View.GONE);
@@ -227,10 +220,6 @@ public class ScanBookActivity extends AppCompatActivity {
                     try {
                         if (response.has("title")) {
                             title = response.getString("title");
-                                //intent.putExtra("Title",title);
-                                //intent.putExtra("ISBN",ISBN);
-                                //setResult(RESULT_OK,intent);
-                                //finish();
 
                         }
                         else {
@@ -267,12 +256,10 @@ public class ScanBookActivity extends AppCompatActivity {
                                         }
                                         catch (JSONException e) {
                                             e.printStackTrace();
-                                            //ReadISBN = Boolean.TRUE;
                                         }
 
 
                                     } else {
-                                        //ReadISBN = Boolean.TRUE;
                                         textView.setText(NoISBN);
 
 
@@ -294,16 +281,12 @@ public class ScanBookActivity extends AppCompatActivity {
                             finish();
 
                         }
-                            //here
-
 
                     } catch (JSONException e) {
-                        //ReadISBN = Boolean.TRUE;
                         e.printStackTrace();
                     }
 
                 } else {
-                    //ReadISBN = Boolean.TRUE;
                     textView.setText(NoISBN);
 
 

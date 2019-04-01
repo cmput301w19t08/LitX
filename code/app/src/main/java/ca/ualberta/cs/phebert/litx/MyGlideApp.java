@@ -21,6 +21,13 @@ import java.io.InputStream;
 @GlideModule
 public class MyGlideApp extends AppGlideModule {
 
+    /**
+     * Used to load the image into the imageview, this function has been re-used from the glide
+     * tutorial, see reuse statement on github
+     * @param context activity context
+     * @param glide glide module
+     * @param registry
+     */
     @Override
     public void registerComponents(Context context, Glide glide, Registry registry) {
         // Register FirebaseImageLoader to handle StorageReference

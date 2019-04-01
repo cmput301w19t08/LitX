@@ -11,6 +11,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.jetbrains.annotations.TestOnly;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,40 +22,114 @@ import javax.annotation.Nullable;
 
 import ca.ualberta.cs.phebert.litx.annotations.BorrowerCalled;
 
+/**
+ * Represents the various users using the app.
+ *
+ * Kind of a god class, this handles both authenticating this user and
+ * getting other users to communicate with them.
+ * @see ProfileActivity
+ */
 @SuppressWarnings("WeakerAccess")
 public class User implements Serializable {
+    /**
+     * this classe's specific log tag.
+     */
     private final static String TAG = "LitX.User";
+    /**
+     * the collection's name on {@link FirebaseFirestore}.
+     */
     final static String USER_COLLECTION = "Users";
+    /**
+     * A database containing all the users keyed by their {@link #uid}.
+     * this is the result of {@link #loadDb()}.
+     * @see #getAll()
+     */
     private static Map<String,User> db;
+    /**
+     * Used to prevent the dual creation of tasks,
+     * and to prevent the GC from collecting a running task.
+     * @see #loadDb()
+     * @see #getAll()
+     */
     private static Task<QuerySnapshot> task;
+    /**
+     * Used in {@link #getAll()} to prevent data races.
+     */
     private static boolean ready = false;
+    /**
+     * The current user using this Application
+     */
     private static User current;
+    /**
+     * Set by {@link FirebaseAuth}, is a unique id used to identify users
+     * @see #getUserid()
+     */
     private String uid;
+    /**
+     * the user name of this user, used to identify him.
+     * it should be unique, but that is not limited yet
+     * @see #setUserName(String)
+     * @see #getUserName()
+     */
     private String userName;
+    /**
+     * the email address of this user, it is also used to authenticate the user,
+     * so it is harder to change and is used to sign in.
+     * @see #setEmail(String)
+     * @see #getEmail()
+     */
     private String email;
+    /**
+     * The phone number of this user, used to contact him.
+     * Could be blank.
+     * @see #setPhoneNumber(String)
+     * @see #getPhoneNumber()
+     */
     private String phoneNumber;
+    /**
+     * A list of observers to notify when a user updates
+     * @see #addObserver(UserObserver)
+     */
     private ArrayList<UserObserver> observers;
+    /**
+     * A list of requests accepted by the user
+     * FIXME unused, and for some odd reason, cannot be expanded
+     * @see #getAcceptedRequests()
+     */
     private ArrayList<Request> acceptedRequests;
+    /**
+     * A list of requests sent by this user.
+     * @see #addRequest(Request)
+     * @see #getRequests()
+     * @see #removeRequest(Request)
+     */
     private ArrayList<Request> myRequests;
+    /**
+     * A list of the books this user registered.
+     * @see #addBook(Book)
+     * @see #getMyBooks()
+     */
     private ArrayList<Book> myBooks;
-    private Coordinate myLocation;
-    private FirebaseUser certificate;
+    /**
+     * Used to reduce the amount of writes to firestore.
+     * @see #scheduleSync()
+     * @see #sync()
+     */
     private boolean syncScheduled;
 
 
-    /*
-     * Check if username is unique
-     * Used for creation of new user
+    /**
+     * Create a user that is not on the database.
      */
+    @TestOnly
     public User(String username, String email, String phone) {
-        observers = new ArrayList<>();
-        acceptedRequests = new ArrayList<>();
-        myRequests = new ArrayList<>();
-        myBooks = new ArrayList<>();
-        certificate = null;
+        this();
         editProfile(username, email, phone);
     }
 
+    /**
+     * Create a default user, whose fields are set afterwards.
+     */
     public User() {
         observers = new ArrayList<>();
         acceptedRequests = new ArrayList<>();
@@ -67,6 +143,10 @@ public class User implements Serializable {
 
     ///////////////////////////////////  Database stuff ////////////////////////////////////////////
 
+    /**
+     * Create {@link #task the task} used to get all the books on the {@link FirebaseFirestore}
+     * database. also add a snapshot listener to automatically update users.
+     */
     static private void loadDb() {
         if(task == null && isSignedIn()) {
 
@@ -95,6 +175,11 @@ public class User implements Serializable {
         }
     }
 
+    /**
+     * Creates a new user from a snapshot.
+     * @param doc
+     * @return
+     */
     static public User fromSnapshot(DocumentSnapshot doc) {
         User ans = new User();
         ans.userName = doc.getString("userName");
@@ -104,6 +189,11 @@ public class User implements Serializable {
         return ans;
     }
 
+    /**
+     * Gets all the user from the database,
+     * can be iterated over in preference to directly querying Firebase.
+     * @return {@link #db}
+     */
     static public Map<String, User> getAll() {
         loadDb();
         if(!isSignedIn()) {
@@ -129,29 +219,51 @@ public class User implements Serializable {
         return db;
     }
 
+    /**
+     * Gets a user by {@link #uid}.
+     * Uses {@link #getAll()} internally.
+     * @param uid the uid of the queryed user
+     * @return the user if it exists, or null.
+     */
     public static User findByUid(String uid) {
         User ans = getAll().get(uid);
         return ans;
     }
 
+    /**
+     * Gets the current user.
+     * @return {@link #currentUser()}
+     */
     public static User currentUser() {
         if(current == null) {
             if(isSignedIn()) {
                 current = findByUid(FirebaseAuth.getInstance().getUid());
-                current.certificate = FirebaseAuth.getInstance().getCurrentUser();
             } else return null;
         }
         return current;
     }
 
+    /**
+     * Add an observer to this book so that when it publishes
+     * (in the snapshot listeners from {@link #loadDb()}
+     * @param observer the observer to add, for example {@link ProfileActivity}
+     */
     void addObserver(UserObserver observer) {
         observers.add(observer);
     }
 
+    /**
+     * Schedules a {@link #sync()}
+     */
     public void scheduleSync() {
         syncScheduled = true;
     }
 
+    /**
+     * Pushes this user's data to {@link FirebaseFirestore}.
+     * @see Book#push()
+     * @see Request#selfPush()
+     */
     public void sync() {
         if(syncScheduled) {
             HashMap<String, Object> user = new HashMap<>();
@@ -160,7 +272,7 @@ public class User implements Serializable {
             user.put("phoneNumber", phoneNumber);
             FirebaseFirestore.getInstance()
                     .collection(USER_COLLECTION)
-                    .document(certificate.getUid())
+                    .document(getUserid())
                     .set(user)
                     .addOnSuccessListener(ign -> {
 
@@ -218,53 +330,77 @@ public class User implements Serializable {
         return FirebaseAuth.getInstance().getCurrentUser() != null;
     }
 
+    /**
+     * Gets this users {@link #uid}, which is the user's actual user ID assigned by firebase.
+     * @return the user's {@link #uid}
+     */
     public String getUserid () {
         return uid;
     }
 
     ////////////////////////////////// setters and getters /////////////////////////////////////////
 
-    /*
-     * Check if username is unique
+    /**
+     * Sets the {@link #userName} of this {@link User user}.
      */
     public void setUserName(String username) {
-        if(certificate != null) {
-            scheduleSync();
-        }
+        scheduleSync();
         this.userName = username;
     }
 
+    /**
+     * Gets the {@link #userName} of this user.
+     * @return this user's {@link #userName}
+     */
     public String getUserName() {
         return userName;
     }
 
+    /**
+     * Sets this user's {@link #email}
+     * @param newEmail the new value to set {@link #email} to
+     */
     public void setEmail(@NonNull String newEmail) {
         email = newEmail;
-        if(certificate != null) {
-            certificate.updateEmail(newEmail);
+        if(this == currentUser() && isSignedIn()) {
+            FirebaseAuth.getInstance().getCurrentUser().updateEmail(newEmail);
             scheduleSync();
         }
     }
 
+    /**
+     * Gets this user's {@link #email}.
+     * @return this user's {@link #email}
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * Sets this user's {@link #phoneNumber}
+     * @param newPhoneNumber the new value to set {@link #phoneNumber} to
+     */
     public void setPhoneNumber (String newPhoneNumber) {
         // TODO validate phone Number
         phoneNumber = newPhoneNumber;
-        if(certificate != null) {
-            scheduleSync();
-        }
+        scheduleSync();
     }
 
+    /**
+     * Gets the {@link #phoneNumber} from this user.
+     * @return {@link #phoneNumber}
+     */
     public String getPhoneNumber () {
-        if(phoneNumber == null && certificate != null) {
-            // TODO getPhoneNumber from FireStore
-        }
         return phoneNumber;
     }
 
+    /**
+     * set the three main fields of the user. uses the setters, so a sync must be called for it
+     * to be reflected on {@link FirebaseFirestore}.
+     * @param username the {@link #userName} of the user .
+     * @param email the {@link #email} of the user.
+     * @param phone the {@link #phoneNumber} of the user.
+     */
     public void editProfile(String username, @NonNull String email, String phone) {
         setUserName(username);
         setEmail(email);
@@ -273,26 +409,41 @@ public class User implements Serializable {
 
     //////////////////////////////////////// requests //////////////////////////////////////////////
 
+    /**
+     * Gets this user's {@link #myRequests requests}
+     * @return
+     */
     public ArrayList<Request> getRequests() {
         return myRequests;
     }
 
+    /**
+     * adds the passed request into the user's list of personal requests
+     *
+     * @param request
+     */
     @BorrowerCalled
     public void addRequest(Request request) {
         myRequests.add(request);
     }
 
+    /**
+     * @return the ArrayList of accepted requests of the user.
+     */
     public ArrayList<Request> getAcceptedRequests() {
         return acceptedRequests;
     }
 
-    // Is this what we want? Shouldn't we go into the the requestors requests and add it?
-    public void acceptRequest(Request request) {
-        myRequests.add(request);
-    }
 
+    /**
+     * removes a request from the user's list of requests.
+     * @param request the request to remove
+     * @see Request#delete()
+     */
     public void removeRequest (Request request) {
-        request.delete();
+        if(myRequests.contains(request)) {
+            myRequests.remove(request);
+        }
     }
 
     /////////////////////////////////////// books //////////////////////////////////////////////////
@@ -305,6 +456,10 @@ public class User implements Serializable {
         return myBooks;
     }
 
+    /**
+     * Adds a books to this user's {@link #myBooks}
+     * @param book
+     */
     public void addBook(Book book) {
         Log.d("MyBooks", "Book Added to myBooks" + book.getTitle());
         myBooks.add(book);
@@ -312,28 +467,22 @@ public class User implements Serializable {
     }
 
     /**
-     * Should delete the book and then remove it form myBooks
+     * Should delete the book and then remove it form {@link #myBooks}
      * @param book the book to delete
      */
     public void deleteBook(Book book) {
         if(myBooks.contains(book)) {
             book.delete(book);
+            myBooks.remove(book);
         }
     }
 
-    ///////////////////////////////////// Location /////////////////////////////////////////////////
-    // TODO: put in main part of class when possible, or deprecate
-
-    public void setMyLocation (double x, double y) {
-        myLocation = new Coordinate(x, y);
-    }
-
-    public Coordinate getMyLocation (){
-        return myLocation;
-    }
-
-    //////////////////////////////////////// misc //////////////////////////////////////////////////
-
+    /**
+     * Verifies if one user is the same as the other.
+     * Used to tell if a user was updated
+     * @param obj If
+     * @return true if and only if the users have the same email, user, and phone number
+     */
     @Override
     public boolean equals(@Nullable Object obj) {
         if(obj instanceof User) {
@@ -344,7 +493,10 @@ public class User implements Serializable {
         } else return false;
     }
 
-    // guarantee if(a.equals(b)) a.hashCode() == b.hashCode()
+    /**
+     * makes a hashcode for this user, only implemented because equals was implemented.
+     * it is guaranteed that if(a.equals(b)) a.hashCode() == b.hashCode()
+     */
     @Override
     public int hashCode() {
         return (email.hashCode() % (Integer.MAX_VALUE / 3)) +
