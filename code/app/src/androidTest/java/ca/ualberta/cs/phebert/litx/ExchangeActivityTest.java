@@ -18,25 +18,25 @@ public class ExchangeActivityTest {
     public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void borrow() {
+    public void forBorrow() {
         onView(withId(R.id.exchange_home)).perform(click());
+        onView(withId(R.id.pick_borrower)).perform(click());
         onView(withId(R.id.recieve_book)).perform(click());
         Espresso.pressBack();
-    }
-
-    @Test
-    public void handoverBorrow() {
-        onView(withId(R.id.exchange_home)).perform(click());
-        onView(withId(R.id.hand_over_book)).perform(click());
         onView(withId(R.id.pick_borrower)).perform(click());
+        onView(withId(R.id.hand_over_book)).perform(click());
         Espresso.pressBack();
     }
 
     @Test
-    public void handoverOwner() {
+    public void forOwner() {
         onView(withId(R.id.exchange_home)).perform(click());
-        onView(withId(R.id.hand_over_book)).perform(click());
         onView(withId(R.id.pick_owner)).perform(click());
+        onView(withId(R.id.recieve_book)).perform(click());
+        Espresso.pressBack();
+        onView(withId(R.id.pick_owner)).perform(click());
+        onView(withId(R.id.hand_over_book)).perform(click());
+        Espresso.pressBack();
     }
 
     @Test

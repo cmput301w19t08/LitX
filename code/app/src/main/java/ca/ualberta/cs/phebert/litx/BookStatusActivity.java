@@ -111,6 +111,6 @@ public class BookStatusActivity extends AppCompatActivity {
         }
 
         recyclerView.setAdapter(booksAdapter);
-        booksAdapter.notifyDataSetChanged();
+//        booksAdapter.notifyDataSetChanged();
     }
 }

@@ -1,5 +1,6 @@
 package ca.ualberta.cs.phebert.litx;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private TopTenAdapter adapter;
     private RecyclerView.LayoutManager manager;
     static Thread loader;
+    private Intent notNullIntent = null;
 
     void getAllData() {
         Request.getAll(); // this should be enough if requests weren't empty
@@ -43,13 +45,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (!User.isSignedIn()) {
             goToProfileView(null);
-        } else {
-            top10Generate();
         }
     }
 
     /**
-     * Populates the top10 Adapter
+     * Populates the top10 Adapter with the top 10 books, or less
      */
     public void top10Generate() {
         int i, topNumber;
@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
         booksToShow = new ArrayList<>(3);
         books.addAll(Book.getAll().values());
         topNumber = min(10, books.size());
-
         for (int j = 0; j < topNumber; j++) {
             comparisonBook = books.get(j);
             for (i = 0; i < books.size(); i++) {
@@ -100,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i("LitX Thread", "thread is running loader");
             loader = new Thread(this::getAllData);
             loader.start();
+            top10Generate();
         }
     }
 
@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
     public void goToProfileView(View v) {
         Intent intent = new Intent(this,ProfileActivity.class);
         startActivity(intent);
+     //   notNullIntent = startActivityForResult(intent,123);
     }
 
     public void getMyBooks(View v) {
