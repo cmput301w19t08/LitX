@@ -3,6 +3,7 @@ package ca.ualberta.cs.phebert.litx;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,7 +72,7 @@ public class BookViewActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        
+
         adapter = new RequestListAdapter(this, book.getRequests());
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
@@ -119,9 +121,8 @@ public class BookViewActivity extends AppCompatActivity {
             changeImage.setText("Click the photo to view the image!");
 
             ArrayList<Request> bookRequests = book.getRequests();
-            for (int i=0; i < bookRequests.size(); i++) {
-                Request request = bookRequests.get(i);
-                if (uid.equals(request.getRequester().getUserid())) {
+            for (Request iterRequest : book.getRequests()) {
+                if (uid.equals(iterRequest.getRequester().getUserid())) {
                     bookRequested();
                 }
             }
@@ -151,6 +152,7 @@ public class BookViewActivity extends AppCompatActivity {
                     Request newRequest = new Request(book, book.getOwner(), User.currentUser());
                     User.currentUser().addRequest(newRequest);
                     book.addRequest(newRequest);
+                    adapter.notifyDataSetChanged();
                 }
             });
         }
@@ -165,7 +167,6 @@ public class BookViewActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
     }
 
     @Override
