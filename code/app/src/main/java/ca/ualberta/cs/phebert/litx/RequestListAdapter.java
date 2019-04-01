@@ -14,12 +14,22 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
+/**
+ * An array adapter for the request object
+ * @Author plontke
+ * @See myBooks
+ * @See MapActivity
+ * @Version 1
+ */
 public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.ViewHolder> {
     private Context context;
     private ArrayList<Request> requests;
-    private double defaultLong = 53.5213;
-    private double defaultLat = -113.5213;
 
+    /**
+     * Constructor for the RequestList Adapter
+     * @param context
+     * @param requests
+     */
     public RequestListAdapter(Context context, ArrayList<Request> requests){
         this.context = context;
         this.requests = requests;

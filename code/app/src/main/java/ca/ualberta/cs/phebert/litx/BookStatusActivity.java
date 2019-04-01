@@ -15,7 +15,11 @@ import java.util.ArrayList;
 
 import ca.ualberta.cs.phebert.litx.R;
 
-
+/**
+ * @author plontke
+ * @version 1
+ *
+ */
 public class BookStatusActivity extends AppCompatActivity {
     public static final String FilterMode = "ca.ualberta.cs.phebert.litx.FilterMode";
     private ArrayList<Book> filteredBooks = new ArrayList<Book>();
@@ -26,6 +30,10 @@ public class BookStatusActivity extends AppCompatActivity {
     private int filter;
     private TextView message;
 
+    /**
+     * On Create method for the BookStatus Activity
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,12 +62,20 @@ public class BookStatusActivity extends AppCompatActivity {
         query();
 
     }
+
+    /**
+     * onStart method for the BookStatusActivity
+     */
     @Override
     public void onStart(){
         super.onStart();
         query();
     }
 
+    /**
+     * queries the requests of the current user and sets filteredBooks to the
+     *  appropriate requests depending on the filter
+     */
     public void query(){
         filteredBooks.clear();
         Log.d("LitX","Querying myRequests");
