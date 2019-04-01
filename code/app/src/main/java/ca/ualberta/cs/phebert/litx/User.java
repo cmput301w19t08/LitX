@@ -143,6 +143,10 @@ public class User implements Serializable {
 
     ///////////////////////////////////  Database stuff ////////////////////////////////////////////
 
+    /**
+     * Create {@link #task the task} used to get all the books on the {@link FirebaseFirestore}
+     * database. also add a snapshot listener to automatically update users.
+     */
     static private void loadDb() {
         if(task == null && isSignedIn()) {
 
@@ -171,6 +175,11 @@ public class User implements Serializable {
         }
     }
 
+    /**
+     * Creates a new user from a snapshot.
+     * @param doc
+     * @return
+     */
     static public User fromSnapshot(DocumentSnapshot doc) {
         User ans = new User();
         ans.userName = doc.getString("userName");
@@ -180,6 +189,11 @@ public class User implements Serializable {
         return ans;
     }
 
+    /**
+     * Gets all the user from the database,
+     * can be iterated over in preference to directly querying Firebase.
+     * @return {@link #db}
+     */
     static public Map<String, User> getAll() {
         loadDb();
         if(!isSignedIn()) {
@@ -205,11 +219,21 @@ public class User implements Serializable {
         return db;
     }
 
+    /**
+     * Gets a user by {@link #uid}.
+     * Uses {@link #getAll()} internally.
+     * @param uid the uid of the queryed user
+     * @return the user if it exists, or null.
+     */
     public static User findByUid(String uid) {
         User ans = getAll().get(uid);
         return ans;
     }
 
+    /**
+     * Gets the current user.
+     * @return {@link #currentUser()}
+     */
     public static User currentUser() {
         if(current == null) {
             if(isSignedIn()) {
@@ -219,14 +243,27 @@ public class User implements Serializable {
         return current;
     }
 
+    /**
+     * Add an observer to this book so that when it publishes
+     * (in the snapshot listeners from {@link #loadDb()}
+     * @param observer the observer to add, for example {@link ProfileActivity}
+     */
     void addObserver(UserObserver observer) {
         observers.add(observer);
     }
 
+    /**
+     * Schedules a {@link #sync()}
+     */
     public void scheduleSync() {
         syncScheduled = true;
     }
 
+    /**
+     * Pushes this user's data to {@link FirebaseFirestore}.
+     * @see Book#push()
+     * @see Request#selfPush()
+     */
     public void sync() {
         if(syncScheduled) {
             HashMap<String, Object> user = new HashMap<>();
@@ -303,18 +340,26 @@ public class User implements Serializable {
 
     ////////////////////////////////// setters and getters /////////////////////////////////////////
 
-    /*
-     * Check if username is unique
+    /**
+     * Sets the {@link #userName} of this {@link User user}.
      */
     public void setUserName(String username) {
         scheduleSync();
         this.userName = username;
     }
 
+    /**
+     * Gets the {@link #userName} of this user.
+     * @return this user's {@link #userName}
+     */
     public String getUserName() {
         return userName;
     }
 
+    /**
+     * Sets this user's {@link #email}
+     * @param newEmail the new value to set {@link #email} to
+     */
     public void setEmail(@NonNull String newEmail) {
         email = newEmail;
         if(this == currentUser() && isSignedIn()) {
@@ -323,13 +368,17 @@ public class User implements Serializable {
         }
     }
 
+    /**
+     * Gets this user's {@link #email}.
+     * @return this user's {@link #email}
+     */
     public String getEmail() {
         return email;
     }
 
     /**
-     *
-     * @param newPhoneNumber the new value to set {@link #phoneNumber to}
+     * Sets this user's {@link #phoneNumber}
+     * @param newPhoneNumber the new value to set {@link #phoneNumber} to
      */
     public void setPhoneNumber (String newPhoneNumber) {
         // TODO validate phone Number
@@ -338,7 +387,7 @@ public class User implements Serializable {
     }
 
     /**
-     * gets the {@link #phoneNumber} from this user.
+     * Gets the {@link #phoneNumber} from this user.
      * @return {@link #phoneNumber}
      */
     public String getPhoneNumber () {
@@ -360,6 +409,10 @@ public class User implements Serializable {
 
     //////////////////////////////////////// requests //////////////////////////////////////////////
 
+    /**
+     * Gets this user's {@link #myRequests requests}
+     * @return
+     */
     public ArrayList<Request> getRequests() {
         return myRequests;
     }
