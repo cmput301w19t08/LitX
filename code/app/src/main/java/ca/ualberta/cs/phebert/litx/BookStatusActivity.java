@@ -15,7 +15,12 @@ import java.util.ArrayList;
 
 import ca.ualberta.cs.phebert.litx.R;
 
-
+/**
+ * Displays all books the user has of the status they selected (Requested, Accepted, Borrowed)
+ * @author plontke
+ * @version 1.0
+ * @see MainActivity, Map, BookViewActivity
+ */
 public class BookStatusActivity extends AppCompatActivity {
     public static final String FilterMode = "ca.ualberta.cs.phebert.litx.FilterMode";
     private ArrayList<Book> filteredBooks = new ArrayList<Book>();
@@ -26,6 +31,10 @@ public class BookStatusActivity extends AppCompatActivity {
     private int filter;
     private TextView message;
 
+    /**
+     * Initializes the status screen
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,18 +57,21 @@ public class BookStatusActivity extends AppCompatActivity {
         }else {
             message.setText(getString(R.string.Borrowed_Books));
         }
-
-
-
         query();
-
     }
+
+    /**
+     * query to find the data when the activity starts
+     */
     @Override
     public void onStart(){
         super.onStart();
         query();
     }
 
+    /**
+     * Find the books relevant to the status that was selected
+     */
     public void query(){
         filteredBooks.clear();
         Log.d("LitX","Querying myRequests");
