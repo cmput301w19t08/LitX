@@ -433,6 +433,7 @@ public class Book implements Serializable {
      */
     void addRequest(Request request) {
        requests.add(request);
+       this.status = BookStatus.requested;
        request.selfPush();
     }
 

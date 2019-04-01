@@ -29,6 +29,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+/**
+ * Allows the Owner of a book to set a location that will be attached to that book
+ * and has the requestor of that book be able to see the location
+ * @author rcdavids
+ * @version 1
+ * @see BookListAdapter
+ * @see RequestListAdapter
+ * @see Book
+ */
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback{
     private LatLng location;
     private Boolean Moveable;
@@ -39,6 +48,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     Button moveMarkerButton;
     private Book book;
 
+
+    /**
+     * onCreate method for MapActivity
+     * passed items through intent,
+     * "MOVABLE" type: Bool is checked to see if the marker is movable
+     * "BOOK" type: String the docID of a book
+     *
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,13 +76,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Book book = Book.findByDocId(intent.getStringExtra("BOOK"));
         try {
 
-
-            // Uses the intent to find the Latitude and Longitude of our Point and then assigns the LatLng variable a value
-            //corresponding to the points in the intent
-           // Intent intent = getIntent();
-        //    Book book = Book.findByDocId(intent.getStringExtra("BOOK"));
-          //  double Latitude = book.getLatitude();
-           // double Longitude = book.getLongitude();
             Log.i("LITX Lats",  Double.toString(book.getLatitude()));
 
             Moveable= intent.getBooleanExtra("MOVABLE",Boolean.FALSE);
@@ -97,6 +109,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
+    /**
+     * When the map is ready this is called
+     * @param googleMap : GoogleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         // Add a marker in Sydney, Australia,
@@ -118,6 +134,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
                 }
 
+                /**
+                 * When the user is done dragging the marker
+                 * @param marker
+                 */
                 public void onMarkerDragEnd(Marker marker){
                     String newLat=Double.toString(marker.getPosition().latitude);
                     String newLong=Double.toString(marker.getPosition().longitude);
@@ -181,9 +201,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
         finish();
 
-        //myLatEditText.setText(Double.toString(specifiedLocation.latitude));
 
     }
+
+    /**
+     * Moves the Marker
+     * @param v :View
+     */
     public void moveMarker(View v) {
         try {
             double Latitude = Double.parseDouble(myLatEditText.getText().toString());

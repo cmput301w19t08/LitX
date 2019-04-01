@@ -146,7 +146,6 @@ public class ExchangeActivity extends AppCompatActivity {
 
             isbn = data.getStringExtra("ISBN");
             for (Request request : User.currentUser().getRequests()){
-//                Log.d("LitxExchange", request.getBook().getAcceptedRequest().getRequester().getUserid());
                 if(request.getStatus() == RequestStatus.Accepted &&
                         Long.toString(request.getBook().getIsbn()).equals(isbn)){
                     found = true;
