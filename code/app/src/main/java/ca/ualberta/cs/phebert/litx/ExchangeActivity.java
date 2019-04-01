@@ -74,13 +74,14 @@ public class ExchangeActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         Boolean found = false;
+        Log.d("LitxExchange", Integer.toString(requestCode));
         if (requestCode == RECIEVE && resultCode == RESULT_OK){
             isbn = data.getStringExtra("ISBN");
             for(Book book : User.currentUser().getMyBooks()) {
+                Log.d("LitxExchange", book.getStatus().toString());
                 if (Long.toString(book.getIsbn()).equals(isbn) && book.getStatus() ==
                         BookStatus.returned ){
                     book.setStatus("available");
-                    book.setAcceptedRequest(null);
                     book.push();
                     found = true;
                     Toast.makeText(ExchangeActivity.this, "Book Has Been Set to Available",
@@ -95,13 +96,15 @@ public class ExchangeActivity extends AppCompatActivity {
             }
             // Accepted --> owner is handing over. Borrowed --> borrower is handing over
         } else if (requestCode == HAND_OVER_BORROWER && resultCode == RESULT_OK){
+
             isbn = data.getStringExtra("ISBN");
             for (Request request : User.currentUser().getRequests()){
-                if(request == request.getBook().getAcceptedRequest() &&
-                        Long.toString(request.getBook().getIsbn()) == isbn){
-                    request.resolve();
+//                Log.d("LitxExchange", request.getBook().getAcceptedRequest().getRequester().getUserid());
+                if(request.getStatus() == RequestStatus.Accepted &&
+                        Long.toString(request.getBook().getIsbn()).equals(isbn)){
                     found = true;
                     request.getBook().setStatus("returned");
+                    request.getBook().push();
                     Toast.makeText(ExchangeActivity.this, "Book Has Been Returned",
                             Toast.LENGTH_LONG).show();
                 }
@@ -112,13 +115,17 @@ public class ExchangeActivity extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
             }
 
-        } else if (requestCode == HAND_OVER_OWNER && requestCode == RESULT_OK){
+        } else {
             isbn = data.getStringExtra("ISBN");
+            Log.d("LitxExchange", "MyBooks Size" + Integer.toString(User.currentUser().getMyBooks().size()));
             for (Book book : User.currentUser().getMyBooks()){
-                if (Long.toString(book.getIsbn()) == isbn &&
+                Log.d("LitxExchange", book.getTitle());
+                Log.d("LitxExchange", book.getStatus().toString());
+                if (Long.toString(book.getIsbn()).equals(isbn) &&
                         book.getStatus() == BookStatus.accepted){
                     found = true;
                     book.setStatus("borrowed");
+                    book.push();
                     Toast.makeText(ExchangeActivity.this,
                             "Book has Been handed over to be borrowed", Toast.LENGTH_LONG)
                             .show();
