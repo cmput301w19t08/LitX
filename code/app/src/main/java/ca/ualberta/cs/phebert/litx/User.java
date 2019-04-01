@@ -36,7 +36,6 @@ public class User implements Serializable {
     private ArrayList<Request> acceptedRequests;
     private ArrayList<Request> myRequests;
     private ArrayList<Book> myBooks;
-    private Coordinate myLocation;
     private FirebaseUser certificate;
     private boolean syncScheduled;
 
@@ -320,19 +319,6 @@ public class User implements Serializable {
             book.delete(book);
         }
     }
-
-    ///////////////////////////////////// Location /////////////////////////////////////////////////
-    // TODO: put in main part of class when possible, or deprecate
-
-    public void setMyLocation (double x, double y) {
-        myLocation = new Coordinate(x, y);
-    }
-
-    public Coordinate getMyLocation (){
-        return myLocation;
-    }
-
-    //////////////////////////////////////// misc //////////////////////////////////////////////////
 
     @Override
     public boolean equals(@Nullable Object obj) {
