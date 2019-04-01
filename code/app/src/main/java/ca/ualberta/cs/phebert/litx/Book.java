@@ -100,6 +100,18 @@ public class Book implements Serializable {
         ans.setStatus(doc.getString("status"));
         ans.setAuthor(doc.getString("author"));
         ans.setTitle(doc.getString("title"));
+        if (doc.getDouble("longitude") == null){
+            ans.setLongitude(0);
+        }else {
+            ans.setLongitude(doc.getDouble("longitude"));
+        }
+        if (doc.getDouble("latitude") == null){
+            ans.setLatitude(0);
+        }else {
+            ans.setLatitude(doc.getDouble("latitude"));
+        }
+
+
         // TODO (Scott): set/get photograph, might want to change this to a filename
         try {
             ans.setIsbn(doc.getLong("isbn"));
@@ -143,6 +155,8 @@ public class Book implements Serializable {
         b.put("author",getAuthor());
         b.put("title", getTitle());
         b.put("isbn",getIsbn());
+        b.put("longitude", getLongitude());
+        b.put("latitude", getLatitude());
 
         for(Book book : Book.getAll().values()) {
             if(this.equals(book)) setDocID(book.docID);
@@ -163,6 +177,8 @@ public class Book implements Serializable {
             db.get(getDocID()).setAuthor(getAuthor());
             db.get(getDocID()).setIsbn(getIsbn());
             owner.getMyBooks().set(owner.getMyBooks().indexOf(this), this);
+            db.get(getDocID()).setLatitude(getLatitude());
+            db.get(getDocID()).setLongitude(getLongitude());
         }
     }
 

@@ -14,6 +14,7 @@ package ca.ualberta.cs.phebert.litx;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -52,14 +53,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             myLongEditText.setVisibility(View.GONE);
 
         }
+        Intent intent = getIntent();
+        Book book = Book.findByDocId(intent.getStringExtra("BOOK"));
         try {
+
+
             // Uses the intent to find the Latitude and Longitude of our Point and then assigns the LatLng variable a value
             //corresponding to the points in the intent
-            Intent intent = getIntent();
-            Book book = Book.findByDocId(intent.getStringExtra("BOOK"));
-            double Latitude = book.getLatitude();
-            double Longitude = book.getLongitude();
-
+           // Intent intent = getIntent();
+        //    Book book = Book.findByDocId(intent.getStringExtra("BOOK"));
+          //  double Latitude = book.getLatitude();
+           // double Longitude = book.getLongitude();
+            Log.i("LITX Lats",  Double.toString(book.getLatitude()));
 
             Moveable= intent.getBooleanExtra("MOVABLE",Boolean.FALSE);
 
@@ -78,7 +83,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
 
-                location = new LatLng(Latitude,Longitude);
+                location = new LatLng(book.getLatitude(), book.getLongitude());
 
             }
 
@@ -162,9 +167,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
     public void getLocation(View v) {
-        double specifiedLatitude = marker.getPosition().latitude;
-        double specifiedLongitude = marker.getPosition().longitude;
+        Intent intent = getIntent();
+        Book book = Book.findByDocId(intent.getStringExtra("BOOK"));
+
+
         if (Moveable) {
+            double specifiedLatitude = marker.getPosition().latitude;
+            double specifiedLongitude = marker.getPosition().longitude;
+            Log.i("LITX LatsGETLOC", Double.toString(specifiedLatitude));
             book.setLatitude(specifiedLatitude);
             book.setLongitude(specifiedLongitude);
             book.push();
