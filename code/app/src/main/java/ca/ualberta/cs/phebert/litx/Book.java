@@ -179,6 +179,8 @@ public class Book implements Serializable {
             owner.getMyBooks().set(owner.getMyBooks().indexOf(this), this);
             db.get(getDocID()).setLatitude(getLatitude());
             db.get(getDocID()).setLongitude(getLongitude());
+
+
         }
     }
 
