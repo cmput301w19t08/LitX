@@ -235,6 +235,7 @@ public class AddBookActivity extends AppCompatActivity {
         findViewById(R.id.btnISBN).setVisibility(View.GONE);
         photo.setVisibility(View.GONE);
         findViewById(R.id.changeImageTextView).setVisibility(View.GONE);
+        findViewById(R.id.invalidTextView).setVisibility(View.GONE);
 
         findViewById(R.id.createBookProgress).setVisibility(View.VISIBLE);
         findViewById(R.id.creatingBookTextView).setVisibility(View.VISIBLE);

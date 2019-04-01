@@ -73,8 +73,8 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:textAlignment="viewStart"
-        android:textColor="#ffffff"
-        android:textColorHint="#d3d3d3"
+        android:textColor="@color/textColor"
+        android:textColorHint="@color/colorAccent"
         app:layout_constraintBottom_toTopOf="@+id/btnISBN"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

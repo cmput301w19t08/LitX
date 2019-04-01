@@ -2,10 +2,13 @@ package ca.ualberta.cs.phebert.litx;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -18,6 +21,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import ca.ualberta.cs.phebert.litx.annotations.*;
 
@@ -35,6 +39,9 @@ public class Request {
     private User requester;
     private User bookOwner;
     private Book book;
+
+
+    private Boolean requestSeen;
 
     private RequestStatus status;
     private String docId;
@@ -77,16 +84,21 @@ public class Request {
      */
     private static Request fromSnapshot(DocumentSnapshot snapshot) {
         Request ans = new Request(
-                // need to somehow acces Book.
+                // need to somehow access Book.
                 Book.findByDocId(snapshot.getString("book")), // need book.byDocId;
                 User.findByUid(snapshot.getString("owner")),
                 User.findByUid(snapshot.getString("requester")),
                 snapshot.getString("status")
         );
+        try {
+            ans.requestSeen = snapshot.getBoolean("seen");
+        } catch (RuntimeException e) {}
         ans.docId = snapshot.getId();
         log.d("Litx", ans.docId);
         ans.book.addRequest(ans);
         ans.requester.addRequest(ans);
+
+        Log.i("THIS IS BEFORE", snapshot.getString("status")+"AND ITS ID IS "+snapshot.getString("book"));
 
         return ans;
     }
@@ -114,15 +126,11 @@ public class Request {
         HashMap<String, Request> onlineRequests = new HashMap<>();
         HashMap<String, Request> offlineRequests = new HashMap<>();
 
-
-        // TODO get stored Requests
-
         while(!task.isComplete()) {
             if(task.isCanceled()) return;
         }
         if(task.isSuccessful()) {
-            Request request; // will be set in a foreach loop
-            // TODO compare stored requests with online requests
+            Request request;
             if(false) {
                 request.generateNotification(ctx);
             }
@@ -183,37 +191,48 @@ public class Request {
      * </p>
      * @param ctx
      */
-    private void generateNotification(Context ctx) {
-        // TODO
+    public void generateNotification(Context ctx) {
+        Random rand = new Random();
+        // 10000 is just a magic number for unique number for notifications
+        int randInt = rand.nextInt(10000);
+        String textTitle;
+        String bookTitle;
+        String textContent;
+        PendingIntent pendingIntent;
+        if (!status.equals(RequestStatus.Accepted)) {
+            Intent intentForOwner = new Intent(ctx.getApplicationContext(), BookViewActivity.class);
+            intentForOwner.putExtra("Book", book.getDocID());
+            intentForOwner.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        // Create an explicit intent for an Activity in your app
-        // Not sure what activity should be started when the notification is clicked. Change 'User.class'
-        // Error Comment out Intent was wrong
-//        Intent intent = new Intent(this, User.class);
-        // Error comment out
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+            pendingIntent = PendingIntent.getActivity(ctx, randInt, intentForOwner, 0);
+            textTitle = "Request";
+            bookTitle = book.getTitle();
+            textContent = requester.getUserName() + " wants to borrow " + bookTitle;
 
-        String textTitle = "Request";
-        String textContent = requester.getUserName() + " wants to borrow book";
+        } else {
+            Intent intentForOwner = new Intent(ctx.getApplicationContext(), BookStatusActivity.class);
+            intentForOwner.putExtra("Book", book.getDocID());
+            intentForOwner.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+            pendingIntent = PendingIntent.getActivity(ctx, randInt, intentForOwner, 0);
+
+            textTitle = "Accepted!";
+            bookTitle = book.getTitle();
+
+            textContent = bookOwner.getUserName() + " accepted your request to borrow " + bookTitle;
+
+        }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, CHANNEL_ID)
-                // Error
-//                .setSmallIcon(R.drawable.notification_icon)
+                .setSmallIcon(R.drawable.book_icon2)
                 .setContentTitle(textTitle)
                 .setContentText(textContent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                //error
-//                .setContentIntent(pendingIntent)
+                .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
-        //error
-        // shows the Notification
-//        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
-        // notificationId is a unique int for each notification that you must define
-        // right now its a magic number
-        int notificationId = 123;
-//        notificationManager.notify(notificationId, builder.build());
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(ctx);
+        notificationManager.notify(randInt, builder.build());
     }
 
     /**
@@ -233,8 +252,6 @@ public class Request {
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
             NotificationManager notificationManager = ctx.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
@@ -251,6 +268,7 @@ public class Request {
         this.bookOwner = owner;
         this.requester = requester;
         status = RequestStatus.Pending;
+        this.requestSeen = false;
     }
 
     /**
@@ -307,6 +325,10 @@ public class Request {
         selfPush();
     }
 
+    /**
+     * Sets the status of the request
+     * @param status
+     */
     public void setStatus(RequestStatus status){
         this.status = status;
     }
@@ -333,6 +355,23 @@ public class Request {
     }
 
     /**
+     * returns true if notification has been generated or false if it has not
+     * @return
+     */
+    public Boolean getRequestSeen() {
+        return requestSeen;
+    }
+
+    /**
+     * Sets the notification
+     * @param requestSeen
+     */
+    public void setRequestSeen(Boolean requestSeen) {
+        this.requestSeen = requestSeen;
+    }
+
+
+    /**
      * turns this Request into a Map, so that it can be pushed.
      * @return a map version of this request.
      */
@@ -342,7 +381,8 @@ public class Request {
         ans.put("requester",requester.getUserid());
         ans.put("owner", bookOwner.getUserid());
         ans.put("book", book.getDocID());
-        ans.put("status", status.name());
+        ans.put("status", status.toString());
+        ans.put("seen", requestSeen);
         return ans;
     }
 }

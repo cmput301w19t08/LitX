@@ -61,6 +61,10 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+        <service
+            android:enabled="true"
+            android:name="ca.ualberta.cs.phebert.litx.NotificationIntentService"
+            android:exported="true" />
     </application>
 
 </manifest>
