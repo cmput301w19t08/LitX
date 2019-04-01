@@ -109,7 +109,6 @@ public class AddBookActivity extends AppCompatActivity {
                     }
 
                     if(!User.isSignedIn()) return;
-                    //TO DO: User should be the one using the app, not newly created user
                     User u = User.currentUser();
                     Book b = new Book(u, author, title, isbn);
 
@@ -132,44 +131,38 @@ public class AddBookActivity extends AppCompatActivity {
             }
         });
 
-        photo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent photos = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-                startActivityForResult(photos, image);
-            }
+        photo.setOnClickListener(v -> {
+            Intent photos = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+            startActivityForResult(photos, image);
         });
 
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancel.setVisibility(View.GONE);
-                photoExists = false;
-                GlideApp.with(AddBookActivity.this).load(iconId).into(photo);
-            }
+        cancel.setOnClickListener(v -> {
+            cancel.setVisibility(View.GONE);
+            photoExists = false;
+            GlideApp.with(AddBookActivity.this).load(iconId).into(photo);
         });
     }
 
+    /**
+     * onActivityResult tries to get information from the last activity, in this case the last
+     * activity will either be scanning for the isbn or getting a photo from the users device
+     * @param requestCode number returned to indicate the activity that got a result
+     * @param resultCode number indicating the result of performing the activity
+     * @param data the intent that the data was retrieved from
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         String TAG = "scan";
-        //titleView.setText("" + resultCode);
         if(requestCode == 155) {
             if(data != null) {
-                //try {
 
-                    String title = data.getStringExtra("Title");
-                    String ISBN = data.getStringExtra("ISBN");
-                    String author = data.getStringExtra("Author");
-                    ISBNView.setText(ISBN);
-                    titleView.setText(title);
-                    authorView.setText(author);
-                //} catch (Exception e){
-                    //If the book is not in the WorldLibrary database print only the ISBN
-                //    String ISBN = data.getStringExtra("ISBN");
-                 //   ISBNView.setText(ISBN);
-                //}
+                String title = data.getStringExtra("Title");
+                String ISBN = data.getStringExtra("ISBN");
+                String author = data.getStringExtra("Author");
+                ISBNView.setText(ISBN);
+                titleView.setText(title);
+                authorView.setText(author);
 
             } else {
                 Log.w(TAG,"data is null");
@@ -184,15 +177,22 @@ public class AddBookActivity extends AppCompatActivity {
             }
         }
     }
+
+    /**
+     * the onClick listener for the scan button,
+     * Starts a scanning activity so that the ISBN of a book mey be scanned.
+     * @param v the scan button
+     */
     public void scanISBN(View v) {
         Intent intent = new Intent(this, ScanBookActivity.class);
         startActivityForResult(intent,155);
-
-
-
-
     }
 
+    /**
+     * Loads an image from the database if it exists, otherwise the placeholder icon stays in the
+     * imageview unless the user changes it
+     * @param book the book that we are trying to find the image for
+     */
     private void loadImage(Book book) {
         // Load the image into the imageview if it exists
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
@@ -209,11 +209,16 @@ public class AddBookActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * sets up the UI to add an image.
+     * @param book the book to which the image should be added.
+     */
     private void addImage(Book book) {
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         pathReference = storageReference.child(book.getOwner().getUserid() + "/" + Long.toString(book.getIsbn()));
         UploadTask upload = pathReference.putFile(uri);
 
+        // Hide buttons and make the progress bar visible while the photo uploads
         titleView.setVisibility(View.GONE);
         authorView.setVisibility(View.GONE);
         ISBNView.setVisibility(View.GONE);
@@ -227,7 +232,7 @@ public class AddBookActivity extends AppCompatActivity {
         findViewById(R.id.createBookProgress).setVisibility(View.VISIBLE);
         findViewById(R.id.creatingBookTextView).setVisibility(View.VISIBLE);
 
-
+        // Once uploaded finish the activity
         upload.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {

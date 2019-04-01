@@ -70,6 +70,7 @@ public class BookViewActivity extends AppCompatActivity {
         Log.i("bookID", bookId);
         book = Book.findByDocId(bookId);
 
+        // Set the adapter to the recycler view
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -91,7 +92,7 @@ public class BookViewActivity extends AppCompatActivity {
             edit = (Button) findViewById(R.id.editButtonID);
 
         /* When delete button is clicked remove the book from the database, then go back to MyBooks
-        screen
+         * screen
          */
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -103,8 +104,7 @@ public class BookViewActivity extends AppCompatActivity {
                 }
             });
 
-        // Set description of book in the textview
-
+            // Pass the book object into AddBook so the user can edit it
             edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -115,15 +115,17 @@ public class BookViewActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
             });
-        }else {
+        } else {
             // Update views on the book
             book.setViews(book.getViews() + 1);
+            book.push();
 
             // The Owner is not viewing the book he cannot delete or edit it just Request it
             edit.setVisibility(View.GONE);
             delete.setVisibility(View.GONE);
             changeImage.setText("Click the photo to view the image!");
 
+            // Check if the book has already been requested by the person viewing it
             ArrayList<Request> bookRequests = book.getRequests();
             for (Request iterRequest : book.getRequests()) {
                 if (uid.equals(iterRequest.getRequester().getUserid())) {
@@ -135,6 +137,7 @@ public class BookViewActivity extends AppCompatActivity {
             String ownerUsername = book.getOwner().getUserName();
             ownerUsernameView.setText(ownerUsername);
 
+            // View the owners profile
             ownerUsernameView.setOnClickListener(new TextView.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -146,6 +149,7 @@ public class BookViewActivity extends AppCompatActivity {
                 }
             });
 
+            // Request the book the user is viewing
             request.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -153,11 +157,7 @@ public class BookViewActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
 
                     bookRequested();
-                    Request newRequest = new Request(book, book.getOwner(), User.currentUser());
-                    User.currentUser().addRequest(newRequest);
-                    book.addRequest(newRequest);
-
-                    newRequest.selfPush();
+                    book.addRequest();
 
                     adapter.notifyDataSetChanged();
                 }
@@ -176,6 +176,9 @@ public class BookViewActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * When the activity starts, set the description of the book
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -186,6 +189,10 @@ public class BookViewActivity extends AppCompatActivity {
         textView.setText(description);
     }
 
+    /**
+     * Load the image of the book if it exists, otherwise make the default image the book icon
+     * @param book the book that may have the image
+     */
     private void loadImage(Book book) {
         // Load the image into the imageview if it exists
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
@@ -201,6 +208,10 @@ public class BookViewActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Changes the visibility of things on the screen, hides the request button and displays
+     * a text view claiming the book has been requested
+     */
     private void bookRequested() {
         request.setVisibility(View.GONE);
         TextView requested = (TextView) findViewById(R.id.requestedTextView);

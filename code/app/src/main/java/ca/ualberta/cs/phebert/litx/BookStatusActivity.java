@@ -16,9 +16,10 @@ import java.util.ArrayList;
 import ca.ualberta.cs.phebert.litx.R;
 
 /**
+ * Displays all books the user has of the status they selected (Requested, Accepted, Borrowed)
  * @author plontke
- * @version 1
- *
+ * @version 1.0
+ * @see MainActivity, Map, BookViewActivity
  */
 public class BookStatusActivity extends AppCompatActivity {
     public static final String FilterMode = "ca.ualberta.cs.phebert.litx.FilterMode";
@@ -56,15 +57,12 @@ public class BookStatusActivity extends AppCompatActivity {
         }else {
             message.setText(getString(R.string.Borrowed_Books));
         }
-
-
-
         query();
-
     }
 
     /**
      * onStart method for the BookStatusActivity
+     * query to find the data when the activity starts
      */
     @Override
     public void onStart(){
@@ -99,7 +97,7 @@ public class BookStatusActivity extends AppCompatActivity {
                 booksAdapter = new BookListAdapter(
                         BookStatusActivity.this, filteredBooks, 1);
             }
-        }else {
+        } else {
             for (Request request : User.currentUser().getRequests()){
                 if (request.getBook().getStatus() == BookStatus.borrowed){
                     filteredBooks.add(request.getBook());
@@ -107,7 +105,6 @@ public class BookStatusActivity extends AppCompatActivity {
                 booksAdapter = new BookListAdapter(
                         BookStatusActivity.this, filteredBooks, 1);
             }
-
         }
 
         recyclerView.setAdapter(booksAdapter);
