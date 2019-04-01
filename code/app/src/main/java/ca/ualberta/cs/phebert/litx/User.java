@@ -20,28 +20,97 @@ import javax.annotation.Nullable;
 
 import ca.ualberta.cs.phebert.litx.annotations.BorrowerCalled;
 
+/**
+ * Represents the various users using the app.
+ *
+ * Kind of a god class, this handles both authenticating this user and
+ * getting other users to communicate with them.
+ * @see ProfileActivity
+ */
 @SuppressWarnings("WeakerAccess")
 public class User implements Serializable {
+    /**
+     * this classe's specific log tag.
+     */
     private final static String TAG = "LitX.User";
+    /**
+     * the collection's name on {@link FirebaseFirestore}.
+     */
     final static String USER_COLLECTION = "Users";
+    /**
+     * A database containing all the users keyed by their {@link #uid}.
+     * this is the result of {@link #loadDb()}.
+     * @see #getAll()
+     */
     private static Map<String,User> db;
+    /**
+     * Used to prevent the dual creation of tasks,
+     * and to prevent the GC from collecting a running task.
+     * @see #loadDb()
+     * @see #getAll()
+     */
     private static Task<QuerySnapshot> task;
+    /**
+     * Used in {@link #getAll()} to prevent data races.
+     */
     private static boolean ready = false;
+    /**
+     * The current user using this Application
+     */
     private static User current;
+    /**
+     * Set by {@link FirebaseAuth}, is a unique id used to identify users
+     * @see #getUserid()
+     */
     private String uid;
+    /**
+     * the user name of this user, used to identify him.
+     * it should be unique, but that is not limited yet
+     * @see #setUserName(String)
+     * @see #getUserName()
+     */
     private String userName;
+    /**
+     * the email address of this user, it is also used to authenticate the user,
+     * so it is harder to change and is used to sign in.
+     * @see #setEmail(String)
+     * @see #getEmail()
+     */
     private String email;
     /**
-     * The phone number of the user, used to contact him.
+     * The phone number of this user, used to contact him.
      * Could be blank.
      * @see #setPhoneNumber(String)
      * @see #getPhoneNumber()
      */
     private String phoneNumber;
+    /**
+     * A list of observers to notify when a user updates
+     * @see #addObserver(UserObserver)
+     */
     private ArrayList<UserObserver> observers;
+    /**
+     * A list of requests accepted by the user
+     * FIXME unused, and for some odd reason, cannot be expanded
+     * @see #getAcceptedRequests()
+     */
     private ArrayList<Request> acceptedRequests;
+    /**
+     * A list of requests sent by this user.
+     * @see #addRequest(Request)
+     * @see #getRequests()
+     * @see #removeRequest(Request)
+     */
     private ArrayList<Request> myRequests;
+    /**
+     * A list of the books this user registered.
+     * @see #addBook(Book)
+     * @see #getMyBooks()
+     */
     private ArrayList<Book> myBooks;
+    /**
+     *
+     */
     private FirebaseUser certificate;
     private boolean syncScheduled;
 
@@ -223,6 +292,10 @@ public class User implements Serializable {
         return FirebaseAuth.getInstance().getCurrentUser() != null;
     }
 
+    /**
+     * Gets this users {@link #uid}, which is the user's actual user ID assigned by firebase.
+     * @return the user's {@link #uid}
+     */
     public String getUserid () {
         return uid;
     }
