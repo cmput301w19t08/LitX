@@ -11,8 +11,8 @@ import java.util.ArrayList;
 
 /**
  * Adapter for the top ten Books
- * @Author plontke
- * @Version 1
+ * @author plontke
+ * @version 1.0
  */
 public class TopTenAdapter extends RecyclerView.Adapter<TopTenAdapter.ViewHolder>{
 
@@ -31,7 +31,7 @@ public class TopTenAdapter extends RecyclerView.Adapter<TopTenAdapter.ViewHolder
     }
 
     /**
-     *
+     * Creates a view holder object
      * @param parent ViewGroup
      * @param viewType int
      * @return ViewHolder
@@ -58,10 +58,6 @@ public class TopTenAdapter extends RecyclerView.Adapter<TopTenAdapter.ViewHolder
         holder.title.setText(book.getTitle());
         holder.author.setText(book.getAuthor());
         holder.number.setText(Integer.toString(top));
-        // Commented out since we cannot get request object from database at this time
-        //        if (!book.isAvailable()) {
-        //            holder.borrower.setText(book.getAcceptedRequest().getRequester().getUserName());
-        //        } else {
 
         /**
          * Sets the onclick listener for each book to go to the view
@@ -79,7 +75,6 @@ public class TopTenAdapter extends RecyclerView.Adapter<TopTenAdapter.ViewHolder
     }
 
     /**
-     *
      * returns the size of the list of recyclerView
      * @return int
      */

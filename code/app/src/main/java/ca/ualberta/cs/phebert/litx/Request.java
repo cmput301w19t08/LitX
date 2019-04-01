@@ -27,6 +27,12 @@ import ca.ualberta.cs.phebert.litx.annotations.*;
 
 import static com.loopj.android.http.AsyncHttpClient.log;
 
+/**
+ * Request object for a book, contains the book, book owner and user that is requesting the book
+ * @author phebert
+ * @version 1.0
+ * @see BookStatusActivity, BookViewActivity, ExchangeActivity
+ */
 public class Request {
     public static final String REQUESTS_COLLECTION = "Requests";
     private static Map<String, Request> db;
@@ -46,7 +52,9 @@ public class Request {
     private RequestStatus status;
     private String docId;
 
-    // Get requests
+    /**
+     * Loads the collection from firestore
+     */
     private static void loadDb(){
         if(task == null && User.isSignedIn()) {
             task = FirebaseFirestore.getInstance().collection(REQUESTS_COLLECTION)
@@ -76,11 +84,16 @@ public class Request {
         return db;
     }
 
-    public String getDocId(){return this.docId;}
     /**
-     *
-     * @param snapshot
-     * @return
+     * Getter for docId
+     * @return document ID of the request
+     */
+    public String getDocId(){return this.docId;}
+
+    /**
+     * Converts from the database into an object
+     * @param snapshot snapshot from database
+     * @return request object
      */
     private static Request fromSnapshot(DocumentSnapshot snapshot) {
         Request ans = new Request(
@@ -167,6 +180,9 @@ public class Request {
     }
 
 
+    /**
+     * Push itself to the database
+     */
     public void selfPush() {
         Log.v("LitX.Request","pushing");
         if (docId == null || docId.isEmpty()) {
@@ -256,6 +272,7 @@ public class Request {
             notificationManager.createNotificationChannel(channel);
         }
     }
+
     /**
      * Constructor for request
      * @param book The book that is being requested
@@ -286,14 +303,14 @@ public class Request {
 
     /**
      * returns the book owner
-     * @return
+     * @return owner of the book
      */
     public User getBookOwner() {
         return bookOwner;
     }
     /**
      * returns the requested book
-     * @return
+     * @return book that has been requested
      */
     public Book getBook(){
         return book;
@@ -301,7 +318,7 @@ public class Request {
 
     /**
      * returns the user that is requesting the book
-     * @return
+     * @return user requesting that book
      */
     public User getRequester() {
         return requester;
@@ -309,7 +326,7 @@ public class Request {
 
     /**
      * Returns the status of the book one of pending, accepted, resolved or refused
-     * @return
+     * @return status of the book
      */
     public RequestStatus getStatus() {
         return status;
@@ -327,7 +344,7 @@ public class Request {
 
     /**
      * Sets the status of the request
-     * @param status
+     * @param status new status to set the book to
      */
     public void setStatus(RequestStatus status){
         this.status = status;
@@ -356,7 +373,7 @@ public class Request {
 
     /**
      * returns true if notification has been generated or false if it has not
-     * @return
+     * @return notification has been generated or no
      */
     public Boolean getRequestSeen() {
         return requestSeen;
@@ -364,7 +381,7 @@ public class Request {
 
     /**
      * Sets the notification
-     * @param requestSeen
+     * @param requestSeen notification has been seen
      */
     public void setRequestSeen(Boolean requestSeen) {
         this.requestSeen = requestSeen;

@@ -158,6 +158,11 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.ViewHo
         }
     }
 
+    /**
+     * Loads the image of the book if it exists
+     * @param holder holder of the items that need to be accessed
+     * @param book book being held at that position
+     */
     private void loadImage(ViewHolder holder, Book book) {
         int iconId = context.getResources().getIdentifier("book_icon", "drawable", context.getPackageName());
         StorageReference storage = FirebaseStorage.getInstance().getReference();

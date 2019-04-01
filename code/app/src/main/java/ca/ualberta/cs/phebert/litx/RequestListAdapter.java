@@ -17,10 +17,10 @@ import java.util.ArrayList;
 
 /**
  * An array adapter for the request object
- * @Author plontke
- * @See myBooks
- * @See MapActivity
- * @Version 1
+ * @author plontke
+ * @see MyBooksActivity
+ * @see MapActivity
+ * @version 1.0
  */
 public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.ViewHolder> {
     private Context context;
@@ -29,12 +29,19 @@ public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.
     /**
      * Constructor for the RequestList Adapter
      * @param context
-     * @param requests
+     * @param requests requests to be loaded
      */
     public RequestListAdapter(Context context, ArrayList<Request> requests){
         this.context = context;
         this.requests = requests;
     }
+
+    /**
+     * Creates a viewholder
+     * @param parent parent viewgroup for the view
+     * @param position position of the request in the adapter
+     * @return viewholder that has been created
+     */
     @Override
     public RequestListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int position){
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.request_list_item, parent,
@@ -44,6 +51,11 @@ public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.
 
     }
 
+    /**
+     * Set onClickListeners to accept or delete requests as well as set things up for the holder
+     * @param holder viewHolder for the adapter
+     * @param position request position in the adapter
+     */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.itemView.setTag(requests.get(position));
@@ -90,14 +102,20 @@ public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.
                 context.startActivity(intent);
             }
         });
-
     }
+
+    /**
+     * Gets the item count requests
+     * @return amount of requests in the requests array
+     */
     @Override
     public int getItemCount(){
         return requests.size();
     }
 
-
+    /**
+     * ViewHolder object for the RecyclerView
+     */
     public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView requestorName;
         public Button accept;

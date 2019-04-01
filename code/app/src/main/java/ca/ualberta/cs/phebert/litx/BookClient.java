@@ -19,8 +19,9 @@ import java.net.URLEncoder;
 
 /**
  * This is our BookClient class this is used by scan to find search results from our ISBN
- * @author 150 1248
+ * @author rcdavids
  * @version 1.0
+ * @see BookClient
  */
 
 public class BookClient {
@@ -33,18 +34,14 @@ public class BookClient {
      * Constructor for a BookClient object. Sets it client to be a new AsyncHttpClient
      * @returns BookClient
      */
-
     public BookClient() {
         this.client = new AsyncHttpClient();
     }
 
     /**
      * gets and ISBN and uses it to create the URL of the book in the openlibrary
-     * @param String
-     * @throws: IOException
-     * @see BookClient
+     * @param ourISBN the isbn of the book
      */
-
     private String getApiUrl(String ourISBN) {
         //return API_BASE_URL + ourISBN +API_END_URL;
         return API_BASE_URL + ourISBN +API_END_URL;
@@ -52,9 +49,7 @@ public class BookClient {
 
     /**
      * Method for accessing the result of a search with our URL
-     * @param String
-     * @throws: IOException
-     * @see BookClient
+     * @param anISBN isbn of book
      */
 
     public void getBooks(final String anISBN, JsonHttpResponseHandler handler) {

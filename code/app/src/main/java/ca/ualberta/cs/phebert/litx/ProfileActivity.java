@@ -15,7 +15,9 @@ import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * This Activity is used to display a {@link User user's} information.
- *
+ * @author phebert
+ * @version 1.0
+ * @see MainActivity
  */
 public class ProfileActivity extends AppCompatActivity implements UserObserver {
     private static final String LOG_TAG = "litX.ProfileActivity";
@@ -78,7 +80,7 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
 
     /**
      * Swaps the layout to the layout used to edit a user.
-     * @param v
+     * @param v view for the button
      */
     public void editProfile(View v) {
         setContentView(editProfile);
@@ -87,7 +89,7 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
 
     /**
      * Swaps the layout to the layout used to create a user or sign in.
-     * @param v
+     * @param v view for the button
      */
     public void addProfile(View v) {
         setContentView(editProfile);
@@ -148,7 +150,7 @@ public class ProfileActivity extends AppCompatActivity implements UserObserver {
 
     /**
      * updates the user's information in real time.
-     * @param user
+     * @param user User that is getting updated
      */
     @Override
     public void onUserUpdated(User user) {

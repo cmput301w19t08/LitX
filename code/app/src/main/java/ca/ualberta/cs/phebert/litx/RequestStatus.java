@@ -4,8 +4,6 @@ import android.util.Log;
 
 import java.util.Hashtable;
 
-//static import Request.TAG;
-
 public enum RequestStatus {
     Pending {
         @Override

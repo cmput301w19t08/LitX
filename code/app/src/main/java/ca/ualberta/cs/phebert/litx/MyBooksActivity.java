@@ -49,7 +49,6 @@ public class MyBooksActivity extends AppCompatActivity {
      * onCreate finds all the books in the database that the user owns and displays them in the
      * RecyclerView. It allows the user to add a new book to this list as well as select a book
      * to display
-     *
      * @param savedInstanceState
      */
     @Override
@@ -152,8 +151,6 @@ public class MyBooksActivity extends AppCompatActivity {
         booksAdapter = new BookListAdapter(
                 MyBooksActivity.this, filteredBooks, 0);
         recyclerView.setAdapter(booksAdapter);
-
-//        booksAdapter.notifyDataSetChanged();
 
     }
 }

@@ -29,7 +29,10 @@ import com.google.firebase.storage.UploadTask;
  * once the okay button gets clicked. The book then gets added to the database.
  * @author sdupasqu
  * @version 1.0
- * @see MyBooksActivity, ViewBookActivity, Book
+ * @see MyBooksActivity
+ * @see BookViewActivity
+ * @see Book
+ * @see ScanBookActivity
  */
 public class AddBookActivity extends AppCompatActivity {
     private static final int image = 100;

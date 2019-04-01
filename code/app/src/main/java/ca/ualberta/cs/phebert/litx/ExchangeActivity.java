@@ -9,9 +9,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 /**
- * @Author plontke
+ * Screen where users can exchange their books
+ * @author plontke
  * @version 1
- *
+ * @see MainActivity, ScanActivity, Book, Requests
  */
 public class ExchangeActivity extends AppCompatActivity {
 
@@ -28,7 +29,7 @@ public class ExchangeActivity extends AppCompatActivity {
     Boolean isOwner;
 
     /**
-     * onCreate for Exchange Activity
+     * Sets the onClickListeners for the buttons and hides unnecessary buttons
      * @param savedInstanceState
      */
     @Override

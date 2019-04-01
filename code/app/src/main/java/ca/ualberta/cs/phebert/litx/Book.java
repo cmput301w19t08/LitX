@@ -19,6 +19,23 @@ import java.util.Map;
 
 import static com.loopj.android.http.AsyncHttpClient.log;
 
+/**
+ * Book object, has a title, author, isbn and other fields to know where it is in the database
+ * @author phebert, sdupasqu, plontke
+ * @version 1.0
+ * @see MyBooksActivity
+ * @see SearchActivity
+ * @see ExchangeActivity
+ * @see MainActivity
+ * @see User
+ * @see Request
+ * @see BookStatusActivity
+ * @see BookViewActivity
+ * @see AddBookActivity
+ * @see BookListAdapter
+ * @see TopTenAdapter
+ * @see ViewPhotoActivity
+ */
 public class Book implements Serializable {
     private static final String TAG = "LitX.Book";
     private static final String BOOK_COLLECTION = "Books";
@@ -33,13 +50,19 @@ public class Book implements Serializable {
     private String docID; // Document ID in Firestore
     private ArrayList<Request> requests;
     private Request acceptedRequest;
-    private ImageView photograph;
     private double latitude;
     private double longitude;
 
     private int views;
     private int borrows;
 
+    /**
+     * Constructor for the book
+     * @param owner owner of the book
+     * @param author author of the book
+     * @param title title of the book
+     * @param isbn ISBN of the book
+     */
     public Book(User owner, String author, String title, long isbn) {
         this.owner = owner;
         this.author = author;
@@ -51,6 +74,13 @@ public class Book implements Serializable {
         this.requests = new ArrayList<>();
     }
 
+    /**
+     * Constructor for the book
+     * @param owner owner of the book
+     * @param author author of the book
+     * @param title title of the book
+     * @param isbn ISBN of the book
+     */
     public Book(String owner, String author, String title, long isbn) {
         setOwner(owner);
         this.author = author;
@@ -58,13 +88,19 @@ public class Book implements Serializable {
         this.isbn = isbn;
     }
 
+    /**
+     * Empty constructor for the book, firestore needs this
+     */
     public Book() {
         requests = new ArrayList<>();
-    } // For firestore
+    }
 
 
     ///////////////////////////////////// Database Stuff ///////////////////////////////////////////
 
+    /**
+     * Gets the collection of books from firestore
+     */
     static private void loadDb() {
         if(task == null && FirebaseAuth.getInstance().getCurrentUser() != null) {
             task = FirebaseFirestore.getInstance()
@@ -73,6 +109,10 @@ public class Book implements Serializable {
         }
     }
 
+    /**
+     * Gets all the books in the database
+     * @return database
+     */
     public static Map<String, Book> getAll() {
         loadDb();
         if(!User.isSignedIn()) return null;
@@ -90,6 +130,11 @@ public class Book implements Serializable {
         return db;
     }
 
+    /**
+     * Creates a book object from the snapshot
+     * @param doc snapshot document to be converted into a book
+     * @return book object that was created
+     */
     private static Book fromSnapshot(DocumentSnapshot doc) {
         Book ans = new Book();
         ans.setDocID(doc.getId());
@@ -125,15 +170,23 @@ public class Book implements Serializable {
         }
         log.d("LitX.Book", ans.getTitle());
         // could be moved elsewhere, if this method is called more than once for a book.
-        //Log.d(TAG,ans.getOwner() == null ? "user is null" : "user is not null");
         ans.getOwner().addBook(ans);
         return ans;
     }
 
+    /**
+     * Finds a book by the document ID
+     * @param docId document ID to get
+     * @return book with that docId
+     */
     public static Book findByDocId(String docId) {
         return getAll().get(docId);
     }
 
+    /**
+     * Removes a book from the database
+     * @param book book to be removed from the database
+     */
     public void delete(Book book) {
         FirebaseFirestore.getInstance()
                 .collection(BOOK_COLLECTION)
@@ -149,10 +202,21 @@ public class Book implements Serializable {
         Request.push();
     }
 
+    /**
+     * Get the document ID of the book
+     * @return books docID
+     */
     public String getDocID() { return docID; }
 
+    /**
+     * Set the document ID of the book
+     * @param newDocID document ID to set for the book
+     */
     private void setDocID(String newDocID) { this.docID = newDocID; }
 
+    /**
+     * Adds a book object to the database
+     */
     public void push() {
         Map<String, Object> b = new HashMap<>();
         b.put("ownerUid",getOwner().getUserid());
@@ -335,19 +399,35 @@ public class Book implements Serializable {
     public int getBorrows() {
         return borrows;
     }
-  
+
+    /**
+     * Get the latitude for meetup location
+     * @return latitude value for meetup
+     */
     public double getLatitude() {
         return latitude;
     }
 
+    /**
+     * Set the latitude for meetup location
+     * @param latitude latitude value for meetup
+     */
     public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
+    /**
+     * Get the longitude for meetup location
+     * @return longitude value for meetup
+     */
     public double getLongitude() {
         return longitude;
     }
 
+    /**
+     * 
+     * @param longitude
+     */
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }

@@ -6,6 +6,12 @@ import android.util.Log;
 
 import java.util.Map;
 
+/**
+ * Background thread for notifications
+ * @author zkist
+ * @version 1.0
+ * @see Request, MainActivity
+ */
 public class NotificationIntentService extends IntentService {
 
     /**
@@ -15,6 +21,10 @@ public class NotificationIntentService extends IntentService {
         super("NOTIFICATION_INTENT_SERVICE");
     }
 
+    /**
+     * Handles when it gets passed the intent and notifies the user
+     * @param intent intent that is getting passed
+     */
     @Override
     protected void onHandleIntent(Intent intent) {
         Map<String, Request>  db =  Request.getAll();

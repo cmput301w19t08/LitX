@@ -27,6 +27,8 @@ import ca.ualberta.cs.phebert.litx.annotations.BorrowerCalled;
  *
  * Kind of a god class, this handles both authenticating this user and
  * getting other users to communicate with them.
+ * @author phebert
+ * @version 1.0
  * @see ProfileActivity
  */
 @SuppressWarnings("WeakerAccess")
