@@ -109,7 +109,6 @@ public class AddBookActivity extends AppCompatActivity {
                     }
 
                     if(!User.isSignedIn()) return;
-                    //TO DO: User should be the one using the app, not newly created user
                     User u = User.currentUser();
                     Book b = new Book(u, author, title, isbn);
 

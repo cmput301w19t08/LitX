@@ -95,7 +95,7 @@ public class BookStatusActivity extends AppCompatActivity {
                 booksAdapter = new BookListAdapter(
                         BookStatusActivity.this, filteredBooks, 1);
             }
-        }else {
+        } else {
             for (Request request : User.currentUser().getRequests()){
                 if (request.getBook().getStatus() == BookStatus.borrowed){
                     filteredBooks.add(request.getBook());
@@ -103,7 +103,6 @@ public class BookStatusActivity extends AppCompatActivity {
                 booksAdapter = new BookListAdapter(
                         BookStatusActivity.this, filteredBooks, 1);
             }
-
         }
 
         recyclerView.setAdapter(booksAdapter);
