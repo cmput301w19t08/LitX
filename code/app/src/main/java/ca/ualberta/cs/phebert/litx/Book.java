@@ -264,7 +264,8 @@ public class Book implements Serializable {
      * @return Boolean
      */
     public Boolean isAvailable() {
-        return this.status == BookStatus.available;
+        return this.status == BookStatus.available ||
+                this.status == BookStatus.requested;
     }
 
     /**
