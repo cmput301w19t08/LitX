@@ -34,6 +34,8 @@ public class Book implements Serializable {
     private ArrayList<Request> requests;
     private Request acceptedRequest;
     private ImageView photograph;
+    private double latitude;
+    private double longitude;
 
     private int views;
     private int borrows;
@@ -44,6 +46,9 @@ public class Book implements Serializable {
         this.title = title;
         this.isbn = isbn;
         this.status = BookStatus.available;
+        this.latitude = 0;
+        this.longitude = 0;
+        this.requests = new ArrayList<>();
     }
 
     public Book(String owner, String author, String title, long isbn) {
@@ -95,6 +100,18 @@ public class Book implements Serializable {
         ans.setStatus(doc.getString("status"));
         ans.setAuthor(doc.getString("author"));
         ans.setTitle(doc.getString("title"));
+        if (doc.getDouble("longitude") == null){
+            ans.setLongitude(0);
+        }else {
+            ans.setLongitude(doc.getDouble("longitude"));
+        }
+        if (doc.getDouble("latitude") == null){
+            ans.setLatitude(0);
+        }else {
+            ans.setLatitude(doc.getDouble("latitude"));
+        }
+
+
         // TODO (Scott): set/get photograph, might want to change this to a filename
         try {
             ans.setIsbn(doc.getLong("isbn"));
@@ -138,6 +155,8 @@ public class Book implements Serializable {
         b.put("author",getAuthor());
         b.put("title", getTitle());
         b.put("isbn",getIsbn());
+        b.put("longitude", getLongitude());
+        b.put("latitude", getLatitude());
 
         for(Book book : Book.getAll().values()) {
             if(this.equals(book)) setDocID(book.docID);
@@ -158,6 +177,8 @@ public class Book implements Serializable {
             db.get(getDocID()).setAuthor(getAuthor());
             db.get(getDocID()).setIsbn(getIsbn());
             owner.getMyBooks().set(owner.getMyBooks().indexOf(this), this);
+            db.get(getDocID()).setLatitude(getLatitude());
+            db.get(getDocID()).setLongitude(getLongitude());
         }
     }
 
@@ -188,6 +209,10 @@ public class Book implements Serializable {
     public void setStatus(String status) {
         try {
             this.status = BookStatus.valueOf(status.toLowerCase());
+            if (status.equals("borrowed")) {
+                borrows += 1;
+
+            }
         } catch(IllegalArgumentException e) {
             log.e("LitX.Book","status does not exist", e);
         }
@@ -315,6 +340,21 @@ public class Book implements Serializable {
     }
 
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 
     public User getBorrower() {
         if (acceptedRequest != null) {
@@ -336,6 +376,7 @@ public class Book implements Serializable {
     public void setAcceptedRequest(Request request) {
         if (acceptedRequest == null) {
             acceptedRequest = request;
+            request.accept();
             status = BookStatus.accepted;
             for (Request deletedRequest : getRequests()){
                 deletedRequest.delete();
