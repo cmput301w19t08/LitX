@@ -26,6 +26,7 @@
             android:parentActivityName=".AddBookActivity" />
         <activity
             android:name=".MapActivity"
+            android:parentActivityName=".MainActivity"
              />
         <activity
             android:name=".AddBookActivity"

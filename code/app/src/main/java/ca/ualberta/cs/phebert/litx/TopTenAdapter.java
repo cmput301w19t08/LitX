@@ -12,6 +12,7 @@ import java.util.ArrayList;
 /**
  * Adapter for the top ten Books
  * @Author plontke
+ * @Version 1
  */
 public class TopTenAdapter extends RecyclerView.Adapter<TopTenAdapter.ViewHolder>{
 
