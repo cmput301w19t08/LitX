@@ -34,7 +34,7 @@ import com.google.firebase.storage.UploadTask;
  */
 public class ViewPhotoActivity extends AppCompatActivity {
 
-    private static final int image = 100;
+    private static final int image = 10;
     Uri uri;
 
     private ImageView ivPhoto;
