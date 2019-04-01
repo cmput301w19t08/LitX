@@ -150,26 +150,26 @@ public class AddBookActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * onActivityResult tries to get information from the last activity, in this case the last
+     * activity will either be scanning for the isbn or getting a photo from the users device
+     * @param requestCode number returned to indicate the activity that got a result
+     * @param resultCode number indicating the result of performing the activity
+     * @param data the intent that the data was retrieved from
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         String TAG = "scan";
-        //titleView.setText("" + resultCode);
         if(requestCode == 155) {
             if(data != null) {
-                //try {
 
-                    String title = data.getStringExtra("Title");
-                    String ISBN = data.getStringExtra("ISBN");
-                    String author = data.getStringExtra("Author");
-                    ISBNView.setText(ISBN);
-                    titleView.setText(title);
-                    authorView.setText(author);
-                //} catch (Exception e){
-                    //If the book is not in the WorldLibrary database print only the ISBN
-                //    String ISBN = data.getStringExtra("ISBN");
-                 //   ISBNView.setText(ISBN);
-                //}
+                String title = data.getStringExtra("Title");
+                String ISBN = data.getStringExtra("ISBN");
+                String author = data.getStringExtra("Author");
+                ISBNView.setText(ISBN);
+                titleView.setText(title);
+                authorView.setText(author);
 
             } else {
                 Log.w(TAG,"data is null");
@@ -184,15 +184,16 @@ public class AddBookActivity extends AppCompatActivity {
             }
         }
     }
-    public void scanISBN(View v) {
-        //Intent intent = new Intent(this, ScanBookActivity.class);
-        //startActivityForResult(intent,155);
 
+    /**
+     * When the scan button is pressed we need to go to the scan activity
+     * @param v View used for the button
+     */
+    public void scanISBN(View v) {
         //This is how the Map Object is to be used!
 
         try {
             Intent intent = new Intent(this, MapObject.class);
-            //double RichardISBN=Double.valueOf(ISBNView.getText().toString());
             double RichardISBN=50;
             intent.putExtra("LONG",-97.432404);
             intent.putExtra("LAT",RichardISBN);
@@ -206,6 +207,11 @@ public class AddBookActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Loads an image from the database if it exists, otherwise the placeholder icon stays in the
+     * imageview unless the user changes it
+     * @param book the book that we are trying to find the image for
+     */
     private void loadImage(Book book) {
         // Load the image into the imageview if it exists
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
@@ -222,11 +228,16 @@ public class AddBookActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Adds the image attached to the database
+     * @param book the book that is getting added to the database
+     */
     private void addImage(Book book) {
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         pathReference = storageReference.child(book.getOwner().getUserid() + "/" + Long.toString(book.getIsbn()));
         UploadTask upload = pathReference.putFile(uri);
 
+        // Hide buttons and make the progress bar visible while the photo uploads
         titleView.setVisibility(View.GONE);
         authorView.setVisibility(View.GONE);
         ISBNView.setVisibility(View.GONE);
@@ -240,7 +251,7 @@ public class AddBookActivity extends AppCompatActivity {
         findViewById(R.id.createBookProgress).setVisibility(View.VISIBLE);
         findViewById(R.id.creatingBookTextView).setVisibility(View.VISIBLE);
 
-
+        // Once uploaded finish the activity
         upload.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
