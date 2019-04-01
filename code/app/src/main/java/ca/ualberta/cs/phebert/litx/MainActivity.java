@@ -62,8 +62,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FirebaseFirestore.getInstance().setFirestoreSettings(
-                new FirebaseFirestoreSettings.Builder().setPersistenceEnabled(false).build());
         Request.createNotificationChannel(this);
 
         if (!User.isSignedIn()) {

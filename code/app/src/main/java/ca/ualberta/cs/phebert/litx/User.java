@@ -151,7 +151,7 @@ public class User implements Serializable {
      */
     static private void loadDb() {
         if(task == null && isSignedIn()) {
-
+            Log.d(TAG,"");
             task = FirebaseFirestore.getInstance()
                     .collection(USER_COLLECTION)
                     .get();
@@ -239,7 +239,9 @@ public class User implements Serializable {
     public static User currentUser() {
         if(current == null) {
             if(isSignedIn()) {
+                Log.d(TAG,"User = " + FirebaseAuth.getInstance().getUid());
                 current = findByUid(FirebaseAuth.getInstance().getUid());
+                Log.d(TAG,"" + current);
             } else return null;
         }
         return current;
@@ -328,8 +330,14 @@ public class User implements Serializable {
         });
     }
 
+    /**
+     * Should return true if and only if the user is signed in.
+     * @return
+     */
     public static boolean isSignedIn() {
-        return FirebaseAuth.getInstance().getCurrentUser() != null;
+        FirebaseUser ans = FirebaseAuth.getInstance().getCurrentUser();
+        Log.d(TAG, ans != null ? ans.getUid() : "null");
+        return ans != null;
     }
 
     /**
