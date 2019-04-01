@@ -361,8 +361,8 @@ public class Request {
     @OwnerCalled
     public void delete() {
         status = status.refuse(book, this);
-        requester.getRequests().remove(this);
-        book.getRequests().remove(this);
+        //requester.getRequests().remove(this);
+        //book.getRequests().remove(this);
 
     }
 

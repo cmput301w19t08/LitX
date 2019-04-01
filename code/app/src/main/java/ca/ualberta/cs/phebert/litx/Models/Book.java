@@ -383,10 +383,13 @@ public class Book implements Serializable {
             }
             for (Request deletedRequest : getRequests()){
                 deletedRequest.delete();
+                deletedRequest.getRequester().removeRequest(deletedRequest);
             }
             request.accept();
             Request.push();
             request.selfPush();
+
+            getRequests().clear();
 
         }
         if (request == null) {
