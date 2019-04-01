@@ -185,7 +185,7 @@ public class AddBookActivity extends AppCompatActivity {
      */
     public void scanISBN(View v) {
         Intent intent = new Intent(this, ScanBookActivity.class);
-        startActivityForResult(intent, 155);
+        startActivityForResult(intent,155);
     }
 
     /**

@@ -8,5 +8,5 @@ public enum BookStatus {
     requested,
     accepted,
     borrowed,
-    returned
+    pending
 }

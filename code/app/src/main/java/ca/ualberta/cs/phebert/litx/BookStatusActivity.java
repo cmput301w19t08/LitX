@@ -32,7 +32,7 @@ public class BookStatusActivity extends AppCompatActivity {
     private TextView message;
 
     /**
-     * Initializes the status screen
+     * On Create method for the BookStatus Activity
      * @param savedInstanceState
      */
     @Override
@@ -61,6 +61,7 @@ public class BookStatusActivity extends AppCompatActivity {
     }
 
     /**
+     * onStart method for the BookStatusActivity
      * query to find the data when the activity starts
      */
     @Override
@@ -70,7 +71,8 @@ public class BookStatusActivity extends AppCompatActivity {
     }
 
     /**
-     * Find the books relevant to the status that was selected
+     * queries the requests of the current user and sets filteredBooks to the
+     *  appropriate requests depending on the filter
      */
     public void query(){
         filteredBooks.clear();
