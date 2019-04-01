@@ -54,7 +54,7 @@ public class Book implements Serializable {
     private double longitude;
 
     private int views;
-    private int borrows;
+    private long borrows;
 
     /**
      * Constructor for the book
@@ -153,6 +153,11 @@ public class Book implements Serializable {
         ans.setStatus(doc.getString("status"));
         ans.setAuthor(doc.getString("author"));
         ans.setTitle(doc.getString("title"));
+        try {
+            ans.borrows = (long) doc.getLong("borrows");
+        } catch(NullPointerException e) {
+            ans.borrows = 0;
+        }
         if (doc.getDouble("longitude") == null){
             ans.setLongitude(0);
         }else {
@@ -226,7 +231,7 @@ public class Book implements Serializable {
         b.put("isbn",getIsbn());
         b.put("longitude", getLongitude());
         b.put("latitude", getLatitude());
-
+        b.put("borrows", borrows);
         for(Book book : Book.getAll().values()) {
             if(this.equals(book)) setDocID(book.docID);
         }
@@ -380,7 +385,7 @@ public class Book implements Serializable {
      * Setter for amount of borrows
      * @param borrows amount of borrows the book has
      */
-    public void setBorrows(int borrows) {
+    public void setBorrows(long borrows) {
         this.borrows = borrows;
     }
 
@@ -396,7 +401,7 @@ public class Book implements Serializable {
      * Getter for borrows
      * @return amount of borrows the book currently has
      */
-    public int getBorrows() {
+    public long getBorrows() {
         return borrows;
     }
 
