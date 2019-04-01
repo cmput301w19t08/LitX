@@ -1,5 +1,6 @@
 package ca.ualberta.cs.phebert.litx;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -37,6 +38,17 @@ public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.itemView.setTag(requests.get(position));
         Request request = requests.get(position);
+
+        String uid = User.currentUser().getUserid();
+        if (!uid.equals(request.getBookOwner().getUserid())) {
+            holder.accept.setVisibility(View.GONE);
+            if (!uid.equals(request.getRequester().getUserid())) {
+                holder.delete.setVisibility(View.GONE);
+            } else {
+                holder.delete.setText("Cancel");
+            }
+        }
+
         holder.requestorName.setText(request.getRequester().getUserName());
         holder.accept.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -61,6 +73,11 @@ public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.
                 request.delete();
                 Request.push();
                 notifyDataSetChanged();
+
+                Intent intent = new Intent(context, BookViewActivity.class);
+                ((Activity) context).finish();
+                intent.putExtra("Book", request.getBook().getDocID());
+                context.startActivity(intent);
             }
         });
 
@@ -82,8 +99,6 @@ public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.
             requestorName = (TextView) itemView.findViewById(R.id.requests_item_owner);
             accept = (Button) itemView.findViewById(R.id.accept_requests);
             delete = (Button) itemView.findViewById(R.id.delete_request);
-
-
         }
 
     }

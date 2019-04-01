@@ -3,6 +3,7 @@ package ca.ualberta.cs.phebert.litx;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,8 +66,20 @@ public class BookViewActivity extends AppCompatActivity {
 
         // Receive the book object the user selected
         Intent intent = getIntent();
-        String bookId = intent.getExtras().getString("Book");
+        String bookId = intent.getStringExtra("Book");
+        Log.i("bookID", bookId);
         book = Book.findByDocId(bookId);
+
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        adapter = new RequestListAdapter(this, book.getRequests());
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
+                recyclerView.getContext(),1);
+        recyclerView.addItemDecoration(dividerItemDecoration);
+        recyclerView.setAdapter(adapter);
 
         loadImage(book);
 
@@ -75,18 +89,6 @@ public class BookViewActivity extends AppCompatActivity {
             // Find buttons in the layout
             delete = (Button) findViewById(R.id.deleteButton);
             edit = (Button) findViewById(R.id.editButtonID);
-            recyclerView.setHasFixedSize(true);
-            layoutManager = new LinearLayoutManager(this);
-            recyclerView.setLayoutManager(layoutManager);
-
-            ArrayList<Request> requests = new ArrayList<>();
-            adapter = new RequestListAdapter(this, book.getRequests());
-
-            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
-                    recyclerView.getContext(),1);
-            recyclerView.addItemDecoration(dividerItemDecoration);
-            recyclerView.setAdapter(adapter);
-
 
         /* When delete button is clicked remove the book from the database, then go back to MyBooks
         screen
@@ -114,15 +116,17 @@ public class BookViewActivity extends AppCompatActivity {
                 }
             });
         }else {
+            // Update views on the book
+            book.setViews(book.getViews() + 1);
+
             // The Owner is not viewing the book he cannot delete or edit it just Request it
             edit.setVisibility(View.GONE);
             delete.setVisibility(View.GONE);
             changeImage.setText("Click the photo to view the image!");
 
             ArrayList<Request> bookRequests = book.getRequests();
-            for (int i=0; i < bookRequests.size(); i++) {
-                Request request = bookRequests.get(i);
-                if (uid.equals(request.getRequester().getUserid())) {
+            for (Request iterRequest : book.getRequests()) {
+                if (uid.equals(iterRequest.getRequester().getUserid())) {
                     bookRequested();
                 }
             }
@@ -152,7 +156,10 @@ public class BookViewActivity extends AppCompatActivity {
                     Request newRequest = new Request(book, book.getOwner(), User.currentUser());
                     User.currentUser().addRequest(newRequest);
                     book.addRequest(newRequest);
+
                     newRequest.selfPush();
+
+                    adapter.notifyDataSetChanged();
                 }
             });
         }
@@ -167,7 +174,6 @@ public class BookViewActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
     }
 
     @Override

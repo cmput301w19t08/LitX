@@ -210,6 +210,12 @@ public class ScanBookActivity extends AppCompatActivity {
      * @see AddBookActivity
      */
     public void confirmISBN(View v) {
+        findViewById(R.id.confirm_btn).setVisibility(View.GONE);
+        findViewById(R.id.clear_btn).setVisibility(View.GONE);
+        findViewById(R.id.ISBNField).setVisibility(View.GONE);
+        findViewById(R.id.scanProgress).setVisibility(View.VISIBLE);
+        findViewById(R.id.findingTextView).setVisibility(View.VISIBLE);
+
         ReadISBN = Boolean.FALSE;
 
         BookClient client = new BookClient();
