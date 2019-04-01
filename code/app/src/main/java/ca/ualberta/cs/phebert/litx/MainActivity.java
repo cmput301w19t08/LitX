@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         topNumber = min(10, books.size());
 
         for (int j = 0; j < topNumber; j++) {
-            comparisonBook = books.get(0);
+            comparisonBook = books.get(j);
             for (i = 0; i < books.size(); i++) {
                 if (comparisonBook.getBorrows() <= books.get(i).getBorrows()) {
                     if (doesNotAlreadyContain(booksToShow, books.get(i)) == Boolean.FALSE) {
