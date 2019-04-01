@@ -15,6 +15,13 @@ import java.util.ArrayList;
 
 import static com.google.common.primitives.UnsignedInts.min;
 
+/**
+ * Main screen of the app, lots of navigation done from here, displays the top 10 books
+ * @author sdupasqu, plontke, zkist, phebert
+ * @version 1.0
+ * @see ProfileActivity, MyBooksActivity, BookStatusActivity, SearchActivity, ExchangeActivity
+ * @see Book, User, TopTenAdapter
+ */
 public class MainActivity extends AppCompatActivity {
     public static final String FilterMode = "ca.ualberta.cs.phebert.litx.FilterMode";
     private RecyclerView recyclerView;
@@ -24,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager manager;
     static Thread loader;
 
+    /**
+     * Loads all data from the database
+     */
     void getAllData() {
         Request.getAll(); // this should be enough if requests weren't empty
         User.getAll();
@@ -34,6 +44,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Either loads the top 10 books or if it is a new user makes them sign in
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,9 +94,9 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Ensures the bookList does not already contain the currentBook
-     * @param bookList
-     * @param currentBook
-     * @return Boolean
+     * @param bookList list of books to check
+     * @param currentBook book to try to find in the bookList
+     * @return Boolean is the book in the list or not
      */
     public Boolean doesNotAlreadyContain(ArrayList<Book> bookList, Book currentBook) {
         for (int r = 0; r < bookList.size(); r++) {
@@ -93,6 +107,9 @@ public class MainActivity extends AppCompatActivity {
         return Boolean.FALSE;
     }
 
+    /**
+     * Load all data for the user
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -103,6 +120,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Depending on which button was clicked from Requested, Accepted, and Borrowing pass in the
+     * filter so the status activity knows which status to get
+     * @param v Used to determine which button was pressed
+     */
     public void filter(View v) {
         Intent intent = new Intent(this, BookStatusActivity.class);
         if(v.getId() == R.id.requests_home) {
@@ -115,11 +137,19 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     * Starts the profile activity
+     * @param v view used for button press
+     */
     public void goToProfileView(View v) {
         Intent intent = new Intent(this,ProfileActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Starts my books activity
+     * @param v view used for button press
+     */
     public void getMyBooks(View v) {
         // Should not be BookViewActivity, need a new activity for MyBooks
         Intent intent = new Intent(this, MyBooksActivity.class);
@@ -127,11 +157,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // No method named this in UML, must be added
+
+    /**
+     * Starts the exchange activity
+     * @param v view used for button press
+     */
     public void exchangeBook(View v) {
         Intent intent = new Intent(this, ExchangeActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Starts the search activity
+     * @param v view used for button press
+     */
     public void searchForBooks(View v) {
         Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
