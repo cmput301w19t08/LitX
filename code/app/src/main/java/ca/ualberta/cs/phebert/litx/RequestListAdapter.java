@@ -1,6 +1,8 @@
 package ca.ualberta.cs.phebert.litx;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +67,11 @@ public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.
                 request.delete();
                 Request.push();
                 notifyDataSetChanged();
+
+                Intent intent = new Intent(context, BookViewActivity.class);
+                ((Activity) context).finish();
+                intent.putExtra("Book", request.getBook().getDocID());
+                context.startActivity(intent);
             }
         });
 
