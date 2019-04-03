@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public Boolean doesNotAlreadyContain(ArrayList<Book> bookList, Book currentBook) {
         for (int r = 0; r < bookList.size(); r++) {
-            if (bookList.get(r).getAuthor().equals(currentBook.getAuthor())) {
+            if (bookList.get(r).getTitle().equals(currentBook.getTitle())) {
                 return Boolean.TRUE;
             }
         }
