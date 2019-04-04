@@ -185,7 +185,7 @@ public class Book implements Serializable {
             db = new HashMap<>();
             for (DocumentSnapshot snapshot : task.getResult().getDocuments()) {
                 Log.v(TAG, snapshot.getId());
-                db.put(snapshot.getId(), fromSnapshot(snapshot));
+                db.putIfAbsent(snapshot.getId(), fromSnapshot(snapshot));
             }
             Log.v(TAG, "amount of books: " + db.size());
         }
