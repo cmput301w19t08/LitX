@@ -238,7 +238,9 @@ public class Book implements Serializable {
         }
         log.d("LitX.Book", ans.getTitle());
         // could be moved elsewhere, if this method is called more than once for a book.
-        ans.getOwner().addBook(ans);
+        if(!ans.getOwner().getMyBooks().contains(ans)) {
+            ans.getOwner().addBook(ans);
+        }
         return ans;
     }
 
