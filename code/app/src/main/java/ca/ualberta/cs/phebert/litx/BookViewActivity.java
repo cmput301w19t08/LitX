@@ -138,46 +138,37 @@ public class BookViewActivity extends AppCompatActivity {
                 }
             }
 
-            TextView ownerUsernameView = (TextView) findViewById(R.id.ownerViewID);
+            TextView ownerUsernameView = findViewById(R.id.ownerViewID);
             String ownerUsername = book.getOwner().getUserName();
             ownerUsernameView.setText(ownerUsername);
 
             // View the owners profile
-            ownerUsernameView.setOnClickListener(new TextView.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            ownerUsernameView.setOnClickListener(v -> {
 
-                    Intent intent = new Intent(BookViewActivity.this, ProfileActivity.class);
-                    intent.putExtra(UID_IN, book.getOwner().getUserid());
+                Intent intent1 = new Intent(BookViewActivity.this, ProfileActivity.class);
+                intent1.putExtra(UID_IN, book.getOwner().getUserid());
 
-                    startActivity(intent);
-                }
+                startActivity(intent1);
             });
 
             // Request the book the user is viewing
-            request.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(BookViewActivity.this, "Your Request has been sent",
-                            Toast.LENGTH_SHORT).show();
+            request.setOnClickListener(v -> {
+                Toast.makeText(BookViewActivity.this, "Your Request has been sent",
+                        Toast.LENGTH_SHORT).show();
 
-                    bookRequested();
-                    book.addRequest();
+                bookRequested();
+                book.addRequest();
 
-                    adapter.notifyDataSetChanged();
-                }
+                adapter.notifyDataSetChanged();
             });
         }
         
         // Set an onClickListener for the photo that launches the view photo activity
-        photo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(BookViewActivity.this, ViewPhotoActivity.class);
-                intent.putExtra("Book", book.getDocID());
-                finish();
-                startActivity(intent);
-            }
+        photo.setOnClickListener(v -> {
+            Intent intent12 = new Intent(BookViewActivity.this, ViewPhotoActivity.class);
+            intent12.putExtra("Book", book.getDocID());
+            finish();
+            startActivity(intent12);
         });
     }
 
@@ -188,7 +179,7 @@ public class BookViewActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        TextView textView = (TextView) findViewById(R.id.descriptionIDView);
+        TextView textView = findViewById(R.id.descriptionIDView);
         String description = "Title: " + book.getTitle() + "\n" + "Author: " + book.getAuthor()
                 + "\n" + "ISBN: " + String.valueOf(book.getIsbn());
         textView.setText(description);
@@ -204,12 +195,9 @@ public class BookViewActivity extends AppCompatActivity {
         int iconId = this.getResources().getIdentifier("book_icon", "drawable", this.getPackageName());
         StorageReference pathReference = storageReference.child(book.getOwner().getUserid() + "/" + Long.toString(book.getIsbn()));
 
-        pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                String imageURL = uri.toString();
-                GlideApp.with(BookViewActivity.this).load(imageURL).placeholder(iconId).into(photo);
-            }
+        pathReference.getDownloadUrl().addOnSuccessListener(uri -> {
+            String imageURL = uri.toString();
+            GlideApp.with(BookViewActivity.this).load(imageURL).placeholder(iconId).into(photo);
         });
     }
 
@@ -219,7 +207,7 @@ public class BookViewActivity extends AppCompatActivity {
      */
     private void bookRequested() {
         request.setVisibility(View.GONE);
-        TextView requested = (TextView) findViewById(R.id.requestedTextView);
+        TextView requested = findViewById(R.id.requestedTextView);
         requested.setVisibility(View.VISIBLE);
     }
 }
