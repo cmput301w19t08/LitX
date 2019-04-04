@@ -121,16 +121,54 @@ public class Book implements Serializable {
                             switch (change.getType()) {
                                 case MODIFIED:
                                     Book book = findByDocId(docId);
-                                    //book.update();
+                                    book.update(change.getDocument());
                                     break;
                                 case ADDED:
                                     db.putIfAbsent(docId,Book.fromSnapshot(change.getDocument()));
                                     break;
                                 case REMOVED:
+                                    db.remove(docId);
                                     break;
                             }
                         }
                     });
+        }
+    }
+
+    private void update(DocumentSnapshot doc) {
+        if (doc.getString("views") == null) {
+            Log.d("FIELD", "DOESN'T EXIST");
+            setViews(0);
+        } else {
+            Log.d("FIELD", "EXISTS");
+            setViews(Integer.valueOf(doc.getString("views")));
+        }
+
+        String ownerUid = doc.getString("ownerUid");
+        //Log.d(TAG, "Owner UID = " + ownerUid);
+        setOwner(ownerUid);
+        setStatus(doc.getString("status"));
+        setAuthor(doc.getString("author"));
+        setTitle(doc.getString("title"));
+        try {
+            borrows = doc.getLong("borrows");
+        } catch(NullPointerException e) {
+            borrows = 0;
+        }
+        if (doc.getDouble("longitude") == null){
+            setLongitude(0);
+        }else {
+            setLongitude(doc.getDouble("longitude"));
+        }
+        if (doc.getDouble("latitude") == null){
+            setLatitude(0);
+        }else {
+            setLatitude(doc.getDouble("latitude"));
+        }
+        try {
+            setIsbn(doc.getLong("isbn"));
+        } catch(NullPointerException e) {
+            // whatever, no isbn, this book is weird
         }
     }
 
@@ -179,7 +217,7 @@ public class Book implements Serializable {
         ans.setAuthor(doc.getString("author"));
         ans.setTitle(doc.getString("title"));
         try {
-            ans.borrows = (long) doc.getLong("borrows");
+            ans.borrows = doc.getLong("borrows");
         } catch(NullPointerException e) {
             ans.borrows = 0;
         }
@@ -200,7 +238,7 @@ public class Book implements Serializable {
         }
         log.d("LitX.Book", ans.getTitle());
         // could be moved elsewhere, if this method is called more than once for a book.
-        ans.getOwner().addBook(ans);
+        //ans.getOwner().addBook(ans);
         return ans;
     }
 
