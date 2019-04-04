@@ -123,7 +123,7 @@ public class BookViewActivity extends AppCompatActivity {
         } else {
             // Update views on the book
             book.setViews(book.getViews() + 1);
-            book.push();
+//            book.push();
 
             // The Owner is not viewing the book he cannot delete or edit it just Request it
             edit.setVisibility(View.GONE);
