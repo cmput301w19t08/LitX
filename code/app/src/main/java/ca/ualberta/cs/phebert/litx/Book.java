@@ -106,6 +106,31 @@ public class Book implements Serializable {
             task = FirebaseFirestore.getInstance()
                     .collection(BOOK_COLLECTION)
                     .get();
+            FirebaseFirestore.getInstance()
+                    .collection(BOOK_COLLECTION)
+                    .addSnapshotListener((result, error) -> {
+                        if(error != null) {
+                            error.printStackTrace();
+                            return;
+                        }
+                        for(DocumentChange change: result.getDocumentChanges()) {
+                            String docId = change.getDocument().getId();
+                            Log.v(TAG,"book {action}: {name}"
+                            .replace("{action}", change.getType().toString().toLowerCase())
+                            .replace("{name}", docId));
+                            switch (change.getType()) {
+                                case MODIFIED:
+                                    Book book = findByDocId(docId);
+                                    //book.update();
+                                    break;
+                                case ADDED:
+                                    db.putIfAbsent(docId,Book.fromSnapshot(change.getDocument()));
+                                    break;
+                                case REMOVED:
+                                    break;
+                            }
+                        }
+                    });
         }
     }
 

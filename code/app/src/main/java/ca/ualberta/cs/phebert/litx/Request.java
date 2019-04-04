@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -61,6 +62,20 @@ public class Request {
         if(task == null && User.isSignedIn()) {
             task = FirebaseFirestore.getInstance().collection(REQUESTS_COLLECTION)
                     .get();
+            FirebaseFirestore.getInstance().collection(REQUESTS_COLLECTION)
+                    .addSnapshotListener((result, error) -> {
+                        if(error != null) {
+                            error.printStackTrace();
+                            return;
+                        }
+                        for(DocumentChange change : result.getDocumentChanges()) {
+                            String docId = change.getDocument().getId();
+                            Log.v("LitX.Request", "request {action}: {name}"
+                                    .replace("{action}", change.getType().toString().toLowerCase())
+                                    .replace("{name}", docId));
+                            /// requests only need to know they are updated.
+                        }
+                    });
         }
     }
 
